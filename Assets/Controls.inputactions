@@ -2,14 +2,30 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "Movement",
+            "name": "VehicleControls",
             "id": "e01c862e-2886-4f72-9f9d-fd11072e60dd",
             "actions": [
                 {
                     "name": "Movement",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "c74ae897-76de-4583-b570-22cc05e78343",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RotationX",
+                    "type": "PassThrough",
+                    "id": "d345a7fa-af93-4ef4-8e54-2e30b6cdade1",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RotationY",
+                    "type": "PassThrough",
+                    "id": "6f601d07-089a-4a79-b81a-8b974740e942",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
                 }
@@ -128,7 +144,7 @@
                 {
                     "name": "GAMEPAD",
                     "id": "d3594cd9-c6fc-4734-ac49-5a7824430ca3",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -179,6 +195,55 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "32bf4ecb-75ae-4a5c-b926-4e1b3f260bc4",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotationX",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55befc5c-1e6a-4a66-bfe4-c5829a48f64a",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotationY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraControls",
+            "id": "2c29fd32-6eb0-497a-b0b8-084854160b87",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "PassThrough",
+                    "id": "5e2d4b63-59db-453f-b790-5028e7645722",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e979533e-a788-46ff-b2a8-ff336ed96d5a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
