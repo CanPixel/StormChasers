@@ -41,6 +41,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Brake"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""bbe92e8b-8b07-4e70-ae41-67ccbbdc6ad2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -230,35 +238,36 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""RotationY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""951d765a-f5f3-4cdb-9951-48471712939b"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf00ada0-412f-4a09-a534-8eb7fa5d58ec"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
             ""name"": ""CameraControls"",
             ""id"": ""2c29fd32-6eb0-497a-b0b8-084854160b87"",
-            ""actions"": [
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""5e2d4b63-59db-453f-b790-5028e7645722"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""e979533e-a788-46ff-b2a8-ff336ed96d5a"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -296,9 +305,9 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Movement = m_VehicleControls.FindAction("Movement", throwIfNotFound: true);
         m_VehicleControls_RotationX = m_VehicleControls.FindAction("RotationX", throwIfNotFound: true);
         m_VehicleControls_RotationY = m_VehicleControls.FindAction("RotationY", throwIfNotFound: true);
+        m_VehicleControls_Brake = m_VehicleControls.FindAction("Brake", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
-        m_CameraControls_Newaction = m_CameraControls.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -351,6 +360,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Movement;
     private readonly InputAction m_VehicleControls_RotationX;
     private readonly InputAction m_VehicleControls_RotationY;
+    private readonly InputAction m_VehicleControls_Brake;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -358,6 +368,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_VehicleControls_Movement;
         public InputAction @RotationX => m_Wrapper.m_VehicleControls_RotationX;
         public InputAction @RotationY => m_Wrapper.m_VehicleControls_RotationY;
+        public InputAction @Brake => m_Wrapper.m_VehicleControls_Brake;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -376,6 +387,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RotationY.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
                 @RotationY.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
                 @RotationY.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
+                @Brake.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
+                @Brake.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
+                @Brake.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -389,6 +403,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RotationY.started += instance.OnRotationY;
                 @RotationY.performed += instance.OnRotationY;
                 @RotationY.canceled += instance.OnRotationY;
+                @Brake.started += instance.OnBrake;
+                @Brake.performed += instance.OnBrake;
+                @Brake.canceled += instance.OnBrake;
             }
         }
     }
@@ -397,12 +414,10 @@ public class @Controls : IInputActionCollection, IDisposable
     // CameraControls
     private readonly InputActionMap m_CameraControls;
     private ICameraControlsActions m_CameraControlsActionsCallbackInterface;
-    private readonly InputAction m_CameraControls_Newaction;
     public struct CameraControlsActions
     {
         private @Controls m_Wrapper;
         public CameraControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_CameraControls_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -412,16 +427,10 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_CameraControlsActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnNewaction;
             }
             m_Wrapper.m_CameraControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
             }
         }
     }
@@ -449,9 +458,9 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnRotationX(InputAction.CallbackContext context);
         void OnRotationY(InputAction.CallbackContext context);
+        void OnBrake(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
     }
 }

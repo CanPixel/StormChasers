@@ -23,6 +23,7 @@ public class VehicleMovement : MonoBehaviour {
     private Rigidbody rb;
 
     private bool move = false;
+    private float brake = 0;
 
     private Vector3 camBaseOffset;
 
@@ -39,13 +40,13 @@ public class VehicleMovement : MonoBehaviour {
         currentSpeed = 0;
     }
 
-    void FixedUpdate() {
-        return;
-        currentSpeed = Mathf.Lerp(currentSpeed, (move) ? speed : -0.1f, Time.deltaTime * acceleration);
+   // void FixedUpdate() {
+     //   return;
+        //currentSpeed = Mathf.Lerp(currentSpeed, (move) ? speed : -0.1f, Time.deltaTime * acceleration);
 
 //        moveVec = Vector3.Lerp(moveVec, Vector3.one * (move ? currentSpeed : 0), Time.deltaTime);
 
-        rb.velocity = moveVec.y * transform.forward * currentSpeed;
+       // rb.velocity = moveVec.y * transform.forward * currentSpeed;
 
        // float RotationX = horizontalSensitivity * MouseX * Time.deltaTime;
        // float RotationY = verticalSensitivity * MouseY * Time.deltaTime;
@@ -53,7 +54,7 @@ public class VehicleMovement : MonoBehaviour {
         //Vector3 CamRot = playerCam.transform.rotation.eulerAngles;
         //CamRot.x -= RotationY;
         //CamRot.y += RotationX;
-    }
+    //}
 
     void Update() {
         return;
@@ -81,6 +82,10 @@ public class VehicleMovement : MonoBehaviour {
 
         //playerCam.transform.position = Vector3.Lerp(playerCam.transform.position, transform.position + camBaseOffset, Time.deltaTime * damping);
         //playerCam.transform.LookAt(transform.position);
+    }
+
+    public void OnBrake(InputValue val) {
+        brake = val.Get<float>();
     }
 
     public void OnMovement(InputValue value){
@@ -121,7 +126,7 @@ public class VehicleMovement : MonoBehaviour {
     }
 
     public bool IsBraking() {
-        return moveVec.y < 0;
+        return moveVec.y < 0 || brake > 0;
     }
 
     public Vector2 GetMouse() {

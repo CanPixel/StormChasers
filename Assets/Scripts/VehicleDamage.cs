@@ -18,6 +18,11 @@ public class VehicleDamage : MonoBehaviour {
         else meshfilters = GetComponentsInChildren<SkinnedMeshRenderer>();
 
         sqrDemRange = demolutionRange * demolutionRange;
+
+        for(int i = 0; i < meshfilters.Length; i++) {
+            var mesh = Mesh.Instantiate(meshfilters[i].sharedMesh);
+            meshfilters[i].sharedMesh = mesh;
+        }
     }
 
     private Vector3 colPointToMe;
