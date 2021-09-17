@@ -19530,7 +19530,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.097611345, y: -0.0000000042810537, z: 4.1988446e-10, w: 0.99522465}
+  m_LocalRotation: {x: 0.097611345, y: 0.0000000042810537, z: -4.1988446e-10, w: 0.99522465}
   m_LocalPosition: {x: 15.98891, y: 3.250001, z: -212.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -20478,16 +20478,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStats:
-    TopSpeed: 35.92
-    Acceleration: 13.2
-    ReverseSpeed: 10
-    ReverseAcceleration: 3
-    AccelerationCurve: 0.69
+    TopSpeed: 40
+    Acceleration: 13
+    ReverseSpeed: 20
+    ReverseAcceleration: 5
+    AccelerationCurve: 0.75
     Braking: 20
     CoastingDrag: 5
-    Grip: 0.97
-    Steer: 4.45
-    AddedGravity: 1
+    Grip: 0.8
+    Steer: 4.5
+    AddedGravity: 1.5
   m_VisualWheels:
   - {fileID: 1195708245}
   - {fileID: 1195708243}
@@ -20495,12 +20495,12 @@ MonoBehaviour:
   - {fileID: 1195708239}
   CenterOfMass: {fileID: 1486402510}
   AirborneReorientationCoefficient: 0.3
-  DriftGrip: 0.85
-  DriftAdditionalSteer: 0
+  DriftGrip: 0.3
+  DriftAdditionalSteer: 2
   MinAngleToFinishDrift: 29
-  MinSpeedPercentToFinishDrift: 0.95
-  DriftControl: 16
-  DriftDampening: 8
+  MinSpeedPercentToFinishDrift: 0.2
+  DriftControl: 14
+  DriftDampening: 2
   DriftSparkVFX: {fileID: 5720418349283321134, guid: 83d0ce15c25af954bbd1425a9ddf8458,
     type: 3}
   DriftSparkHorizontalOffset: 0.15
@@ -22563,12 +22563,12 @@ PrefabInstance:
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000042810537
+      value: 0.0000000042810537
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 4.1988446e-10
+      value: -4.1988446e-10
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
