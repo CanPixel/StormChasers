@@ -19530,8 +19530,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.097611345, y: 0.0000000042810537, z: -4.1988446e-10, w: 0.99522465}
-  m_LocalPosition: {x: 15.98891, y: 3.250001, z: -212.6}
+  m_LocalRotation: {x: 0.06660829, y: -0.7275059, z: 0.07135375, w: 0.6791223}
+  m_LocalPosition: {x: 14.395819, y: 3.250001, z: -206.18773}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -20370,7 +20370,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard
+  m_DefaultControlScheme: 
   m_DefaultActionMap: VehicleControls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 892070512}
@@ -20400,9 +20400,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 939766220}
-  TurnInputName: Horizontal
-  AccelerateButtonName: Accelerate
-  BrakeButtonName: Brake
 --- !u!114 &939766220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20479,28 +20476,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseStats:
     TopSpeed: 40
-    Acceleration: 13
+    Acceleration: 8
     ReverseSpeed: 20
     ReverseAcceleration: 5
     AccelerationCurve: 0.75
-    Braking: 20
+    Braking: 10
     CoastingDrag: 5
     Grip: 0.8
-    Steer: 4.5
+    Steer: 3.8
     AddedGravity: 1.5
+  airSteeringFactor: 5
+  groundSteeringFactor: 1
   m_VisualWheels:
   - {fileID: 1195708245}
   - {fileID: 1195708243}
   - {fileID: 1195708241}
   - {fileID: 1195708239}
   CenterOfMass: {fileID: 1486402510}
-  AirborneReorientationCoefficient: 0.3
-  DriftGrip: 0.3
-  DriftAdditionalSteer: 2
-  MinAngleToFinishDrift: 29
-  MinSpeedPercentToFinishDrift: 0.2
+  AirborneReorientationCoefficient: 2.5
+  DriftGrip: 0.6
+  DriftAdditionalSteer: 2.02
+  MinAngleToFinishDrift: 30
+  MinSpeedPercentToFinishDrift: 0.01
   DriftControl: 14
-  DriftDampening: 2
+  DriftDampening: 12.3
   DriftSparkVFX: {fileID: 5720418349283321134, guid: 83d0ce15c25af954bbd1425a9ddf8458,
     type: 3}
   DriftSparkHorizontalOffset: 0.15
@@ -20547,8 +20546,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939766216}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.98891, y: 0.2500009, z: -206.6}
+  m_LocalRotation: {x: 0, y: -0.7309966, z: 0, w: 0.6823811}
+  m_LocalPosition: {x: 8.41, y: 0.2500009, z: -206.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 325626637}
@@ -20558,7 +20557,7 @@ Transform:
   - {fileID: 1195708238}
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -93.94, z: 0}
 --- !u!114 &939766226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22538,7 +22537,7 @@ PrefabInstance:
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.98891
+      value: 14.395819
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
@@ -22548,27 +22547,27 @@ PrefabInstance:
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -212.6
+      value: -206.18773
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99522465
+      value: 0.6791223
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.097611345
+      value: 0.06660829
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000042810537
+      value: -0.7275059
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -4.1988446e-10
+      value: 0.07135375
       objectReference: {fileID: 0}
     - target: {fileID: 6691645748356329553, guid: 4366ba6a4d5213d4f9fc7bba3e778799,
         type: 3}

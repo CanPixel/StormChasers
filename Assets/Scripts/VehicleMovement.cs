@@ -23,7 +23,7 @@ public class VehicleMovement : MonoBehaviour {
     private Rigidbody rb;
 
     private bool move = false;
-    private float brake = 0;
+    private float brake = 0, gas = 0, steering = 0, drift = 0;
 
     private Vector3 camBaseOffset;
 
@@ -86,16 +86,28 @@ public class VehicleMovement : MonoBehaviour {
 
     public void OnBrake(InputValue val) {
         brake = val.Get<float>();
+        MoveCalc();
+    }
+    public void OnGas(InputValue val) {
+        gas = val.Get<float>();
+        MoveCalc();
+    }
+    public void OnSteer(InputValue val) {
+        steering = val.Get<float>();
+        MoveCalc();
+    }
+    public void OnDrift(InputValue val) {
+        drift = val.Get<float>();
+        MoveCalc();
     }
 
-    public void OnMovement(InputValue value){
-        //context.action.bindings[0];
-        //context.control.
-        //Debug.Log(value.Get<Vector2>());
+    protected void MoveCalc() {
+        //gas brake drift
 
-        moveVec = value.Get<Vector2>();
+        moveVec = new Vector2(steering, gas - brake);
         move = (moveVec != Vector2.zero);
     }
+
     public void OnRotationX(InputValue val) {
         MouseX = val.Get<float>();
     }
@@ -126,7 +138,11 @@ public class VehicleMovement : MonoBehaviour {
     }
 
     public bool IsBraking() {
-        return moveVec.y < 0 || brake > 0;
+        return brake > 0;
+    }
+
+    public bool IsDrifting() {
+        return drift > 0;
     }
 
     public Vector2 GetMouse() {

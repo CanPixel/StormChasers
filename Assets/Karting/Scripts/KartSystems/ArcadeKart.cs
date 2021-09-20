@@ -90,6 +90,10 @@ namespace KartGame.KartSystems
             AddedGravity        = 1f,
         };
 
+        [Header("Can variabelen")]
+        public float airSteeringFactor = 1f; 
+        public float groundSteeringFactor = 1f;
+
         [Header("Vehicle Visual")] 
         public List<GameObject> m_VisualWheels;
 
@@ -312,7 +316,7 @@ namespace KartGame.KartSystems
             // apply vehicle physics
             if (m_CanMove)
             {
-                MoveVehicle(Input.Accelerate, Input.Brake, Input.TurnInput);
+                MoveVehicle(Input.Accelerate, Input.Brake, Input.Drift, Input.TurnInput);
             }
             GroundAirbourne();
 
@@ -331,7 +335,7 @@ namespace KartGame.KartSystems
             for (int i = 0; i < m_Inputs.Length; i++)
             {
                 Input = m_Inputs[i].GenerateInput();
-                WantsToDrift = Input.Brake && Vector3.Dot(Rigidbody.velocity, transform.forward) > 0.0f;
+                WantsToDrift = Input.Drift && Vector3.Dot(Rigidbody.velocity, transform.forward) > 0.0f;
             }
         }
 
@@ -413,7 +417,7 @@ namespace KartGame.KartSystems
             }
         }
 
-        void MoveVehicle(bool accelerate, bool brake, float turnInput)
+        void MoveVehicle(bool accelerate, bool brake, bool drift, float turnInput)
         {
             float accelInput = (accelerate ? 1.0f : 0.0f) - (brake ? 1.0f : 0.0f);
 
@@ -434,6 +438,8 @@ namespace KartGame.KartSystems
             float accelRamp = Mathf.Lerp(multipliedAccelerationCurve, 1, accelRampT * accelRampT);
 
             bool isBraking = (localVelDirectionIsFwd && brake) || (!localVelDirectionIsFwd && accelerate);
+
+            bool dDrift = (localVelDirectionIsFwd && drift) || (!localVelDirectionIsFwd && accelerate);
 
             // if we are braking (moving reverse to where we are going)
             // use the braking accleration instead
@@ -473,8 +479,8 @@ namespace KartGame.KartSystems
             Rigidbody.velocity = newVelocity;
 
             // Drift
-            if (GroundPercent > 0.0f)
-            {
+  /*           if (GroundPercent > 0.0f)
+            { */
                 if (m_InAir)
                 {
                     m_InAir = false;
@@ -482,7 +488,7 @@ namespace KartGame.KartSystems
                 }
 
                 // manual angular velocity coefficient
-                float angularVelocitySteering = 0.4f;
+                float angularVelocitySteering = 0.4f * ((GroundPercent < 1) ? airSteeringFactor : groundSteeringFactor);
                 float angularVelocitySmoothSpeed = 20f;
 
                 // turning is reversed if we're going in reverse and pressing reverse
@@ -516,7 +522,7 @@ namespace KartGame.KartSystems
                 // Drift Management
                 if (!IsDrifting)
                 {
-                    if ((WantsToDrift || isBraking) && currentSpeed > maxSpeed * MinSpeedPercentToFinishDrift)
+                    if ((WantsToDrift || dDrift) && currentSpeed > maxSpeed * MinSpeedPercentToFinishDrift  && GroundPercent > 0f)
                     {
                         IsDrifting = true;
                         m_DriftTurningPower = turningPower + (Mathf.Sign(turningPower) * DriftAdditionalSteer);
@@ -552,16 +558,19 @@ namespace KartGame.KartSystems
                         IsDrifting = false;
                         m_CurrentGrip = m_FinalStats.Grip;
                     }
-
                 }
+
+
+            if(!drift) IsDrifting = false; 
 
                 // rotate our velocity based on current steer value
                 Rigidbody.velocity = Quaternion.AngleAxis(turningPower * Mathf.Sign(localVel.z) * velocitySteering * m_CurrentGrip * Time.fixedDeltaTime, transform.up) * Rigidbody.velocity;
-            }
+/*             }
             else
             {
                 m_InAir = true;
-            }
+            } */
+
 
             bool validPosition = false;
             if (Physics.Raycast(transform.position + (transform.up * 0.1f), -transform.up, out RaycastHit hit, 3.0f, 1 << 9 | 1 << 10 | 1 << 11)) // Layer: ground (9) / Environment(10) / Track (11)

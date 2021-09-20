@@ -19,14 +19,6 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""e01c862e-2886-4f72-9f9d-fd11072e60dd"",
             ""actions"": [
                 {
-                    ""name"": ""Movement"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""c74ae897-76de-4583-b570-22cc05e78343"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""RotationX"",
                     ""type"": ""PassThrough"",
                     ""id"": ""d345a7fa-af93-4ef4-8e54-2e30b6cdade1"",
@@ -49,174 +41,33 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Gas"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""771c0de9-bd73-4909-a8b2-ee573a5846da"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Steer"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""435c2bd3-4839-42c6-9eb9-66d5054465d8"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Drift"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""faba2312-e31c-44f5-a935-e2fe0df2ea26"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": ""WASD"",
-                    ""id"": ""f45910bb-e4db-4425-ae37-70baa0f18042"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""99841566-f1dc-4860-819a-683928ff64d4"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""ba42df89-dede-4e18-8118-0d67afabbb75"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""2b5ba14f-4aa5-4bed-ac74-2d29efb0c73b"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""3bbe19f9-3ab5-4009-9448-d02535ea3d97"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Arrows"",
-                    ""id"": ""736eca1e-7747-437d-9b73-49cabaccccd1"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""94ee0532-d429-4515-ae64-bb2e281a45d9"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""bc9043d0-ed55-4b24-8e36-e740c14d171f"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""428861bf-05b6-4a5e-8200-9c5dcf732448"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""a0ef213c-912b-4a1d-952a-d2a7d1ab3032"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""GAMEPAD"",
-                    ""id"": ""d3594cd9-c6fc-4734-ac49-5a7824430ca3"",
-                    ""path"": ""2DVector(mode=2)"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""1264d3d2-fb5b-4ff8-a7ef-d0bf1df25abb"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""e1784eb2-311a-4446-8424-52af3679c8ea"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""ca81de07-ab64-4256-8385-6dcc2b80a6f6"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""048f1287-3301-4d68-90f7-ed5090a5c166"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
                 {
                     ""name"": """",
                     ""id"": ""32bf4ecb-75ae-4a5c-b926-4e1b3f260bc4"",
@@ -242,7 +93,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""951d765a-f5f3-4cdb-9951-48471712939b"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -258,6 +109,149 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7e287e0-e206-4994-b0d3-3a123a6f636a"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Gas"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7873936d-7253-4d18-8402-f9c2d83ffec4"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Gas"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Arrows"",
+                    ""id"": ""5999e4c3-25f2-4409-9bca-034849368044"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""ca510825-d070-44a5-87e4-80d7ae15ccd9"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""b6d9f61e-29a7-47a8-9a49-c5c36898dd19"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""bae7a2bf-8705-40b2-8fe3-344dcfb9b2c2"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""71567267-f0ab-468e-9671-c7587c23617d"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""e445d7e6-b9a6-4b6d-b8c7-389b74755e54"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""3b572ab5-c38b-434b-9ead-c58886d5e026"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""34a0864f-5f12-49f0-959c-00855fbfc80b"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""a28a0f93-e9be-40f0-99ff-d64a19d005f4"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f1016fb-38bc-44f8-a82d-284f9ac335ca"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c9baff7-6111-4b6e-abc2-aabb4cd62405"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Drift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -302,10 +296,12 @@ public class @Controls : IInputActionCollection, IDisposable
 }");
         // VehicleControls
         m_VehicleControls = asset.FindActionMap("VehicleControls", throwIfNotFound: true);
-        m_VehicleControls_Movement = m_VehicleControls.FindAction("Movement", throwIfNotFound: true);
         m_VehicleControls_RotationX = m_VehicleControls.FindAction("RotationX", throwIfNotFound: true);
         m_VehicleControls_RotationY = m_VehicleControls.FindAction("RotationY", throwIfNotFound: true);
         m_VehicleControls_Brake = m_VehicleControls.FindAction("Brake", throwIfNotFound: true);
+        m_VehicleControls_Gas = m_VehicleControls.FindAction("Gas", throwIfNotFound: true);
+        m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
+        m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -357,18 +353,22 @@ public class @Controls : IInputActionCollection, IDisposable
     // VehicleControls
     private readonly InputActionMap m_VehicleControls;
     private IVehicleControlsActions m_VehicleControlsActionsCallbackInterface;
-    private readonly InputAction m_VehicleControls_Movement;
     private readonly InputAction m_VehicleControls_RotationX;
     private readonly InputAction m_VehicleControls_RotationY;
     private readonly InputAction m_VehicleControls_Brake;
+    private readonly InputAction m_VehicleControls_Gas;
+    private readonly InputAction m_VehicleControls_Steer;
+    private readonly InputAction m_VehicleControls_Drift;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
         public VehicleControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_VehicleControls_Movement;
         public InputAction @RotationX => m_Wrapper.m_VehicleControls_RotationX;
         public InputAction @RotationY => m_Wrapper.m_VehicleControls_RotationY;
         public InputAction @Brake => m_Wrapper.m_VehicleControls_Brake;
+        public InputAction @Gas => m_Wrapper.m_VehicleControls_Gas;
+        public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
+        public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -378,9 +378,6 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_VehicleControlsActionsCallbackInterface != null)
             {
-                @Movement.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnMovement;
-                @Movement.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnMovement;
-                @Movement.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnMovement;
                 @RotationX.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
                 @RotationX.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
                 @RotationX.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
@@ -390,13 +387,19 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Brake.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
                 @Brake.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
                 @Brake.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
+                @Gas.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
+                @Gas.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
+                @Gas.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
+                @Steer.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
+                @Steer.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
+                @Steer.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
+                @Drift.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
+                @Drift.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
+                @Drift.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
                 @RotationX.started += instance.OnRotationX;
                 @RotationX.performed += instance.OnRotationX;
                 @RotationX.canceled += instance.OnRotationX;
@@ -406,6 +409,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Brake.started += instance.OnBrake;
                 @Brake.performed += instance.OnBrake;
                 @Brake.canceled += instance.OnBrake;
+                @Gas.started += instance.OnGas;
+                @Gas.performed += instance.OnGas;
+                @Gas.canceled += instance.OnGas;
+                @Steer.started += instance.OnSteer;
+                @Steer.performed += instance.OnSteer;
+                @Steer.canceled += instance.OnSteer;
+                @Drift.started += instance.OnDrift;
+                @Drift.performed += instance.OnDrift;
+                @Drift.canceled += instance.OnDrift;
             }
         }
     }
@@ -455,10 +467,12 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IVehicleControlsActions
     {
-        void OnMovement(InputAction.CallbackContext context);
         void OnRotationX(InputAction.CallbackContext context);
         void OnRotationY(InputAction.CallbackContext context);
         void OnBrake(InputAction.CallbackContext context);
+        void OnGas(InputAction.CallbackContext context);
+        void OnSteer(InputAction.CallbackContext context);
+        void OnDrift(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
