@@ -105,10 +105,16 @@ namespace KartGame.KartSystems
         public float AirborneReorientationCoefficient = 3.0f;
 
         [Header("Drifting")]
+        [Range(0.0f, 10.0f), Tooltip("Reduction multiplier for the top speed when drifting.")]
+        public float DriftSpeedReduction = 5.0f;
         [Range(0.01f, 1.0f), Tooltip("The grip value when drifting.")]
         public float DriftGrip = 0.4f;
-        [Range(0.0f, 10.0f), Tooltip("Additional steer when the kart is drifting.")]
-        public float DriftAdditionalSteer = 5.0f;
+        [Range(0.0f, 10.0f), Tooltip("Current Additional steer when the kart is drifting.")]
+        [HideInInspector] public float DriftAdditionalSteer = 5.0f;     
+        [Range(0.0f, 10.0f), Tooltip("Max Additional steer when the kart is drifting.")]
+        public float MaxDriftAdditionalSteer = 5.0f;
+        [Range(0.0f, 10.0f), Tooltip("Amount of seconds for a drift to reach max additional steer.")]
+        public float SecondsToFullDrift = 2.0f;
         [Range(1.0f, 30.0f), Tooltip("The higher the angle, the easier it is to regain full grip.")]
         public float MinAngleToFinishDrift = 10.0f;
         [Range(0.01f, 0.99f), Tooltip("Mininum speed percentage to switch back to full grip.")]
@@ -286,6 +292,7 @@ namespace KartGame.KartSystems
 
         void FixedUpdate()
         {
+            Debug.Log(DriftAdditionalSteer); 
             UpdateSuspensionParams(FrontLeftWheel);
             UpdateSuspensionParams(FrontRightWheel);
             UpdateSuspensionParams(RearLeftWheel);
@@ -538,7 +545,10 @@ namespace KartGame.KartSystems
                     if (turnInputAbs < k_NullInput)
                         m_DriftTurningPower = Mathf.MoveTowards(m_DriftTurningPower, 0.0f, Mathf.Clamp01(DriftDampening * Time.fixedDeltaTime));
 
-                    // Update the turning power based on input
+                // Update the turning power based on input
+                   
+                if (DriftAdditionalSteer < MaxDriftAdditionalSteer) DriftAdditionalSteer += MaxDriftAdditionalSteer/SecondsToFullDrift * Time.deltaTime; //Simcha code
+
                     float driftMaxSteerValue = m_FinalStats.Steer + DriftAdditionalSteer;
                     m_DriftTurningPower = Mathf.Clamp(m_DriftTurningPower + (turnInput * Mathf.Clamp01(DriftControl * Time.fixedDeltaTime)), -driftMaxSteerValue, driftMaxSteerValue);
 
@@ -561,7 +571,11 @@ namespace KartGame.KartSystems
                 }
 
 
-            if(!drift) IsDrifting = false; 
+            if (!drift)
+            {
+                DriftAdditionalSteer = 0f; 
+                IsDrifting = false;
+            }
 
                 // rotate our velocity based on current steer value
                 Rigidbody.velocity = Quaternion.AngleAxis(turningPower * Mathf.Sign(localVel.z) * velocitySteering * m_CurrentGrip * Time.fixedDeltaTime, transform.up) * Rigidbody.velocity;
