@@ -65,6 +65,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotation"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ba13ece7-257b-4717-8d6f-f35fa30272e8"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -254,6 +262,61 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Drift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""0ec00ded-249c-4b76-b7c0-e72ff60c207e"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""97597b24-1679-449c-9ac4-b9135a1b9e4b"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2593c55b-9205-4293-96bf-fd5ec3dc23af"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""15147479-fd14-4f80-ac5a-97d9cf299242"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e1c04a0f-3d36-4cb0-8113-cbdbfb6842b9"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -302,6 +365,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Gas = m_VehicleControls.FindAction("Gas", throwIfNotFound: true);
         m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
         m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
+        m_VehicleControls_Rotation = m_VehicleControls.FindAction("Rotation", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -359,6 +423,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Gas;
     private readonly InputAction m_VehicleControls_Steer;
     private readonly InputAction m_VehicleControls_Drift;
+    private readonly InputAction m_VehicleControls_Rotation;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -369,6 +434,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Gas => m_Wrapper.m_VehicleControls_Gas;
         public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
         public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
+        public InputAction @Rotation => m_Wrapper.m_VehicleControls_Rotation;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -396,6 +462,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Drift.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
                 @Drift.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
                 @Drift.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
+                @Rotation.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
+                @Rotation.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
+                @Rotation.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -418,6 +487,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Drift.started += instance.OnDrift;
                 @Drift.performed += instance.OnDrift;
                 @Drift.canceled += instance.OnDrift;
+                @Rotation.started += instance.OnRotation;
+                @Rotation.performed += instance.OnRotation;
+                @Rotation.canceled += instance.OnRotation;
             }
         }
     }
@@ -473,6 +545,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnGas(InputAction.CallbackContext context);
         void OnSteer(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
+        void OnRotation(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
