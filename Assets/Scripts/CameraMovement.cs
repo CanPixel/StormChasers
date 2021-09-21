@@ -8,6 +8,9 @@ public class CameraMovement : MonoBehaviour {
     public Transform CamPosition;
     public float damping = 1f;
 
+    public Light[] brakeLights;
+    public Material brakeMaterial;
+
     public Cinemachine.CinemachineFreeLook freeLook;
 
     public float cameraRotateSpeedX = 10.0f, cameraRotateSpeedY = 10.0f;
@@ -32,6 +35,7 @@ public class CameraMovement : MonoBehaviour {
     private Vector2 rotationInput;
 
     public void OnEnable() {
+        SetBrakeLights(false);
      //   Cursor.visible = false;
         //Cursor.lockState = CursorLockMode.Confined;
         if(controls == null) controls = new Controls();
@@ -91,6 +95,8 @@ public class CameraMovement : MonoBehaviour {
 
     public void OnBrake(InputValue val) {
         brake = val.Get<float>();
+
+        SetBrakeLights(brake > 0);
         MoveCalc();
     }
     public void OnGas(InputValue val) {
@@ -104,6 +110,12 @@ public class CameraMovement : MonoBehaviour {
     public void OnDrift(InputValue val) {
         drift = val.Get<float>();
         MoveCalc();
+    }
+
+    protected void SetBrakeLights(bool on) {
+        foreach(var i in brakeLights) i.enabled = on;
+        brakeMaterial.SetColor("_EmissionColor", on ? new Color(1, 0, 0) : new Color(0, 0, 0));
+        brakeMaterial.SetColor("_Color", on ? new Color(1, 0, 0) : new Color(0, 0, 0));
     }
 
     protected void MoveCalc() {
