@@ -32,8 +32,8 @@ public class CameraMovement : MonoBehaviour {
     private Vector2 rotationInput;
 
     public void OnEnable() {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
+     //   Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Confined;
         if(controls == null) controls = new Controls();
         if(rb == null) rb = GetComponent<Rigidbody>();
         if(playerInput == null) playerInput = GetComponent<PlayerInput>();
@@ -112,9 +112,11 @@ public class CameraMovement : MonoBehaviour {
     }
 
     public void OnRotationX(InputValue val) {
+        if(playerInput.currentControlScheme == "Gamepad") return;
         MouseX = val.Get<float>();
     }
     public void OnRotationY(InputValue val) {
+        if(playerInput.currentControlScheme == "Gamepad") return;
         MouseY = val.Get<float>();
     }
     public void OnRotation(InputValue val) {
@@ -131,9 +133,9 @@ public class CameraMovement : MonoBehaviour {
         playerInput.SwitchCurrentActionMap(map);
     }
 
-    public Vector2 GetMousePos() {
+/*     public Vector2 GetMousePos() {
         return Mouse.current.position.ReadValue();
-    }
+    } */
 
     public float IsGassing() {
         return moveVec.y;
@@ -151,7 +153,7 @@ public class CameraMovement : MonoBehaviour {
         return drift > 0;
     }
 
-    public Vector2 GetMouse() {
+/*     public Vector2 GetMouse() {
         return new Vector2(MouseX, MouseY);
-    }
+    } */
 }

@@ -105,8 +105,6 @@ namespace KartGame.KartSystems
         public float AirborneReorientationCoefficient = 3.0f;
 
         [Header("Drifting")]
-        [Range(0.0f, 10.0f), Tooltip("Reduction multiplier for the top speed when drifting.")]
-        public float DriftSpeedReduction = 5.0f;
         [Range(0.01f, 1.0f), Tooltip("The grip value when drifting.")]
         public float DriftGrip = 0.4f;
         [Range(0.0f, 10.0f), Tooltip("Current Additional steer when the kart is drifting.")]
@@ -292,7 +290,6 @@ namespace KartGame.KartSystems
 
         void FixedUpdate()
         {
-            Debug.Log(DriftAdditionalSteer); 
             UpdateSuspensionParams(FrontLeftWheel);
             UpdateSuspensionParams(FrontRightWheel);
             UpdateSuspensionParams(RearLeftWheel);
@@ -495,7 +492,7 @@ namespace KartGame.KartSystems
                 }
 
                 // manual angular velocity coefficient
-                float angularVelocitySteering = 0.4f * ((GroundPercent < 1) ? airSteeringFactor : groundSteeringFactor);
+                float angularVelocitySteering = 0.4f * ((GroundPercent < 1) ? airSteeringFactor * (1f - GroundPercent) : groundSteeringFactor);
                 float angularVelocitySmoothSpeed = 20f;
 
                 // turning is reversed if we're going in reverse and pressing reverse
