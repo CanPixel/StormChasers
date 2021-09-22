@@ -1,9 +1,23 @@
-- after drift, mini boost?
-
-- camera better while drifting
-
-- trails
+- | after drift, mini boost?
+- | camera better while drifting
 
 
+- Brake + gas should be = 0
 
-- Right trigger should be analog aka hoe meer force hoe meer velocity
+- FOV increase = car speed
+
+- speed boost / cam adjustment vlak na drift exit
+
+
+
+
+
+
+
+
+UPDATE:
+- Achterlichten
+- Je kan nu ''langzaam rijden'' --> analog gas trigger
+- wiggle anim / bounce cassis anim
+- smoke particles / fumes
+- model scaling animation / bobbing

@@ -4,7 +4,7 @@ namespace KartGame.KartSystems
 {
     public struct InputData
     {
-        public bool Accelerate;
+        public float AccelerateInput;
         public bool Brake, Drift;
         public float TurnInput;
     }

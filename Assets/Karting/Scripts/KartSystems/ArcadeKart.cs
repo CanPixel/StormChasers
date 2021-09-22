@@ -75,6 +75,8 @@ namespace KartGame.KartSystems
         public InputData Input     { get; private set; }
         public float AirPercent    { get; private set; }
         public float GroundPercent { get; private set; }
+        
+        public Cinemachine.CinemachineFreeLook look;
 
         public ArcadeKart.Stats baseStats = new ArcadeKart.Stats
         {
@@ -320,7 +322,7 @@ namespace KartGame.KartSystems
             // apply vehicle physics
             if (m_CanMove)
             {
-                MoveVehicle(Input.Accelerate, Input.Brake, Input.Drift, Input.TurnInput);
+                MoveVehicle(Input.AccelerateInput, Input.Brake, Input.Drift, Input.TurnInput);
             }
             GroundAirbourne();
 
@@ -401,7 +403,7 @@ namespace KartGame.KartSystems
             else
             {
                 // use this value to play kart sound when it is waiting the race start countdown.
-                return Input.Accelerate ? 1.0f : 0.0f;
+                return Input.AccelerateInput;
             }
         }
 
@@ -421,9 +423,9 @@ namespace KartGame.KartSystems
             }
         }
 
-        void MoveVehicle(bool accelerate, bool brake, bool drift, float turnInput)
+        void MoveVehicle(float accelerate, bool brake, bool drift, float turnInput)
         {
-            float accelInput = (accelerate ? 1.0f : 0.0f) - (brake ? 1.0f : 0.0f);
+            float accelInput = accelerate - (brake ? 1.0f : 0.0f);
 
             // manual acceleration curve coefficient scalar
             float accelerationCurveCoeff = 5;
@@ -441,9 +443,9 @@ namespace KartGame.KartSystems
             float multipliedAccelerationCurve = m_FinalStats.AccelerationCurve * accelerationCurveCoeff;
             float accelRamp = Mathf.Lerp(multipliedAccelerationCurve, 1, accelRampT * accelRampT);
 
-            bool isBraking = (localVelDirectionIsFwd && brake) || (!localVelDirectionIsFwd && accelerate);
+            bool isBraking = (localVelDirectionIsFwd && brake) || (!localVelDirectionIsFwd && accelerate > 0);
 
-            bool dDrift = (localVelDirectionIsFwd && drift) || (!localVelDirectionIsFwd && accelerate);
+            bool dDrift = (localVelDirectionIsFwd && drift) || (!localVelDirectionIsFwd && accelerate > 0);
 
             // if we are braking (moving reverse to where we are going)
             // use the braking accleration instead
@@ -563,16 +565,24 @@ namespace KartGame.KartSystems
                     {
                         // No Input, and car aligned with speed direction => Stop the drift
                         IsDrifting = false;
+                        //look.ForceCameraPosition(transform.position, transform.rotation);
                         m_CurrentGrip = m_FinalStats.Grip;
+           //             m_DriftTurningPower = 0;
                     }
                 }
+
+           // Debug.Log(IsDrifting + " | " + dDrift + " | " + m_DriftTurningPower);
 
 
             if (!drift)
             {
                 DriftAdditionalSteer = 0f; 
+                if(IsDrifting) {
+                    //look.ForceCameraPosition(transform.position, transform.rotation);
+                }
                 IsDrifting = false;
-            }
+         //       m_DriftTurningPower = 0;
+            } 
 
                 // rotate our velocity based on current steer value
                 Rigidbody.velocity = Quaternion.AngleAxis(turningPower * Mathf.Sign(localVel.z) * velocitySteering * m_CurrentGrip * Time.fixedDeltaTime, transform.up) * Rigidbody.velocity;

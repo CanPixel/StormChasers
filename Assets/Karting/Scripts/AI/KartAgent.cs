@@ -88,7 +88,7 @@ namespace KartGame.AI
 #endregion
 
         ArcadeKart m_Kart;
-        bool m_Acceleration;
+        float m_Acceleration;
         bool m_Brake;
         float m_Steering;
         int m_CheckpointIndex;
@@ -139,7 +139,8 @@ namespace KartGame.AI
                         transform.position = checkpoint.position;
                         m_Kart.Rigidbody.velocity = default;
                         m_Steering = 0f;
-						m_Acceleration = m_Brake = false; 
+						m_Acceleration = 0;
+                        m_Brake = false; 
                     }
 
                     break;
@@ -236,7 +237,7 @@ namespace KartGame.AI
                 sensor.AddObservation(hit ? hitInfo.distance : current.RayDistance);
             }
 
-            sensor.AddObservation(m_Acceleration);
+            sensor.AddObservation(m_Acceleration > 0);
         }
 
         public override void OnActionReceived(float[] vectorAction)
@@ -254,7 +255,7 @@ namespace KartGame.AI
 
             // Add rewards if the agent is heading in the right direction
             AddReward(reward * TowardsCheckpointReward);
-            AddReward((m_Acceleration && !m_Brake ? 1.0f : 0.0f) * AccelerationReward);
+            AddReward((m_Acceleration > 0 && !m_Brake ? 1.0f : 0.0f) * AccelerationReward);
             AddReward(m_Kart.LocalSpeed() * SpeedReward);
         }
 
@@ -268,7 +269,7 @@ namespace KartGame.AI
                     transform.localRotation = collider.transform.rotation;
                     transform.position = collider.transform.position;
                     m_Kart.Rigidbody.velocity = default;
-                    m_Acceleration = false;
+                    m_Acceleration = 0;
                     m_Brake = false;
                     m_Steering = 0f;
                     break;
@@ -280,7 +281,7 @@ namespace KartGame.AI
         void InterpretDiscreteActions(float[] actions)
         {
             m_Steering = actions[0] - 1f;
-            m_Acceleration = actions[1] >= 1.0f;
+            //m_Acceleration = actions[1] >= 1.0f;
             m_Brake = actions[1] < 1.0f;
         }
 
@@ -288,7 +289,7 @@ namespace KartGame.AI
         {
             return new InputData
             {
-                Accelerate = m_Acceleration,
+                AccelerateInput = m_Acceleration,
                 Brake = m_Brake,
                 TurnInput = m_Steering
             };

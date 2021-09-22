@@ -9,7 +9,7 @@ namespace KartGame.KartSystems {
         public override InputData GenerateInput() {
             return new InputData
             {
-                Accelerate = movement.IsGassing() > 0,
+                AccelerateInput = movement.IsGassing(),
                 Brake = movement.IsBraking(),
                 Drift = movement.IsDrifting(),
                 TurnInput = movement.IsSteering()

@@ -19,22 +19,6 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""e01c862e-2886-4f72-9f9d-fd11072e60dd"",
             ""actions"": [
                 {
-                    ""name"": ""RotationX"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""d345a7fa-af93-4ef4-8e54-2e30b6cdade1"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""RotationY"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""6f601d07-089a-4a79-b81a-8b974740e942"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Brake"",
                     ""type"": ""PassThrough"",
                     ""id"": ""bbe92e8b-8b07-4e70-ae41-67ccbbdc6ad2"",
@@ -67,7 +51,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Rotation"",
+                    ""name"": ""Looking"",
                     ""type"": ""PassThrough"",
                     ""id"": ""ba13ece7-257b-4717-8d6f-f35fa30272e8"",
                     ""expectedControlType"": ""Axis"",
@@ -76,28 +60,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""32bf4ecb-75ae-4a5c-b926-4e1b3f260bc4"",
-                    ""path"": ""<Mouse>/delta/x"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""RotationX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""55befc5c-1e6a-4a66-bfe4-c5829a48f64a"",
-                    ""path"": ""<Mouse>/delta/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""RotationY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""951d765a-f5f3-4cdb-9951-48471712939b"",
@@ -254,6 +216,17 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""fe18a06f-00ce-4a23-addf-4d18cfbec538"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""6c9baff7-6111-4b6e-abc2-aabb4cd62405"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
@@ -270,7 +243,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Looking"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -281,7 +254,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -292,7 +265,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -303,7 +276,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -314,7 +287,62 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Looking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""id"": ""259e0cde-d94d-4fb9-a7a3-db0338d86368"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Looking"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""75d5813f-654f-4e8f-af44-3b6325d4c4c1"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert,Scale(factor=0.005)"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Looking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""4f37edf5-7030-4c73-867f-b304ca762e5d"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0.005)"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Looking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a53a1763-43e0-4271-bb8e-d32f69d563fa"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert,Scale(factor=0.005)"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Looking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""a2803dbd-88b3-407c-984a-5e5fc9b76ff0"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0.005)"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -359,13 +387,11 @@ public class @Controls : IInputActionCollection, IDisposable
 }");
         // VehicleControls
         m_VehicleControls = asset.FindActionMap("VehicleControls", throwIfNotFound: true);
-        m_VehicleControls_RotationX = m_VehicleControls.FindAction("RotationX", throwIfNotFound: true);
-        m_VehicleControls_RotationY = m_VehicleControls.FindAction("RotationY", throwIfNotFound: true);
         m_VehicleControls_Brake = m_VehicleControls.FindAction("Brake", throwIfNotFound: true);
         m_VehicleControls_Gas = m_VehicleControls.FindAction("Gas", throwIfNotFound: true);
         m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
         m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
-        m_VehicleControls_Rotation = m_VehicleControls.FindAction("Rotation", throwIfNotFound: true);
+        m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -417,24 +443,20 @@ public class @Controls : IInputActionCollection, IDisposable
     // VehicleControls
     private readonly InputActionMap m_VehicleControls;
     private IVehicleControlsActions m_VehicleControlsActionsCallbackInterface;
-    private readonly InputAction m_VehicleControls_RotationX;
-    private readonly InputAction m_VehicleControls_RotationY;
     private readonly InputAction m_VehicleControls_Brake;
     private readonly InputAction m_VehicleControls_Gas;
     private readonly InputAction m_VehicleControls_Steer;
     private readonly InputAction m_VehicleControls_Drift;
-    private readonly InputAction m_VehicleControls_Rotation;
+    private readonly InputAction m_VehicleControls_Looking;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
         public VehicleControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @RotationX => m_Wrapper.m_VehicleControls_RotationX;
-        public InputAction @RotationY => m_Wrapper.m_VehicleControls_RotationY;
         public InputAction @Brake => m_Wrapper.m_VehicleControls_Brake;
         public InputAction @Gas => m_Wrapper.m_VehicleControls_Gas;
         public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
         public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
-        public InputAction @Rotation => m_Wrapper.m_VehicleControls_Rotation;
+        public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -444,12 +466,6 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_VehicleControlsActionsCallbackInterface != null)
             {
-                @RotationX.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
-                @RotationX.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
-                @RotationX.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationX;
-                @RotationY.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
-                @RotationY.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
-                @RotationY.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotationY;
                 @Brake.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
                 @Brake.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
                 @Brake.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
@@ -462,19 +478,13 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Drift.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
                 @Drift.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
                 @Drift.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
-                @Rotation.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
-                @Rotation.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
-                @Rotation.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRotation;
+                @Looking.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
+                @Looking.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
+                @Looking.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @RotationX.started += instance.OnRotationX;
-                @RotationX.performed += instance.OnRotationX;
-                @RotationX.canceled += instance.OnRotationX;
-                @RotationY.started += instance.OnRotationY;
-                @RotationY.performed += instance.OnRotationY;
-                @RotationY.canceled += instance.OnRotationY;
                 @Brake.started += instance.OnBrake;
                 @Brake.performed += instance.OnBrake;
                 @Brake.canceled += instance.OnBrake;
@@ -487,9 +497,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Drift.started += instance.OnDrift;
                 @Drift.performed += instance.OnDrift;
                 @Drift.canceled += instance.OnDrift;
-                @Rotation.started += instance.OnRotation;
-                @Rotation.performed += instance.OnRotation;
-                @Rotation.canceled += instance.OnRotation;
+                @Looking.started += instance.OnLooking;
+                @Looking.performed += instance.OnLooking;
+                @Looking.canceled += instance.OnLooking;
             }
         }
     }
@@ -539,13 +549,11 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IVehicleControlsActions
     {
-        void OnRotationX(InputAction.CallbackContext context);
-        void OnRotationY(InputAction.CallbackContext context);
         void OnBrake(InputAction.CallbackContext context);
         void OnGas(InputAction.CallbackContext context);
         void OnSteer(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
-        void OnRotation(InputAction.CallbackContext context);
+        void OnLooking(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
