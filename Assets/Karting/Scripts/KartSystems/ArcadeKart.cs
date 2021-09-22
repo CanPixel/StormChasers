@@ -423,8 +423,29 @@ namespace KartGame.KartSystems
             }
         }
 
+        public void LockDriftDirection(float steer) {
+            driftDirection = steer;
+        }
+        private float driftDirection = 0;
+
         void MoveVehicle(float accelerate, bool brake, bool drift, float turnInput)
         {
+            float normalizedTurn = turnInput;
+
+            if(drift && driftDirection != 0) {
+                var ding = normalizedTurn;
+                if(driftDirection > 0) normalizedTurn = Mathf.Clamp(normalizedTurn, 0, 1);
+                else if(driftDirection < 0) normalizedTurn = Mathf.Clamp(normalizedTurn, -1, 0); 
+
+                if((ding > 0 && driftDirection < 0) || (ding < 0 && driftDirection > 0)) {
+                    driftDirection = 0;
+                    DriftAdditionalSteer = 0;
+                    //IsDrifting = false;
+                }
+
+                //Debug.Log("[" + driftDirection + "] " + ding + " | normalized: " + normalizedTurn);
+            }
+
             float accelInput = accelerate - (brake ? 1.0f : 0.0f);
 
             // manual acceleration curve coefficient scalar
@@ -444,17 +465,15 @@ namespace KartGame.KartSystems
             float accelRamp = Mathf.Lerp(multipliedAccelerationCurve, 1, accelRampT * accelRampT);
 
             bool isBraking = (localVelDirectionIsFwd && brake) || (!localVelDirectionIsFwd && accelerate > 0);
-
             bool dDrift = (localVelDirectionIsFwd && drift) || (!localVelDirectionIsFwd && accelerate > 0);
 
             // if we are braking (moving reverse to where we are going)
             // use the braking accleration instead
             float finalAccelPower = isBraking ? m_FinalStats.Braking : accelPower;
-
             float finalAcceleration = finalAccelPower * accelRamp;
 
             // apply inputs to forward/backward
-            float turningPower = IsDrifting ? m_DriftTurningPower : turnInput * m_FinalStats.Steer;
+            float turningPower = IsDrifting ? m_DriftTurningPower : normalizedTurn * m_FinalStats.Steer;
 
             Quaternion turnAngle = Quaternion.AngleAxis(turningPower, transform.up);
             Vector3 fwd = turnAngle * transform.forward;
@@ -540,7 +559,7 @@ namespace KartGame.KartSystems
 
                 if (IsDrifting)
                 {
-                    float turnInputAbs = Mathf.Abs(turnInput);
+                    float turnInputAbs = Mathf.Abs(normalizedTurn);
                     if (turnInputAbs < k_NullInput)
                         m_DriftTurningPower = Mathf.MoveTowards(m_DriftTurningPower, 0.0f, Mathf.Clamp01(DriftDampening * Time.fixedDeltaTime));
 
@@ -549,7 +568,7 @@ namespace KartGame.KartSystems
                 if (DriftAdditionalSteer < MaxDriftAdditionalSteer) DriftAdditionalSteer += MaxDriftAdditionalSteer/SecondsToFullDrift * Time.deltaTime; //Simcha code
 
                     float driftMaxSteerValue = m_FinalStats.Steer + DriftAdditionalSteer;
-                    m_DriftTurningPower = Mathf.Clamp(m_DriftTurningPower + (turnInput * Mathf.Clamp01(DriftControl * Time.fixedDeltaTime)), -driftMaxSteerValue, driftMaxSteerValue);
+                    m_DriftTurningPower = Mathf.Clamp(m_DriftTurningPower + (normalizedTurn * Mathf.Clamp01(DriftControl * Time.fixedDeltaTime)), -driftMaxSteerValue, driftMaxSteerValue);
 
                     bool facingVelocity = Vector3.Dot(Rigidbody.velocity.normalized, transform.forward * Mathf.Sign(accelInput)) > Mathf.Cos(MinAngleToFinishDrift * Mathf.Deg2Rad);
 
@@ -567,18 +586,20 @@ namespace KartGame.KartSystems
                         IsDrifting = false;
                         //look.ForceCameraPosition(transform.position, transform.rotation);
                         m_CurrentGrip = m_FinalStats.Grip;
+                        //driftEntered = false;
            //             m_DriftTurningPower = 0;
                     }
                 }
 
-           // Debug.Log(IsDrifting + " | " + dDrift + " | " + m_DriftTurningPower);
-
-
             if (!drift)
             {
                 DriftAdditionalSteer = 0f; 
+                driftDirection = 0;
+
+                //EXIT
                 if(IsDrifting) {
-                    //look.ForceCameraPosition(transform.position, transform.rotation);
+               //     look.ForceCameraPosition(transform.position, transform.rotation);
+
                 }
                 IsDrifting = false;
          //       m_DriftTurningPower = 0;

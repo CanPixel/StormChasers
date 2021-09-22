@@ -8,16 +8,8 @@
 
 - speed boost / cam adjustment vlak na drift exit
 
+- wobble on land
 
+- speed boost trigger
 
-
-
-
-
-
-UPDATE:
-- Achterlichten
-- Je kan nu ''langzaam rijden'' --> analog gas trigger
-- wiggle anim / bounce cassis anim
-- smoke particles / fumes
-- model scaling animation / bobbing
+- vehicle damage ontrigger

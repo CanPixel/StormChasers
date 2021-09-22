@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using KartGame.KartSystems;
 
 public class CameraMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
 
+    public ArcadeKart kart;
     public Cinemachine.CinemachineFreeLook freeLook;
 
     public float cameraRotateSpeedX = 10.0f, cameraRotateSpeedY = 10.0f;
-
-    public bool enableCamMovement = true;
 
     private float currentSpeed = 0;
     protected Vector2 moveVec = Vector2.zero;
@@ -57,6 +57,7 @@ public class CameraMovement : MonoBehaviour {
     public void OnDrift(InputValue val) {
         drift = val.Get<float>();
         MoveCalc();
+        if(drift == 1 && steering != 0) kart.LockDriftDirection(steering);
     }
 
     protected void SetBrakeLights(bool on) {

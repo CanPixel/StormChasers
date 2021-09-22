@@ -16,6 +16,7 @@ public class CarAnimation : MonoBehaviour {
 
     public float wiggleSpeed = 1, wiggleRange = 1;
     public float wiggleSpeedCap = 10, wiggleRangeCap = 10;
+    public float GasBounceReduction = 6f;
 
     public float dampening = 20f;
 
@@ -30,7 +31,7 @@ public class CarAnimation : MonoBehaviour {
         var speed = rb.velocity.magnitude / kart.baseStats.TopSpeed;
 
         for(int i = 0; i < fumes.Length; i++) {
-            if(speed > 0.01f) fumes[i].Play();
+            if(movement.IsGassing() > 0.01f) fumes[i].Play();
             else fumes[i].Stop();
         }
 
@@ -39,7 +40,6 @@ public class CarAnimation : MonoBehaviour {
 
         chassis.transform.localRotation = Quaternion.Lerp(chassis.transform.localRotation, Quaternion.Euler(b), Time.deltaTime * dampening);
 
-
         if(gasBounce > 0) gasBounce -= Time.deltaTime * 3f;
 
         if(lastGas != movement.IsGassing()) {
@@ -47,6 +47,6 @@ public class CarAnimation : MonoBehaviour {
             lastGas = movement.IsGassing();
         }
 
-        chassis.transform.localScale = Vector3.Lerp(chassis.transform.localScale, baseScale + new Vector3(0, gasBounce / 5f, 0), Time.deltaTime * 24f);
+        chassis.transform.localScale = Vector3.Lerp(chassis.transform.localScale, baseScale + new Vector3(0, gasBounce / GasBounceReduction, 0), Time.deltaTime * 24f);
     }
 }
