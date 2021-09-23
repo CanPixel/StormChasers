@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SpeedLines : MonoBehaviour
 {
-
     public ParticleSystem speedPS;
-    private int lineSpeed;
-    private int currVel;
-    private int minVel;
+    public float minSpeed = 5.0f;
+    public bool velocityAmount = true;
+    public bool velocityPlay = true;
+    private int lineAmount = 0;
+    private int currVel = 0;
+    private int minVel;   
     private Vector3 prevPos;
 
 
@@ -19,10 +21,25 @@ public class SpeedLines : MonoBehaviour
 
     void FixedUpdate()
     {
-        lineSpeed = (minVel * minVel) * 15;
         ParticleSystem.EmissionModule psEmission = speedPS.emission;
-        psEmission.rateOverTime = lineSpeed;
-        Debug.Log(lineSpeed);
+
+        if (currVel >= 0 && velocityAmount == true)
+        {
+            lineAmount = (minVel * minVel) * 25;
+            psEmission.rateOverTime = lineAmount;
+        }
+        if (currVel >= 0 && velocityPlay == true)
+        {
+            lineAmount = 100;
+            PlayParticle();
+        }
+
+    }
+
+    void PlayParticle()
+    {
+        speedPS.Play();
+        Debug.Log(currVel);
     }
 
     IEnumerator CalcVelocity()
@@ -34,8 +51,9 @@ public class SpeedLines : MonoBehaviour
             // Wait till it the end of the frame
             yield return new WaitForEndOfFrame();
             // Calculate velocity: Velocity = DeltaPosition / DeltaTime
-            currVel = Mathf.RoundToInt((Vector3.Distance(transform.position, prevPos) / Time.fixedDeltaTime) - 5.0f);
+            currVel = Mathf.RoundToInt((Vector3.Distance(transform.position, prevPos) / Time.fixedDeltaTime) - minSpeed);
             minVel = Mathf.Clamp(currVel, 0, 10);
         }
     }
+
 }
