@@ -7,34 +7,20 @@ public class VehicleDamage : MonoBehaviour {
     public float YforceDamp = 0.1f; // 0.0 - 1.0
     public float demolutionRange = 0.5f;
     public float impactDirManipulator = 0.0f;
-    public SkinnedMeshRenderer[] optionalMeshList;
-    public MeshFilter[] optionalMeshListRender;
+    public MeshFilter[] optionalMeshList;
     public AudioSource crashSound;
-    public bool useSkinnedMesh = true;
 
-    private SkinnedMeshRenderer[] meshfilters;
-    private MeshFilter[] meshfilterssss;
+    private MeshFilter[] meshFilters;
     private float sqrDemRange;
 
     public void Start() {
         sqrDemRange = demolutionRange * demolutionRange;
 
-        if(useSkinnedMesh) {
-            if (optionalMeshList.Length > 0) meshfilters = optionalMeshList;
-            else meshfilters = GetComponentsInChildren<SkinnedMeshRenderer>();
+        meshFilters = optionalMeshList;
 
-            for(int i = 0; i < meshfilters.Length; i++) {
-                var mesh = Mesh.Instantiate(meshfilters[i].sharedMesh);
-                meshfilters[i].sharedMesh = mesh;
-            }
-        } else {
-            if (optionalMeshList.Length > 0) meshfilterssss = optionalMeshListRender;
-            else meshfilterssss = GetComponentsInChildren<MeshFilter>();
-
-            for(int i = 0; i < meshfilterssss.Length; i++) {
-                var mesh = Mesh.Instantiate(meshfilterssss[i].mesh);
-                meshfilterssss[i].mesh = mesh;
-            }
+        for(int i = 0; i < meshFilters.Length; i++) {
+            var mesh = Mesh.Instantiate(meshFilters[i].mesh);
+            meshFilters[i].mesh = mesh;
         }
     }
 
@@ -68,57 +54,29 @@ public class VehicleDamage : MonoBehaviour {
         // force should be between 0.0 and 1.0
         force = Mathf.Clamp01(force);
 
-        if(useSkinnedMesh) {
-            for (int j = 0; j < meshfilters.Length; ++j) {   
-                Vector3[] verts = meshfilters[j].sharedMesh.vertices;
+        for (int j = 0; j < meshFilters.Length; ++j) {   
+            Vector3[] verts = meshFilters[j].mesh.vertices;
 
-                    for (int i = 0; i < verts.Length; ++i) {
-                        Vector3 scaledVert = Vector3.Scale(verts[i], transform.localScale);
-                        Vector3 vertWorldPos = meshfilters[j].transform.position + (meshfilters[j].transform.rotation * scaledVert);
-                        Vector3 originToMeDir = vertWorldPos - originPos;
-                        Vector3 flatVertToCenterDir = transform.position - vertWorldPos;
-                        flatVertToCenterDir.y = 0.0f;
+            for (int i = 0; i < verts.Length; ++i) {
+                Vector3 scaledVert = Vector3.Scale(verts[i], transform.localScale);
+                Vector3 vertWorldPos = meshFilters[j].transform.position + (meshFilters[j].transform.rotation * scaledVert);
+                Vector3 originToMeDir = vertWorldPos - originPos;
+                Vector3 flatVertToCenterDir = transform.position - vertWorldPos;
+                flatVertToCenterDir.y = 0.0f;
 
-                        // 0.5 - 1 => 45� to 0�  / current vertice is nearer to exploPos than center of bounds
-                        if (originToMeDir.sqrMagnitude < sqrDemRange) //dot > 0.8f ) 
-                        {
-                            float dist = Mathf.Clamp01(originToMeDir.sqrMagnitude / sqrDemRange);
-                            float moveDelta = force * (1.0f - dist) * maxMoveDelta;
+                // 0.5 - 1 => 45� to 0�  / current vertice is nearer to exploPos than center of bounds
+                if (originToMeDir.sqrMagnitude < sqrDemRange) //dot > 0.8f ) 
+                {
+                    float dist = Mathf.Clamp01(originToMeDir.sqrMagnitude / sqrDemRange);
+                    float moveDelta = force * (1.0f - dist) * maxMoveDelta;
 
-                            Vector3 moveDir = Vector3.Slerp(originToMeDir, flatVertToCenterDir, impactDirManipulator).normalized * moveDelta;
+                    Vector3 moveDir = Vector3.Slerp(originToMeDir, flatVertToCenterDir, impactDirManipulator).normalized * moveDelta;
 
-                            verts[i] += Quaternion.Inverse(transform.rotation) * moveDir;
-                        }
-                    }
-                    meshfilters[j].sharedMesh.vertices = verts;
-                    meshfilters[j].sharedMesh.RecalculateBounds();
-                } 
-        }
-         else {
-                for (int j = 0; j < meshfilterssss.Length; ++j) {   
-                    Vector3[] verts = meshfilterssss[j].mesh.vertices;
-
-                    for (int i = 0; i < verts.Length; ++i) {
-                        Vector3 scaledVert = Vector3.Scale(verts[i], transform.localScale);
-                        Vector3 vertWorldPos = meshfilterssss[j].transform.position + (meshfilterssss[j].transform.rotation * scaledVert);
-                        Vector3 originToMeDir = vertWorldPos - originPos;
-                        Vector3 flatVertToCenterDir = transform.position - vertWorldPos;
-                        flatVertToCenterDir.y = 0.0f;
-
-                        // 0.5 - 1 => 45� to 0�  / current vertice is nearer to exploPos than center of bounds
-                        if (originToMeDir.sqrMagnitude < sqrDemRange) //dot > 0.8f ) 
-                        {
-                            float dist = Mathf.Clamp01(originToMeDir.sqrMagnitude / sqrDemRange);
-                            float moveDelta = force * (1.0f - dist) * maxMoveDelta;
-
-                            Vector3 moveDir = Vector3.Slerp(originToMeDir, flatVertToCenterDir, impactDirManipulator).normalized * moveDelta;
-
-                            verts[i] += Quaternion.Inverse(transform.rotation) * moveDir;
-                        }
-                    }
-                    meshfilterssss[j].mesh.vertices = verts;
-                    meshfilterssss[j].mesh.RecalculateBounds(); 
+                    verts[i] += Quaternion.Inverse(transform.rotation) * moveDir;
                 }
-         }
+            }
+            meshFilters[j].mesh.vertices = verts;
+            meshFilters[j].mesh.RecalculateBounds(); 
+        }
     }
 }
