@@ -25,7 +25,7 @@ public class SpeedLines : MonoBehaviour
 
         if (currVel >= 0 && velocityAmount == true)
         {
-            lineAmount = (minVel * minVel) * 25;
+            lineAmount = (minVel * minVel) * 50;
             psEmission.rateOverTime = lineAmount;
         }
         if (currVel >= 0 && velocityPlay == true)
