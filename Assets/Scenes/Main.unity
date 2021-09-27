@@ -4449,7 +4449,7 @@ WheelCollider:
   m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0.05
   m_Mass: 20
-  m_WheelDampingRate: 0.56
+  m_WheelDampingRate: 0.1
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -4461,7 +4461,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 5
   m_Enabled: 1
 --- !u!1 &165022606
 GameObject:
@@ -5982,7 +5982,7 @@ MonoBehaviour:
   m_Follow: {fileID: 939766225}
   m_CommonLens: 1
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.001
     FarClipPlane: 5000
@@ -9090,7 +9090,7 @@ WheelCollider:
   m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0.05
   m_Mass: 20
-  m_WheelDampingRate: 0.56
+  m_WheelDampingRate: 0.1
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -9102,7 +9102,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 5
   m_Enabled: 1
 --- !u!1001 &369910800
 PrefabInstance:
@@ -17673,7 +17673,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.001
     FarClipPlane: 5000
@@ -17694,7 +17694,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682861241}
-  m_LocalRotation: {x: 0.17042674, y: 0.0000045895576, z: -0.0000017434359, w: 0.9853704}
+  m_LocalRotation: {x: 0.16040342, y: 0.000008165836, z: -0.0000030398369, w: 0.9870516}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -31464,7 +31464,7 @@ Camera:
     height: 1
   near clip plane: 0.001
   far clip plane: 5000
-  field of view: 40
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -31489,8 +31489,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.19327968, y: -0.7010582, z: 0.20704776, w: 0.65444}
-  m_LocalPosition: {x: 12.375968, y: 4.1194043, z: -206.32689}
+  m_LocalRotation: {x: 0.18993509, y: -0.70210415, z: 0.2034633, w: 0.65542144}
+  m_LocalPosition: {x: 12.401033, y: 4.0990953, z: -206.3252}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -32157,7 +32157,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.001
     FarClipPlane: 5000
@@ -32178,7 +32178,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919930997}
-  m_LocalRotation: {x: 0.18827473, y: 0.000004529953, z: -0.0000018291175, w: 0.98211646}
+  m_LocalRotation: {x: 0.18325564, y: 0.000008136035, z: -0.0000032521787, w: 0.9830653}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -32596,8 +32596,8 @@ MonoBehaviour:
   freeLook: {fileID: 246726404}
   cameraRotateSpeedX: 200
   cameraRotateSpeedY: 3
-  SuspensionResetSpeed: 4
-  jumpHeight: 4
+  SuspensionResetSpeed: 5
+  jumpHeight: 5
 --- !u!114 &939766221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32649,7 +32649,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 50
+          m_FloatArgument: 60
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
@@ -32676,7 +32676,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 40
+          m_FloatArgument: 50
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -32721,16 +32721,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   look: {fileID: 246726404}
   baseStats:
-    TopSpeed: 50
-    Acceleration: 7
-    ReverseSpeed: 20
+    TopSpeed: 55
+    Acceleration: 7.8
+    ReverseSpeed: 40
     ReverseAcceleration: 5
-    AccelerationCurve: 0.7
-    Braking: 15
-    CoastingDrag: 1.5
+    AccelerationCurve: 0.6
+    Braking: 10
+    CoastingDrag: 16
     Grip: 1
     Steer: 3.5
-    AddedGravity: 1.5
+    AddedGravity: 2.4
   airSteeringFactor: 0.8
   groundSteeringFactor: 1
   m_VisualWheels:
@@ -32739,10 +32739,10 @@ MonoBehaviour:
   - {fileID: 8812002708216683883}
   - {fileID: 3143104769639302723}
   CenterOfMass: {fileID: 1034341562}
-  AirborneReorientationCoefficient: 1.05
+  AirborneReorientationCoefficient: 5
   DriftGrip: 1
   DriftAdditionalSteer: 3.5
-  MaxDriftAdditionalSteer: 4
+  MaxDriftAdditionalSteer: 5
   SecondsToFullDrift: 1
   MinAngleToFinishDrift: 30
   MinSpeedPercentToFinishDrift: 0.3
@@ -32760,9 +32760,9 @@ MonoBehaviour:
     type: 3}
   Nozzles:
   - {fileID: 0}
-  SuspensionHeight: 0.271
+  SuspensionHeight: 0.35
   SuspensionSpring: 70000
-  SuspensionDamp: 459
+  SuspensionDamp: 1000
   WheelsPositionVerticalOffset: 0.05
   FrontLeftWheel: {fileID: 1735752378}
   FrontRightWheel: {fileID: 2088935321}
@@ -41971,7 +41971,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupActivated.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
@@ -41981,7 +41981,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupFinishCooldown.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
@@ -54635,7 +54635,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupActivated.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
@@ -54645,7 +54645,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupFinishCooldown.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
@@ -58574,7 +58574,7 @@ WheelCollider:
   m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0.05
   m_Mass: 20
-  m_WheelDampingRate: 0.56
+  m_WheelDampingRate: 0.1
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -68020,7 +68020,7 @@ WheelCollider:
   m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0.05
   m_Mass: 20
-  m_WheelDampingRate: 0.56
+  m_WheelDampingRate: 0.1
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -68717,7 +68717,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.001
     FarClipPlane: 5000
@@ -68738,7 +68738,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129961419}
-  m_LocalRotation: {x: 0.20610783, y: 0.0000045001507, z: -0.0000019147992, w: 0.97852933}
+  m_LocalRotation: {x: 0.20610785, y: 0.000007987022, z: -0.0000034198165, w: 0.97852933}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -73343,7 +73343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
   m_LocalRotation: {x: 0.06660829, y: -0.7275059, z: 0.07135375, w: 0.6791223}
-  m_LocalPosition: {x: 10.405274, y: 1.6500008, z: -206.4626}
+  m_LocalPosition: {x: 10.405275, y: 1.6500008, z: -206.46262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2129961421}
