@@ -446,7 +446,7 @@ namespace KartGame.KartSystems
                 //Debug.Log("[" + driftDirection + "] " + ding + " | normalized: " + normalizedTurn);
             }
 
-            float accelInput = accelerate - (brake ? 1.0f : 0.0f);
+            float accelInput = accelerate;// - (brake ? 1.0f : 0.0f);
 
             // manual acceleration curve coefficient scalar
             float accelerationCurveCoeff = 5;
@@ -483,8 +483,7 @@ namespace KartGame.KartSystems
             bool wasOverMaxSpeed = currentSpeed >= maxSpeed;
 
             // if over max speed, cannot accelerate faster.
-            if (wasOverMaxSpeed && !isBraking) 
-                movement *= 0.0f;
+            if (wasOverMaxSpeed && !isBraking) movement *= 0.0f;
 
             Vector3 newVelocity = Rigidbody.velocity + movement * Time.fixedDeltaTime;
             newVelocity.y = Rigidbody.velocity.y;

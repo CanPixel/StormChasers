@@ -12,7 +12,9 @@ public class CameraMovement : MonoBehaviour {
     public Cinemachine.CinemachineFreeLook freeLook;
 
     public float cameraRotateSpeedX = 10.0f, cameraRotateSpeedY = 10.0f;
+    public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
 
+    private float baseSuspension;
     private float currentSpeed = 0;
     protected Vector2 moveVec = Vector2.zero;
 
@@ -21,9 +23,13 @@ public class CameraMovement : MonoBehaviour {
     private Rigidbody rb;
 
     private bool move = false;
-    private float brake = 0, gas = 0, steering = 0, drift = 0;
+    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
 
     private Vector2 rotationInput;
+
+    void Start() {
+        baseSuspension = kart.SuspensionHeight;
+    }
 
     public void OnEnable() {
         Cursor.visible = false;
@@ -38,6 +44,8 @@ public class CameraMovement : MonoBehaviour {
     void Update() {
         freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
         freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
+
+        kart.SuspensionHeight = Mathf.Lerp(kart.SuspensionHeight, baseSuspension, Time.deltaTime * SuspensionResetSpeed);
     }
 
     public void OnBrake(InputValue val) {
@@ -58,6 +66,10 @@ public class CameraMovement : MonoBehaviour {
         drift = val.Get<float>();
         MoveCalc();
         if(drift == 1 && steering != 0) kart.LockDriftDirection(steering);
+    }
+    public void OnJump(InputValue val) {
+        jump = val.Get<float>();
+        if(jump >= 0.5f) kart.SuspensionHeight = baseSuspension * jumpHeight;
     }
 
     protected void SetBrakeLights(bool on) {

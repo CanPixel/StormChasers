@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7500661886356550056
 Transform:
   m_ObjectHideFlags: 0
@@ -4818,3 +4818,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedPS: {fileID: 7500661886356550057}
+  minSpeed: 5
+  velocityAmount: 1
+  velocityPlay: 1

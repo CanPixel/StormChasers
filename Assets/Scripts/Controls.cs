@@ -57,6 +57,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""623908aa-1c38-4a17-89ea-77f9730a08f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -228,7 +236,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6c9baff7-6111-4b6e-abc2-aabb4cd62405"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -345,6 +353,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0248e4f-cd1e-41b6-8dd3-9d9df61b0711"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -392,6 +411,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
         m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
         m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
+        m_VehicleControls_Jump = m_VehicleControls.FindAction("Jump", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -448,6 +468,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Steer;
     private readonly InputAction m_VehicleControls_Drift;
     private readonly InputAction m_VehicleControls_Looking;
+    private readonly InputAction m_VehicleControls_Jump;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -457,6 +478,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
         public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
         public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
+        public InputAction @Jump => m_Wrapper.m_VehicleControls_Jump;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -481,6 +503,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Looking.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
                 @Looking.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
                 @Looking.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
+                @Jump.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -500,6 +525,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Looking.started += instance.OnLooking;
                 @Looking.performed += instance.OnLooking;
                 @Looking.canceled += instance.OnLooking;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -554,6 +582,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnSteer(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
         void OnLooking(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class ArcadeKartPowerup : MonoBehaviour {
+    private Cinemachine.CinemachineFreeLook fl;
 
     public ArcadeKart.StatPowerup boostStats = new ArcadeKart.StatPowerup
     {
@@ -18,14 +19,21 @@ public class ArcadeKartPowerup : MonoBehaviour {
     public UnityEvent onPowerupActivated;
     public UnityEvent onPowerupFinishCooldown;
 
+    private Vector3 baseScale;
+    public float animateSpeed = 4f, animateRange = 0.1f;
+
     private void Awake()
     {
+        baseScale = transform.localScale;
         lastActivatedTimestamp = -9999f;
-    }
 
+        fl = GameObject.FindGameObjectWithTag("Player").GetComponent<ArcadeKart>().look;
+    }
 
     private void Update()
     {
+        transform.localScale = baseScale * (1f + Mathf.Sin(Time.time * animateSpeed) * animateRange);
+
         if (isCoolingDown) { 
 
             if (Time.time - lastActivatedTimestamp > cooldown) {
@@ -36,7 +44,6 @@ public class ArcadeKartPowerup : MonoBehaviour {
 
         }
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -59,4 +66,7 @@ public class ArcadeKartPowerup : MonoBehaviour {
         }
     }
 
+    public void IncreaseFOV(float fov) {
+        fl.m_Lens.FieldOfView = fov;
+    }
 }
