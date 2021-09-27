@@ -21,9 +21,10 @@ public class CameraMovement : MonoBehaviour {
     private PlayerInput playerInput;
     private Controls controls;
     private Rigidbody rb;
+    private StatBoost statBoost;
 
     private bool move = false;
-    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
+    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0, boost = 0;
 
     private Vector2 rotationInput;
 
@@ -32,7 +33,8 @@ public class CameraMovement : MonoBehaviour {
     }
 
     public void OnEnable() {
-        Cursor.visible = false;
+        statBoost = GetComponent<StatBoost>();
+        //Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
         if(controls == null) controls = new Controls();
@@ -70,6 +72,11 @@ public class CameraMovement : MonoBehaviour {
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
         if(jump >= 0.5f) kart.SuspensionHeight = baseSuspension * jumpHeight;
+    }
+    public void OnBoost(InputValue val) {
+        if(statBoost == null) return;
+        boost = val.Get<float>();
+        if(boost >= 0.5f) statBoost.TriggerStatBoost();
     }
 
     protected void SetBrakeLights(bool on) {

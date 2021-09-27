@@ -17694,7 +17694,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682861241}
-  m_LocalRotation: {x: 0.17042679, y: 0.00000461936, z: -0.0000017918646, w: 0.9853704}
+  m_LocalRotation: {x: 0.17042674, y: 0.0000045895576, z: -0.0000017434359, w: 0.9853704}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -32610,6 +32610,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7502470b7a9bb6a43bd1ae029ecdf31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boostStats:
+    modifiers:
+      TopSpeed: 22
+      Acceleration: 22
+      ReverseSpeed: 0
+      ReverseAcceleration: 0
+      AccelerationCurve: 0
+      Braking: 0
+      CoastingDrag: 0
+      Grip: 0
+      Steer: 0
+      AddedGravity: 0
+    PowerUpID: 
+    ElapsedTime: 0
+    MaxTime: 3
+  cooldown: 2
+  onPowerupActivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 775267194}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 939766221}
+        m_TargetAssemblyTypeName: StatBoost, Assembly-CSharp
+        m_MethodName: IncreaseFOV
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 50
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  onPowerupFinishCooldown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 775267194}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 939766221}
+        m_TargetAssemblyTypeName: StatBoost, Assembly-CSharp
+        m_MethodName: IncreaseFOV
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 40
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &939766222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68668,7 +68738,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129961419}
-  m_LocalRotation: {x: 0.20610783, y: 0.0000045001507, z: -0.000001899898, w: 0.97852933}
+  m_LocalRotation: {x: 0.20610783, y: 0.0000045001507, z: -0.0000019147992, w: 0.97852933}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
