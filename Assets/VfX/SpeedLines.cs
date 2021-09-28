@@ -39,7 +39,6 @@ public class SpeedLines : MonoBehaviour
     void PlayParticle()
     {
         speedPS.Play();
-        Debug.Log(currVel);
     }
 
     IEnumerator CalcVelocity()
