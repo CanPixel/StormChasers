@@ -18184,8 +18184,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682861241}
-  m_LocalRotation: {x: -0.01961919, y: 0.000000016607553, z: -0.000000004499847, w: 0.99980754}
-  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
+  m_LocalRotation: {x: 0.0016533509, y: -0.000000004174879, z: 0.0000000010363874,
+    w: 0.9999987}
+  m_LocalPosition: {x: -0.000000042982997, y: -2.2793202, z: 5.7075357}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 60928072}
@@ -32149,8 +32150,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.1416318, y: -0.000000017032926, z: 0.00000000243697, w: 0.9899194}
-  m_LocalPosition: {x: -14.71, y: 5.650001, z: -216.18001}
+  m_LocalRotation: {x: 0.12054199, y: 0.000000004270228, z: -5.1852267e-10, w: 0.99270827}
+  m_LocalPosition: {x: -14.71, y: 4.830001, z: -215.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -32838,9 +32839,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919930997}
-  m_LocalRotation: {x: -0.019619182, y: 0.000000016607553, z: -0.0000000044998476,
-    w: 0.99980754}
-  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
+  m_LocalRotation: {x: 0.0016533583, y: -0.000000004174879, z: 0.0000000010363874,
+    w: 0.9999987}
+  m_LocalPosition: {x: -0.000000042982997, y: -2.2793202, z: 5.7075357}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1656488176}
@@ -33382,7 +33383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   look: {fileID: 6691645747756642081}
   baseStats:
-    TopSpeed: 50
+    TopSpeed: 47
     Acceleration: 10
     ReverseSpeed: 40
     ReverseAcceleration: 5
@@ -33390,9 +33391,9 @@ MonoBehaviour:
     Braking: 10
     CoastingDrag: 16
     Grip: 1
-    Steer: 4.5
+    Steer: 4.2
     AddedGravity: 2.4
-  airSteeringFactor: 1.2
+  airSteeringFactor: 1.3
   groundSteeringFactor: 1
   m_VisualWheels:
   - {fileID: 1771005038328993286}
@@ -35345,8 +35346,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 5.4, z: -9.58}
-  m_XDamping: 0.1
+  m_FollowOffset: {x: 0, y: 4.58, z: -9}
+  m_XDamping: 0.3
   m_YDamping: 0.1
   m_ZDamping: 0.2
   m_AngularDampingMode: 0
@@ -62595,13 +62596,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823078991}
-  m_LocalRotation: {x: 0, y: 0, z: -0.6072371, w: 0.7945207}
+  m_LocalRotation: {x: -0, y: -0, z: -0.47915164, w: 0.87773216}
   m_LocalPosition: {x: -71, y: 10.3, z: -178.29912}
   m_LocalScale: {x: 119.8416, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -74.78}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -57.26}
 --- !u!1001 &1823448359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69901,9 +69902,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129961419}
-  m_LocalRotation: {x: -0.019619182, y: 0.000000016607553, z: -0.0000000044998476,
-    w: 0.99980754}
-  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
+  m_LocalRotation: {x: 0.0016533583, y: -0.000000004174879, z: 0.0000000010363874,
+    w: 0.9999987}
+  m_LocalPosition: {x: -0.000000042982997, y: -2.2793202, z: 5.7075357}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1428800863}
@@ -74524,8 +74525,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
-  m_LocalRotation: {x: 0.1416318, y: -0.000000017032926, z: 0.00000000243697, w: 0.9899194}
-  m_LocalPosition: {x: -14.71, y: 5.650001, z: -216.18001}
+  m_LocalRotation: {x: 0.12054199, y: 0.000000004270228, z: -5.1852267e-10, w: 0.99270827}
+  m_LocalPosition: {x: -14.71, y: 4.830001, z: -215.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2129961421}
