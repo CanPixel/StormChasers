@@ -1,15 +1,13 @@
-- | after drift, mini boost?
-- | camera better while drifting
-
-
-- Brake + gas should be = 0
-
-- FOV increase = car speed
-
-- speed boost / cam adjustment vlak na drift exit
-
 - wobble on land
 
-- speed boost trigger
-
 - vehicle damage ontrigger
+
+
+
+
+
+
+- als je geen links/rechts op L-Analog hebt, dan simpele break * 2 force. (sterkere break?)
+
+
+-  Press R to reload scene

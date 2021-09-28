@@ -4,7 +4,7 @@ namespace KartGame.KartSystems {
 
     public class GameInput : BaseInput
     {
-        public CameraMovement movement;
+        public CarMovement movement;
 
         public override InputData GenerateInput() {
             return new InputData

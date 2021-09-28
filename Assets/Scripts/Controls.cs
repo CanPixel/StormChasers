@@ -57,6 +57,46 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""623908aa-1c38-4a17-89ea-77f9730a08f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""17a962dd-7b13-4359-8351-2a6a467991b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraAim"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""749119d6-42f7-4c76-af70-17671390cc9b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraShoot"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a69c8358-55cf-40d6-ac8d-6059f689c642"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Recenter"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""3df37bbb-3751-46e6-bd5c-d50a969eb685"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -228,7 +268,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6c9baff7-6111-4b6e-abc2-aabb4cd62405"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -345,6 +385,61 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Looking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0248e4f-cd1e-41b6-8dd3-9d9df61b0711"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""611aab00-b166-4c7b-9050-3e93f9cf3b31"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92f4336a-9727-4d40-8e9b-bf6e1abcc985"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraAim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""129e30ef-eeb2-4033-904b-209c04b17499"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0bd715ed-ddf9-474a-aff5-0ccaed6c1367"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Recenter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -392,6 +487,11 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
         m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
         m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
+        m_VehicleControls_Jump = m_VehicleControls.FindAction("Jump", throwIfNotFound: true);
+        m_VehicleControls_Boost = m_VehicleControls.FindAction("Boost", throwIfNotFound: true);
+        m_VehicleControls_CameraAim = m_VehicleControls.FindAction("CameraAim", throwIfNotFound: true);
+        m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
+        m_VehicleControls_Recenter = m_VehicleControls.FindAction("Recenter", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -448,6 +548,11 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Steer;
     private readonly InputAction m_VehicleControls_Drift;
     private readonly InputAction m_VehicleControls_Looking;
+    private readonly InputAction m_VehicleControls_Jump;
+    private readonly InputAction m_VehicleControls_Boost;
+    private readonly InputAction m_VehicleControls_CameraAim;
+    private readonly InputAction m_VehicleControls_CameraShoot;
+    private readonly InputAction m_VehicleControls_Recenter;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -457,6 +562,11 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
         public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
         public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
+        public InputAction @Jump => m_Wrapper.m_VehicleControls_Jump;
+        public InputAction @Boost => m_Wrapper.m_VehicleControls_Boost;
+        public InputAction @CameraAim => m_Wrapper.m_VehicleControls_CameraAim;
+        public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
+        public InputAction @Recenter => m_Wrapper.m_VehicleControls_Recenter;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -481,6 +591,21 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Looking.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
                 @Looking.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
                 @Looking.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
+                @Jump.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Boost.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @CameraAim.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraShoot.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @Recenter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -500,6 +625,21 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Looking.started += instance.OnLooking;
                 @Looking.performed += instance.OnLooking;
                 @Looking.canceled += instance.OnLooking;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
+                @CameraAim.started += instance.OnCameraAim;
+                @CameraAim.performed += instance.OnCameraAim;
+                @CameraAim.canceled += instance.OnCameraAim;
+                @CameraShoot.started += instance.OnCameraShoot;
+                @CameraShoot.performed += instance.OnCameraShoot;
+                @CameraShoot.canceled += instance.OnCameraShoot;
+                @Recenter.started += instance.OnRecenter;
+                @Recenter.performed += instance.OnRecenter;
+                @Recenter.canceled += instance.OnRecenter;
             }
         }
     }
@@ -554,6 +694,11 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnSteer(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
         void OnLooking(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
+        void OnCameraAim(InputAction.CallbackContext context);
+        void OnCameraShoot(InputAction.CallbackContext context);
+        void OnRecenter(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
