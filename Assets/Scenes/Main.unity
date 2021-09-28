@@ -9518,7 +9518,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 5
+    m_Stiffness: 1
   m_Enabled: 1
 --- !u!1001 &369910800
 PrefabInstance:
@@ -18184,8 +18184,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682861241}
-  m_LocalRotation: {x: 0.021973284, y: 0.0000000041950794, z: -9.513393e-10, w: 0.9997586}
-  m_LocalPosition: {x: 0.000000019754422, y: -1.3925089, z: 2.6271307}
+  m_LocalRotation: {x: -0.01961919, y: 0.000000016607553, z: -0.000000004499847, w: 0.99980754}
+  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 60928072}
@@ -32149,8 +32149,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.10034497, y: -0.0000000042798853, z: 4.316436e-10, w: 0.99495274}
-  m_LocalPosition: {x: -14.71, y: 3.140001, z: -212.90001}
+  m_LocalRotation: {x: 0.1416318, y: -0.000000017032926, z: 0.00000000243697, w: 0.9899194}
+  m_LocalPosition: {x: -14.71, y: 5.650001, z: -216.18001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -32838,8 +32838,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919930997}
-  m_LocalRotation: {x: 0.021973291, y: 0.0000000041950794, z: -9.513395e-10, w: 0.9997586}
-  m_LocalPosition: {x: 0.000000019754422, y: -1.3925089, z: 2.6271307}
+  m_LocalRotation: {x: -0.019619182, y: 0.000000016607553, z: -0.0000000044998476,
+    w: 0.99980754}
+  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1656488176}
@@ -33256,7 +33257,7 @@ MonoBehaviour:
   camControl: {fileID: 939766228}
   kart: {fileID: 939766223}
   SuspensionResetSpeed: 5
-  jumpHeight: 5
+  jumpHeight: 17
 --- !u!114 &939766221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33382,16 +33383,16 @@ MonoBehaviour:
   look: {fileID: 6691645747756642081}
   baseStats:
     TopSpeed: 50
-    Acceleration: 7.8
+    Acceleration: 10
     ReverseSpeed: 40
     ReverseAcceleration: 5
     AccelerationCurve: 0.6
     Braking: 10
     CoastingDrag: 16
     Grip: 1
-    Steer: 3.5
+    Steer: 4.5
     AddedGravity: 2.4
-  airSteeringFactor: 0.8
+  airSteeringFactor: 1.2
   groundSteeringFactor: 1
   m_VisualWheels:
   - {fileID: 1771005038328993286}
@@ -33421,8 +33422,8 @@ MonoBehaviour:
   Nozzles:
   - {fileID: 0}
   SuspensionHeight: 0.35
-  SuspensionSpring: 70000
-  SuspensionDamp: 1000
+  SuspensionSpring: 50000
+  SuspensionDamp: 1800
   WheelsPositionVerticalOffset: 0.05
   FrontLeftWheel: {fileID: 1735752378}
   FrontRightWheel: {fileID: 2088935321}
@@ -35344,7 +35345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 2.89, z: -6.3}
+  m_FollowOffset: {x: 0, y: 5.4, z: -9.58}
   m_XDamping: 0.1
   m_YDamping: 0.1
   m_ZDamping: 0.2
@@ -35366,9 +35367,9 @@ MonoBehaviour:
   m_XAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 250
-    m_AccelTime: 0.15
-    m_DecelTime: 0.1
+    m_MaxSpeed: 220
+    m_AccelTime: 0
+    m_DecelTime: 0.05
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
     m_InvertInput: 0
@@ -69900,8 +69901,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129961419}
-  m_LocalRotation: {x: 0.021973291, y: 0.0000000041950794, z: -9.513395e-10, w: 0.9997586}
-  m_LocalPosition: {x: 0.000000019754422, y: -1.3925089, z: 2.6271307}
+  m_LocalRotation: {x: -0.019619182, y: 0.000000016607553, z: -0.0000000044998476,
+    w: 0.99980754}
+  m_LocalPosition: {x: 0.00000019189144, y: -2.6589541, z: 6.5859885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1428800863}
@@ -71164,7 +71166,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -72439,7 +72441,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -74522,8 +74524,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
-  m_LocalRotation: {x: 0.10034497, y: -0.0000000042798853, z: 4.316436e-10, w: 0.99495274}
-  m_LocalPosition: {x: -14.71, y: 3.140001, z: -212.90001}
+  m_LocalRotation: {x: 0.1416318, y: -0.000000017032926, z: 0.00000000243697, w: 0.9899194}
+  m_LocalPosition: {x: -14.71, y: 5.650001, z: -216.18001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2129961421}
