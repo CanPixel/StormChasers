@@ -17694,7 +17694,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682861241}
-  m_LocalRotation: {x: 0.16040342, y: 0.000008165836, z: -0.0000030398369, w: 0.9870516}
+  m_LocalRotation: {x: 0.16040343, y: 0.000008165836, z: -0.0000030249357, w: 0.9870516}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -32512,6 +32512,7 @@ GameObject:
   - component: {fileID: 939766217}
   - component: {fileID: 939766226}
   - component: {fileID: 939766221}
+  - component: {fileID: 939766228}
   m_Layer: 2
   m_Name: PLAYER
   m_TagString: Player
@@ -32592,6 +32593,7 @@ MonoBehaviour:
   - {fileID: 2068112264}
   - {fileID: 190303009}
   brakeMaterial: {fileID: 2100000, guid: e741194cfbcff8145bea0c93e2c5f500, type: 2}
+  camControl: {fileID: 939766228}
   kart: {fileID: 939766223}
   freeLook: {fileID: 246726404}
   cameraRotateSpeedX: 200
@@ -32610,6 +32612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7502470b7a9bb6a43bd1ae029ecdf31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  kart: {fileID: 939766223}
   boostStats:
     modifiers:
       TopSpeed: 22
@@ -32625,7 +32628,7 @@ MonoBehaviour:
     PowerUpID: 
     ElapsedTime: 0
     MaxTime: 3
-  cooldown: 2
+  cooldown: 3
   onPowerupActivated:
     m_PersistentCalls:
       m_Calls:
@@ -32649,7 +32652,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 60
+          m_FloatArgument: 65
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
@@ -32854,6 +32857,21 @@ MonoBehaviour:
   wiggleRangeCap: 10
   GasBounceReduction: 10
   dampening: 10
+--- !u!114 &939766228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939766216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00447becb8b2f674fbce2b4b4677100c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camSys:
+    aim: 0
+    shoot: 0
 --- !u!1001 &940017336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41971,7 +41989,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupActivated.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 60
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
@@ -54635,7 +54653,7 @@ PrefabInstance:
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}
       propertyPath: onPowerupActivated.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
-      value: 60
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 1957102644646649599, guid: ca718117a11f745b292c7dba21f42c00,
         type: 3}

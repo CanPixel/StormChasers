@@ -73,6 +73,22 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraAim"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""749119d6-42f7-4c76-af70-17671390cc9b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraShoot"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a69c8358-55cf-40d6-ac8d-6059f689c642"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -383,14 +399,76 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92f4336a-9727-4d40-8e9b-bf6e1abcc985"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraAim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""129e30ef-eeb2-4033-904b-209c04b17499"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
             ""name"": ""CameraControls"",
             ""id"": ""2c29fd32-6eb0-497a-b0b8-084854160b87"",
-            ""actions"": [],
-            ""bindings"": []
+            ""actions"": [
+                {
+                    ""name"": ""CameraAim"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f9c5e407-61a6-421d-9abd-90df1764a789"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraShoot"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f09eed4e-26c9-4713-bbb3-3091cf8343ef"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""56dd67c7-125e-4234-8c19-8002b5e8a2d8"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraAim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88fe4bea-921d-47b4-8941-499c88d12ef4"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -432,8 +510,12 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
         m_VehicleControls_Jump = m_VehicleControls.FindAction("Jump", throwIfNotFound: true);
         m_VehicleControls_Boost = m_VehicleControls.FindAction("Boost", throwIfNotFound: true);
+        m_VehicleControls_CameraAim = m_VehicleControls.FindAction("CameraAim", throwIfNotFound: true);
+        m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
+        m_CameraControls_CameraAim = m_CameraControls.FindAction("CameraAim", throwIfNotFound: true);
+        m_CameraControls_CameraShoot = m_CameraControls.FindAction("CameraShoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -490,6 +572,8 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Looking;
     private readonly InputAction m_VehicleControls_Jump;
     private readonly InputAction m_VehicleControls_Boost;
+    private readonly InputAction m_VehicleControls_CameraAim;
+    private readonly InputAction m_VehicleControls_CameraShoot;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -501,6 +585,8 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
         public InputAction @Jump => m_Wrapper.m_VehicleControls_Jump;
         public InputAction @Boost => m_Wrapper.m_VehicleControls_Boost;
+        public InputAction @CameraAim => m_Wrapper.m_VehicleControls_CameraAim;
+        public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -531,6 +617,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Boost.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
                 @Boost.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
                 @Boost.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @CameraAim.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraShoot.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -556,6 +648,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Boost.started += instance.OnBoost;
                 @Boost.performed += instance.OnBoost;
                 @Boost.canceled += instance.OnBoost;
+                @CameraAim.started += instance.OnCameraAim;
+                @CameraAim.performed += instance.OnCameraAim;
+                @CameraAim.canceled += instance.OnCameraAim;
+                @CameraShoot.started += instance.OnCameraShoot;
+                @CameraShoot.performed += instance.OnCameraShoot;
+                @CameraShoot.canceled += instance.OnCameraShoot;
             }
         }
     }
@@ -564,10 +662,14 @@ public class @Controls : IInputActionCollection, IDisposable
     // CameraControls
     private readonly InputActionMap m_CameraControls;
     private ICameraControlsActions m_CameraControlsActionsCallbackInterface;
+    private readonly InputAction m_CameraControls_CameraAim;
+    private readonly InputAction m_CameraControls_CameraShoot;
     public struct CameraControlsActions
     {
         private @Controls m_Wrapper;
         public CameraControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CameraAim => m_Wrapper.m_CameraControls_CameraAim;
+        public InputAction @CameraShoot => m_Wrapper.m_CameraControls_CameraShoot;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -577,10 +679,22 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_CameraControlsActionsCallbackInterface != null)
             {
+                @CameraAim.started -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.performed -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.canceled -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
+                @CameraShoot.started -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.performed -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.canceled -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
             }
             m_Wrapper.m_CameraControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @CameraAim.started += instance.OnCameraAim;
+                @CameraAim.performed += instance.OnCameraAim;
+                @CameraAim.canceled += instance.OnCameraAim;
+                @CameraShoot.started += instance.OnCameraShoot;
+                @CameraShoot.performed += instance.OnCameraShoot;
+                @CameraShoot.canceled += instance.OnCameraShoot;
             }
         }
     }
@@ -612,8 +726,12 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnLooking(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
+        void OnCameraAim(InputAction.CallbackContext context);
+        void OnCameraShoot(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
+        void OnCameraAim(InputAction.CallbackContext context);
+        void OnCameraShoot(InputAction.CallbackContext context);
     }
 }

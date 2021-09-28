@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using KartGame.KartSystems;
 
-public class CameraMovement : MonoBehaviour {
+public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
+
+    public CameraControl camControl;
 
     public ArcadeKart kart;
     public Cinemachine.CinemachineFreeLook freeLook;
@@ -71,12 +73,19 @@ public class CameraMovement : MonoBehaviour {
     }
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
-        if(jump >= 0.5f) kart.SuspensionHeight = baseSuspension * jumpHeight;
+        if(jump >= 0.5f && kart.GroundPercent > 0.0f) kart.SuspensionHeight = baseSuspension * jumpHeight;
     }
     public void OnBoost(InputValue val) {
         if(statBoost == null) return;
         boost = val.Get<float>();
-        if(boost >= 0.5f) statBoost.TriggerStatBoost();
+        if(boost >= 0.4f && gas > 0 && brake < 0.5f) statBoost.TriggerStatBoost();
+    }
+
+    public void OnCameraAim(InputValue val) {
+        camControl.camSys.aim = val.Get<float>();
+    }
+    public void OnCameraShoot(InputValue val) {
+        camControl.camSys.shoot = val.Get<float>();
     }
 
     protected void SetBrakeLights(bool on) {

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class StatBoost : MonoBehaviour {
     private Cinemachine.CinemachineFreeLook fl;
 
-    private ArcadeKart kart;
+    public ArcadeKart kart;
 
     public ArcadeKart.StatPowerup boostStats = new ArcadeKart.StatPowerup
     {
@@ -17,26 +17,28 @@ public class StatBoost : MonoBehaviour {
 
     public float cooldown = 5f;
 
+    public const float fovChangeSpeed = 5f;
+
     public UnityEvent onPowerupActivated;
     public UnityEvent onPowerupFinishCooldown;
 
-    private void Awake()
-    {
-        kart = GetComponent<ArcadeKart>();
-        lastActivatedTimestamp = -9999f;
+    private float fovTarget;
 
+    private void Awake() {
+        lastActivatedTimestamp = -9999f;
         fl = GameObject.FindGameObjectWithTag("Player").GetComponent<ArcadeKart>().look;
+        fovTarget = fl.m_Lens.FieldOfView;
     }
 
     private void Update() {
-        if (isCoolingDown) { 
+        fl.m_Lens.FieldOfView = Mathf.Lerp(fl.m_Lens.FieldOfView, fovTarget, Time.deltaTime * fovChangeSpeed);
 
+        if (isCoolingDown) { 
             if (Time.time - lastActivatedTimestamp > cooldown) {
                 //finished cooldown!
                 isCoolingDown = false;
                 onPowerupFinishCooldown.Invoke();
             }
-
         }
     }
 
@@ -49,6 +51,7 @@ public class StatBoost : MonoBehaviour {
     }
 
     public void IncreaseFOV(float fov) {
-        fl.m_Lens.FieldOfView = fov;
+        fovTarget = fov;
+        //fl.m_Lens.FieldOfView = fov;
     }
 }
