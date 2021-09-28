@@ -76,6 +76,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Recenter",
+                    "type": "PassThrough",
+                    "id": "3df37bbb-3751-46e6-bd5c-d50a969eb685",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -408,54 +416,25 @@
                     "action": "CameraShoot",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0bd715ed-ddf9-474a-aff5-0ccaed6c1367",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Recenter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
         {
             "name": "CameraControls",
             "id": "2c29fd32-6eb0-497a-b0b8-084854160b87",
-            "actions": [
-                {
-                    "name": "CameraAim",
-                    "type": "PassThrough",
-                    "id": "f9c5e407-61a6-421d-9abd-90df1764a789",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "CameraShoot",
-                    "type": "PassThrough",
-                    "id": "f09eed4e-26c9-4713-bbb3-3091cf8343ef",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "56dd67c7-125e-4234-8c19-8002b5e8a2d8",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "CameraAim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "88fe4bea-921d-47b4-8941-499c88d12ef4",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "CameraShoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": [

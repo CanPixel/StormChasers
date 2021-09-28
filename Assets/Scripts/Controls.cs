@@ -89,6 +89,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Recenter"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""3df37bbb-3751-46e6-bd5c-d50a969eb685"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -421,54 +429,25 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""CameraShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0bd715ed-ddf9-474a-aff5-0ccaed6c1367"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Recenter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
             ""name"": ""CameraControls"",
             ""id"": ""2c29fd32-6eb0-497a-b0b8-084854160b87"",
-            ""actions"": [
-                {
-                    ""name"": ""CameraAim"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""f9c5e407-61a6-421d-9abd-90df1764a789"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""CameraShoot"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""f09eed4e-26c9-4713-bbb3-3091cf8343ef"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""56dd67c7-125e-4234-8c19-8002b5e8a2d8"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CameraAim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""88fe4bea-921d-47b4-8941-499c88d12ef4"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CameraShoot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -512,10 +491,9 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Boost = m_VehicleControls.FindAction("Boost", throwIfNotFound: true);
         m_VehicleControls_CameraAim = m_VehicleControls.FindAction("CameraAim", throwIfNotFound: true);
         m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
+        m_VehicleControls_Recenter = m_VehicleControls.FindAction("Recenter", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
-        m_CameraControls_CameraAim = m_CameraControls.FindAction("CameraAim", throwIfNotFound: true);
-        m_CameraControls_CameraShoot = m_CameraControls.FindAction("CameraShoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -574,6 +552,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Boost;
     private readonly InputAction m_VehicleControls_CameraAim;
     private readonly InputAction m_VehicleControls_CameraShoot;
+    private readonly InputAction m_VehicleControls_Recenter;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -587,6 +566,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Boost => m_Wrapper.m_VehicleControls_Boost;
         public InputAction @CameraAim => m_Wrapper.m_VehicleControls_CameraAim;
         public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
+        public InputAction @Recenter => m_Wrapper.m_VehicleControls_Recenter;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -623,6 +603,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @CameraShoot.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
                 @CameraShoot.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
                 @CameraShoot.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @Recenter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -654,6 +637,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @CameraShoot.started += instance.OnCameraShoot;
                 @CameraShoot.performed += instance.OnCameraShoot;
                 @CameraShoot.canceled += instance.OnCameraShoot;
+                @Recenter.started += instance.OnRecenter;
+                @Recenter.performed += instance.OnRecenter;
+                @Recenter.canceled += instance.OnRecenter;
             }
         }
     }
@@ -662,14 +648,10 @@ public class @Controls : IInputActionCollection, IDisposable
     // CameraControls
     private readonly InputActionMap m_CameraControls;
     private ICameraControlsActions m_CameraControlsActionsCallbackInterface;
-    private readonly InputAction m_CameraControls_CameraAim;
-    private readonly InputAction m_CameraControls_CameraShoot;
     public struct CameraControlsActions
     {
         private @Controls m_Wrapper;
         public CameraControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @CameraAim => m_Wrapper.m_CameraControls_CameraAim;
-        public InputAction @CameraShoot => m_Wrapper.m_CameraControls_CameraShoot;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -679,22 +661,10 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_CameraControlsActionsCallbackInterface != null)
             {
-                @CameraAim.started -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
-                @CameraAim.performed -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
-                @CameraAim.canceled -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraAim;
-                @CameraShoot.started -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
-                @CameraShoot.performed -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
-                @CameraShoot.canceled -= m_Wrapper.m_CameraControlsActionsCallbackInterface.OnCameraShoot;
             }
             m_Wrapper.m_CameraControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @CameraAim.started += instance.OnCameraAim;
-                @CameraAim.performed += instance.OnCameraAim;
-                @CameraAim.canceled += instance.OnCameraAim;
-                @CameraShoot.started += instance.OnCameraShoot;
-                @CameraShoot.performed += instance.OnCameraShoot;
-                @CameraShoot.canceled += instance.OnCameraShoot;
             }
         }
     }
@@ -728,10 +698,9 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnBoost(InputAction.CallbackContext context);
         void OnCameraAim(InputAction.CallbackContext context);
         void OnCameraShoot(InputAction.CallbackContext context);
+        void OnRecenter(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
-        void OnCameraAim(InputAction.CallbackContext context);
-        void OnCameraShoot(InputAction.CallbackContext context);
     }
 }

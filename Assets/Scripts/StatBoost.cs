@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class StatBoost : MonoBehaviour {
-    private Cinemachine.CinemachineFreeLook fl;
+    private Cinemachine.CinemachineVirtualCamera fl;
 
     public ArcadeKart kart;
 

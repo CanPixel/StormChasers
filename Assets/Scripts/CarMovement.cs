@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using KartGame.KartSystems;
+using Cinemachine;
 
 public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
@@ -11,9 +12,7 @@ public class CarMovement : MonoBehaviour {
     public CameraControl camControl;
 
     public ArcadeKart kart;
-    public Cinemachine.CinemachineFreeLook freeLook;
 
-    public float cameraRotateSpeedX = 10.0f, cameraRotateSpeedY = 10.0f;
     public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
 
     private float baseSuspension;
@@ -46,8 +45,12 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
-        freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
-        freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
+        camControl.rotationInput = rotationInput;
+
+        if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+
+        //freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
+        //freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
 
         kart.SuspensionHeight = Mathf.Lerp(kart.SuspensionHeight, baseSuspension, Time.deltaTime * SuspensionResetSpeed);
     }
@@ -81,8 +84,14 @@ public class CarMovement : MonoBehaviour {
         if(boost >= 0.4f && gas > 0 && brake < 0.5f) statBoost.TriggerStatBoost();
     }
 
+    public void OnRecenter(InputValue val) {
+        if(val.Get<float>() >= 0.4f) camControl.Recenter();
+    }
+
     public void OnCameraAim(InputValue val) {
         camControl.camSys.aim = val.Get<float>();
+        if(camControl.camSys.aim >= 0.5f) camControl.AnimateCameraMascotte();
+        //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
     }
     public void OnCameraShoot(InputValue val) {
         camControl.camSys.shoot = val.Get<float>();
@@ -109,7 +118,7 @@ public class CarMovement : MonoBehaviour {
         //triggerAction.action.ApplyBindingOverride(0, binding);
     }
 
-    protected void SwitchControls(string map) {
+    protected void SwitchControlMap(string map) {
         playerInput.SwitchCurrentActionMap(map);
     }
 

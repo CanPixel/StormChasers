@@ -1,3 +1,13 @@
 - wobble on land
 
 - vehicle damage ontrigger
+
+
+
+
+
+
+- als je geen links/rechts op L-Analog hebt, dan simpele break * 2 force. (sterkere break?)
+
+
+-  Press R to reload scene

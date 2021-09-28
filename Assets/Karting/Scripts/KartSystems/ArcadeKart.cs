@@ -76,7 +76,7 @@ namespace KartGame.KartSystems
         public float AirPercent    { get; private set; }
         public float GroundPercent { get; private set; }
         
-        public Cinemachine.CinemachineFreeLook look;
+        public Cinemachine.CinemachineVirtualCamera look;
 
         public ArcadeKart.Stats baseStats = new ArcadeKart.Stats
         {
