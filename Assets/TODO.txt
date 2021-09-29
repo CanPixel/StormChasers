@@ -6,9 +6,6 @@
 
 - als je geen links/rechts op L-Analog hebt, dan simpele break * 2 force. (sterkere break?)
 
-
-- Doors only open on boost
-
 - cam meejumpen
 
 - cam meegaan met loop-de-loop
@@ -31,3 +28,8 @@ TESTEN:
 - AutoFocus
 
 - Slider minigame focus
+
+
+
+========= DONE:
+- Doors only open on boost

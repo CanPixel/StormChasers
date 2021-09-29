@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class StatBoost : MonoBehaviour {
     private Cinemachine.CinemachineVirtualCamera fl;
+    public GameObject doorLeftStatic, doorRightStatic, doorLeft, doorRight;
 
     public ArcadeKart kart;
 
@@ -28,9 +29,13 @@ public class StatBoost : MonoBehaviour {
         lastActivatedTimestamp = -9999f;
         fl = GameObject.FindGameObjectWithTag("Player").GetComponent<ArcadeKart>().look;
         fovTarget = fl.m_Lens.FieldOfView;
+        SetHingesStatic(true);
     }
 
     private void Update() {
+        doorLeftStatic.transform.localRotation = Quaternion.Lerp(doorLeftStatic.transform.localRotation, Quaternion.identity, Time.deltaTime * 3f);
+        doorRightStatic.transform.localRotation = Quaternion.Lerp(doorRightStatic.transform.localRotation, Quaternion.identity, Time.deltaTime * 3f);
+
         fl.m_Lens.FieldOfView = Mathf.Lerp(fl.m_Lens.FieldOfView, fovTarget, Time.deltaTime * fovChangeSpeed);
 
         if (isCoolingDown) { 
@@ -48,10 +53,21 @@ public class StatBoost : MonoBehaviour {
         kart.AddPowerup(this.boostStats);
         onPowerupActivated.Invoke();
         isCoolingDown = true;
+        SetHingesStatic(false);
     }
 
     public void IncreaseFOV(float fov) {
         fovTarget = fov;
         //fl.m_Lens.FieldOfView = fov;
+    }
+
+    public void SetHingesStatic(bool enabled) {
+        doorLeftStatic.SetActive(enabled);
+        doorRightStatic.SetActive(enabled);
+        doorLeft.SetActive(!enabled);
+        doorRight.SetActive(!enabled);
+        doorLeftStatic.transform.localEulerAngles = doorLeft.transform.localEulerAngles;
+        doorRightStatic.transform.localEulerAngles = doorRight.transform.localEulerAngles;
+        doorLeft.transform.localEulerAngles = doorRight.transform.localEulerAngles = Vector3.zero;
     }
 }

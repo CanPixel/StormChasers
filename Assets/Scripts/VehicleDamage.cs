@@ -29,6 +29,7 @@ public class VehicleDamage : MonoBehaviour {
 
     public void OnCollisionEnter(Collision collision) {
         //  if (collision.gameObject.CompareTag("car")) return;
+
         Vector3 colRelVel = collision.relativeVelocity;
         colRelVel.y *= YforceDamp;
 
@@ -63,6 +64,8 @@ public class VehicleDamage : MonoBehaviour {
                 Vector3 originToMeDir = vertWorldPos - originPos;
                 Vector3 flatVertToCenterDir = transform.position - vertWorldPos;
                 flatVertToCenterDir.y = 0.0f;
+
+                Debug.Log(originToMeDir.sqrMagnitude + " | " + sqrDemRange);
 
                 // 0.5 - 1 => 45� to 0�  / current vertice is nearer to exploPos than center of bounds
                 if (originToMeDir.sqrMagnitude < sqrDemRange) //dot > 0.8f ) 
