@@ -13,7 +13,11 @@ public class VehicleDamage : MonoBehaviour {
     private MeshFilter[] meshFilters;
     private float sqrDemRange;
 
+    public bool enable = false;
+
     public void Start() {
+        if(!enable) return;
+
         sqrDemRange = demolutionRange * demolutionRange;
 
         meshFilters = optionalMeshList;
@@ -28,6 +32,7 @@ public class VehicleDamage : MonoBehaviour {
     private float colStrength;
 
     public void OnCollisionEnter(Collision collision) {
+        if(!enable) return;
         //  if (collision.gameObject.CompareTag("car")) return;
 
         Vector3 colRelVel = collision.relativeVelocity;

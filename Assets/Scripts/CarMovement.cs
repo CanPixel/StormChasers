@@ -45,6 +45,11 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
+        if(steering == 0 && drift >= 0.5f) {
+            kart.ActivateDriftVFX(true);
+            kart.IsDrifting = true;
+        }
+
         camControl.rotationInput = rotationInput;
 
         if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
@@ -72,7 +77,10 @@ public class CarMovement : MonoBehaviour {
     public void OnDrift(InputValue val) {
         drift = val.Get<float>();
         MoveCalc();
-        if(drift == 1 && steering != 0) kart.LockDriftDirection(steering);
+        if(drift >= 0.5f) {
+            if(steering != 0) kart.LockDriftDirection(steering);
+            else MoveCalc();
+        } 
     }
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
@@ -94,6 +102,7 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraAim(InputValue val) {
         camControl.camSystem.aim = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f) camControl.AnimateCameraMascotte();
+        else camControl.Recenter();
         //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
     }
     public void OnCameraShoot(InputValue val) {
@@ -107,7 +116,13 @@ public class CarMovement : MonoBehaviour {
     }
 
     protected void MoveCalc() {
-        moveVec = new Vector2(steering, gas - brake);
+        float driftStop = 1;
+        if(steering == 0 && drift >= 0.5f) driftStop = 0;
+        float baseVel = gas * driftStop - brake * (1 - driftStop);
+        if(gas > 0 && brake > 0) baseVel = 0;
+        if(gas <= 0 && brake > 0) baseVel = -1;
+
+        moveVec = new Vector2(steering, baseVel * driftStop);
         move = (moveVec != Vector2.zero);
     }
 
@@ -128,15 +143,12 @@ public class CarMovement : MonoBehaviour {
     public float IsGassing() {
         return moveVec.y;
     }
-
     public float IsSteering() {
         return moveVec.x;
     }
-
     public bool IsBraking() {
         return brake > 0;
     }
-
     public bool IsDrifting() {
         return drift > 0;
     }

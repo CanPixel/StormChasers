@@ -1,14 +1,7 @@
 - wobble on land
-
 - vehicle damage ontrigger
 
 
-
-- als je geen links/rechts op L-Analog hebt, dan simpele break * 2 force. (sterkere break?)
-
-- cam meejumpen
-
-- cam meegaan met loop-de-loop
 
 
 
@@ -17,19 +10,27 @@ TESTEN:
 
 - or reward with boost amount (boost bar)
 
-
 - Center frame
 - object orientation
 - anti-objects
 - Special Focal points
 
-- Depth of field / focus
 
+        - Depth of field / focus
 - AutoFocus
-
 - Slider minigame focus
 
 
 
 ========= DONE:
 - Doors only open on boost
+- Cam Now Recenters/redirects to front on exiting cameramode 
+- Without steering, using drift now halts you (faster than brake). 
+- Gas + brake = velocity 0
+- brake + drift = brake the brake xD
+- Basic Cam collision
+- New Camera try-out. Matching the old steering feel + Loop de loop working again. More racing-camera like
+- 1st person Cam jumpt mee
+- 1st person Cam gaat mee met loop-de-loop :D
+- Veel smoothere damping voor alles
+- Betere transition van 3rd -> 1st
