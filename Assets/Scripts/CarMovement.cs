@@ -35,7 +35,7 @@ public class CarMovement : MonoBehaviour {
 
     public void OnEnable() {
         statBoost = GetComponent<StatBoost>();
-        //Cursor.visible = false;
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
         if(controls == null) controls = new Controls();
@@ -87,14 +87,17 @@ public class CarMovement : MonoBehaviour {
     public void OnRecenter(InputValue val) {
         if(val.Get<float>() >= 0.4f) camControl.Recenter();
     }
+    public void OnCycleFilter(InputValue val) {
+        if(camControl.camSystem.aim >= 0.5f && val.Get<float>() != 0) camControl.CycleFilters(val.Get<float>());
+    }
 
     public void OnCameraAim(InputValue val) {
-        camControl.camSys.aim = val.Get<float>();
-        if(camControl.camSys.aim >= 0.5f) camControl.AnimateCameraMascotte();
+        camControl.camSystem.aim = val.Get<float>();
+        if(camControl.camSystem.aim >= 0.5f) camControl.AnimateCameraMascotte();
         //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
     }
     public void OnCameraShoot(InputValue val) {
-        camControl.camSys.shoot = val.Get<float>();
+        camControl.camSystem.shoot = val.Get<float>();
     }
 
     protected void SetBrakeLights(bool on) {
