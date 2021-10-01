@@ -56,7 +56,6 @@ public class LockOnSystem : MonoBehaviour
                     lockedObject.crosshair = createImage;
                     lockedObject.target = targetsInGame[i];
                     crossHairs.Add(lockedObject) ;
-
                 }
                 else if (targetsInFrame.Contains(targetsInGame[i]) && !isOnScreen)
                 {
@@ -69,6 +68,7 @@ public class LockOnSystem : MonoBehaviour
                 }
             }
         }
+
         crossHairs = tempList;
         for (int k = 0; k < targetsInFrame.Count; k++)
         {
@@ -76,4 +76,5 @@ public class LockOnSystem : MonoBehaviour
             crossHairs[k].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }
     }
+
 }
