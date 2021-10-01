@@ -13,7 +13,11 @@ public class VehicleDamage : MonoBehaviour {
     private MeshFilter[] meshFilters;
     private float sqrDemRange;
 
+    public bool enable = false;
+
     public void Start() {
+        if(!enable) return;
+
         sqrDemRange = demolutionRange * demolutionRange;
 
         meshFilters = optionalMeshList;
@@ -28,7 +32,9 @@ public class VehicleDamage : MonoBehaviour {
     private float colStrength;
 
     public void OnCollisionEnter(Collision collision) {
+        if(!enable) return;
         //  if (collision.gameObject.CompareTag("car")) return;
+
         Vector3 colRelVel = collision.relativeVelocity;
         colRelVel.y *= YforceDamp;
 
@@ -63,6 +69,8 @@ public class VehicleDamage : MonoBehaviour {
                 Vector3 originToMeDir = vertWorldPos - originPos;
                 Vector3 flatVertToCenterDir = transform.position - vertWorldPos;
                 flatVertToCenterDir.y = 0.0f;
+
+                Debug.Log(originToMeDir.sqrMagnitude + " | " + sqrDemRange);
 
                 // 0.5 - 1 => 45� to 0�  / current vertice is nearer to exploPos than center of bounds
                 if (originToMeDir.sqrMagnitude < sqrDemRange) //dot > 0.8f ) 

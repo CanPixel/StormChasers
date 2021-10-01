@@ -65,6 +65,46 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""17a962dd-7b13-4359-8351-2a6a467991b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraAim"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""749119d6-42f7-4c76-af70-17671390cc9b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraShoot"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a69c8358-55cf-40d6-ac8d-6059f689c642"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Recenter"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""3df37bbb-3751-46e6-bd5c-d50a969eb685"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CycleFilter"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""0e382c57-c152-4fe0-903c-48afaa7d5abf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -213,17 +253,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7f1016fb-38bc-44f8-a82d-284f9ac335ca"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Drift"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""fe18a06f-00ce-4a23-addf-4d18cfbec538"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
@@ -315,7 +344,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""75d5813f-654f-4e8f-af44-3b6325d4c4c1"",
                     ""path"": ""<Mouse>/delta/y"",
                     ""interactions"": """",
-                    ""processors"": ""Invert,Scale(factor=0.005)"",
+                    ""processors"": ""Scale(factor=0.02)"",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Looking"",
                     ""isComposite"": false,
@@ -326,7 +355,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""4f37edf5-7030-4c73-867f-b304ca762e5d"",
                     ""path"": ""<Mouse>/delta/y"",
                     ""interactions"": """",
-                    ""processors"": ""Scale(factor=0.005)"",
+                    ""processors"": ""Invert,Scale(factor=0.02)"",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Looking"",
                     ""isComposite"": false,
@@ -337,7 +366,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""a53a1763-43e0-4271-bb8e-d32f69d563fa"",
                     ""path"": ""<Mouse>/delta/x"",
                     ""interactions"": """",
-                    ""processors"": ""Invert,Scale(factor=0.005)"",
+                    ""processors"": ""Invert,Scale(factor=0.02)"",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Looking"",
                     ""isComposite"": false,
@@ -348,7 +377,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""a2803dbd-88b3-407c-984a-5e5fc9b76ff0"",
                     ""path"": ""<Mouse>/delta/x"",
                     ""interactions"": """",
-                    ""processors"": ""Scale(factor=0.005)"",
+                    ""processors"": ""Scale(factor=0.02)"",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Looking"",
                     ""isComposite"": false,
@@ -364,6 +393,138 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dffb3e72-3b9e-4a54-9ec1-a92f5d884d2b"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""611aab00-b166-4c7b-9050-3e93f9cf3b31"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f0d93fc-c2fb-49ba-9a50-f425c544423e"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92f4336a-9727-4d40-8e9b-bf6e1abcc985"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraAim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f966395-3f7e-4469-bab9-d644ce4df1b8"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""CameraAim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""129e30ef-eeb2-4033-904b-209c04b17499"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""126c6d71-0dcc-4171-b720-d97466979609"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""CameraShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0bd715ed-ddf9-474a-aff5-0ccaed6c1367"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Recenter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f1770de-e5f0-461f-94e0-7378ac930247"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Recenter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""CycleFilter"",
+                    ""id"": ""5a07f5ec-beeb-4ffd-a84a-2edf6aca4b3c"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""9a9220e6-1361-4fcf-92e5-87f9f80c8617"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""d0ea811e-f51f-4de3-9e3c-3f36b0ced15a"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -412,6 +573,11 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
         m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
         m_VehicleControls_Jump = m_VehicleControls.FindAction("Jump", throwIfNotFound: true);
+        m_VehicleControls_Boost = m_VehicleControls.FindAction("Boost", throwIfNotFound: true);
+        m_VehicleControls_CameraAim = m_VehicleControls.FindAction("CameraAim", throwIfNotFound: true);
+        m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
+        m_VehicleControls_Recenter = m_VehicleControls.FindAction("Recenter", throwIfNotFound: true);
+        m_VehicleControls_CycleFilter = m_VehicleControls.FindAction("CycleFilter", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -469,6 +635,11 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_Drift;
     private readonly InputAction m_VehicleControls_Looking;
     private readonly InputAction m_VehicleControls_Jump;
+    private readonly InputAction m_VehicleControls_Boost;
+    private readonly InputAction m_VehicleControls_CameraAim;
+    private readonly InputAction m_VehicleControls_CameraShoot;
+    private readonly InputAction m_VehicleControls_Recenter;
+    private readonly InputAction m_VehicleControls_CycleFilter;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -479,6 +650,11 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
         public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
         public InputAction @Jump => m_Wrapper.m_VehicleControls_Jump;
+        public InputAction @Boost => m_Wrapper.m_VehicleControls_Boost;
+        public InputAction @CameraAim => m_Wrapper.m_VehicleControls_CameraAim;
+        public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
+        public InputAction @Recenter => m_Wrapper.m_VehicleControls_Recenter;
+        public InputAction @CycleFilter => m_Wrapper.m_VehicleControls_CycleFilter;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -506,6 +682,21 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
+                @Boost.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
+                @CameraAim.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
+                @CameraShoot.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
+                @Recenter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
+                @CycleFilter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
+                @CycleFilter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
+                @CycleFilter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -528,6 +719,21 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
+                @CameraAim.started += instance.OnCameraAim;
+                @CameraAim.performed += instance.OnCameraAim;
+                @CameraAim.canceled += instance.OnCameraAim;
+                @CameraShoot.started += instance.OnCameraShoot;
+                @CameraShoot.performed += instance.OnCameraShoot;
+                @CameraShoot.canceled += instance.OnCameraShoot;
+                @Recenter.started += instance.OnRecenter;
+                @Recenter.performed += instance.OnRecenter;
+                @Recenter.canceled += instance.OnRecenter;
+                @CycleFilter.started += instance.OnCycleFilter;
+                @CycleFilter.performed += instance.OnCycleFilter;
+                @CycleFilter.canceled += instance.OnCycleFilter;
             }
         }
     }
@@ -583,6 +789,11 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnDrift(InputAction.CallbackContext context);
         void OnLooking(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
+        void OnCameraAim(InputAction.CallbackContext context);
+        void OnCameraShoot(InputAction.CallbackContext context);
+        void OnRecenter(InputAction.CallbackContext context);
+        void OnCycleFilter(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
