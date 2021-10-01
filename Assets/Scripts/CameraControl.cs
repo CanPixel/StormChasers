@@ -13,6 +13,8 @@ public class CameraControl : MonoBehaviour {
 
     public Cinemachine.PostFX.CinemachinePostProcessing postProcessing;
 
+    public float slowMotionDamping = 3f, slowMotionTime = 0.1f;
+
     public GameObject[] enableOnFirstPerson;
 
     public bool glitchyOnPurpose = false;
@@ -31,7 +33,15 @@ public class CameraControl : MonoBehaviour {
     public class CameraSystem {
         public float aim, shoot, focus;
 
-        public PostProcessProfile[] filters;
+        [System.Serializable]
+        public class ShaderFilter {
+            public string name;
+            public PostProcessProfile profile;
+            public Sprite icon;
+        }
+
+        public ShaderFilter[] shaderFilters;
+
         [HideInInspector] public int filterIndex = 0;
 
         public override string ToString() {
@@ -39,6 +49,7 @@ public class CameraControl : MonoBehaviour {
         }
     }
     public CameraSystem camSystem;
+    public ShaderReel shaderReel;
 
     private float recenterTime = 0;
     public float recenterDuration = 1f;
@@ -53,6 +64,8 @@ public class CameraControl : MonoBehaviour {
         // /freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
         //freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
 
+        Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming()) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
+
         if(recenterTime > 0) {
             recenterTime -= Time.deltaTime;
             orbitalTransposer.m_XAxis.Value = Mathf.Lerp(orbitalTransposer.m_XAxis.Value, 0, Time.deltaTime * 4f);
@@ -64,11 +77,18 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
     }
 
+    protected bool IsAiming() {
+        return camSystem.aim >= 0.5f;
+    }
+
     public void CycleFilters(float add) {
         camSystem.filterIndex += (int)add;
-        if(camSystem.filterIndex >= camSystem.filters.Length) camSystem.filterIndex = 0;
-        if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.filters.Length - 1;
-        postProcessing.m_Profile = camSystem.filters[camSystem.filterIndex];
+        if(camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
+        if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
+        postProcessing.m_Profile = camSystem.shaderFilters[camSystem.filterIndex].profile;
+        shaderReel.current = camSystem.filterIndex;
+
+        SoundManager.PlaySound("ShaderSwitch");
     }
 
     protected void FirstPersonLook() {
@@ -113,6 +133,7 @@ public class CameraControl : MonoBehaviour {
         orbitalTransposer.m_RecenterToTargetHeading.DoRecentering(); */
         if(glitchyOnPurpose) orbitalTransposer.ForceCameraPosition(orbitalTransposer.transform.position, transform.localRotation);
         orbitalTransposer.m_XAxis.Value = 0;
+        pov.m_VerticalAxis.Value = 0;
         recenterTime = recenterDuration;
     }
 }

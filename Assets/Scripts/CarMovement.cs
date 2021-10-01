@@ -84,19 +84,20 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
-        if(jump >= 0.5f && kart.GroundPercent > 0.0f) kart.SuspensionHeight = baseSuspension * jumpHeight;
+        if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
     }
     public void OnBoost(InputValue val) {
         if(statBoost == null) return;
         boost = val.Get<float>();
-        if(boost >= 0.4f && gas > 0 && brake < 0.5f) statBoost.TriggerStatBoost();
+        if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
     }
 
     public void OnRecenter(InputValue val) {
         if(val.Get<float>() >= 0.4f) camControl.Recenter();
     }
     public void OnCycleFilter(InputValue val) {
-        if(camControl.camSystem.aim >= 0.5f && val.Get<float>() != 0) camControl.CycleFilters(val.Get<float>());
+        var fl = val.Get<float>();
+        if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
     }
 
     public void OnCameraAim(InputValue val) {
@@ -107,6 +108,16 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnCameraShoot(InputValue val) {
         camControl.camSystem.shoot = val.Get<float>();
+    }
+
+    protected void Jump() {
+        kart.SuspensionHeight = baseSuspension * jumpHeight;
+        SoundManager.PlaySound("Jump");
+    }
+
+    protected void Boost() {
+        statBoost.TriggerStatBoost();
+        SoundManager.PlaySound("Boost");
     }
 
     protected void SetBrakeLights(bool on) {
