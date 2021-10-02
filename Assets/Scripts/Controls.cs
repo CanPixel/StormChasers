@@ -105,6 +105,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""PhotoBook"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""e0bf7e2c-01ba-4551-99fb-69d1290e1962"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -525,6 +533,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""CycleFilter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a3e5dd7-c275-43df-96ea-4f3048333ef9"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PhotoBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -578,6 +597,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
         m_VehicleControls_Recenter = m_VehicleControls.FindAction("Recenter", throwIfNotFound: true);
         m_VehicleControls_CycleFilter = m_VehicleControls.FindAction("CycleFilter", throwIfNotFound: true);
+        m_VehicleControls_PhotoBook = m_VehicleControls.FindAction("PhotoBook", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
     }
@@ -640,6 +660,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_VehicleControls_CameraShoot;
     private readonly InputAction m_VehicleControls_Recenter;
     private readonly InputAction m_VehicleControls_CycleFilter;
+    private readonly InputAction m_VehicleControls_PhotoBook;
     public struct VehicleControlsActions
     {
         private @Controls m_Wrapper;
@@ -655,6 +676,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
         public InputAction @Recenter => m_Wrapper.m_VehicleControls_Recenter;
         public InputAction @CycleFilter => m_Wrapper.m_VehicleControls_CycleFilter;
+        public InputAction @PhotoBook => m_Wrapper.m_VehicleControls_PhotoBook;
         public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -697,6 +719,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @CycleFilter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
                 @CycleFilter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
                 @CycleFilter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
+                @PhotoBook.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
+                @PhotoBook.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
+                @PhotoBook.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
             }
             m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -734,6 +759,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @CycleFilter.started += instance.OnCycleFilter;
                 @CycleFilter.performed += instance.OnCycleFilter;
                 @CycleFilter.canceled += instance.OnCycleFilter;
+                @PhotoBook.started += instance.OnPhotoBook;
+                @PhotoBook.performed += instance.OnPhotoBook;
+                @PhotoBook.canceled += instance.OnPhotoBook;
             }
         }
     }
@@ -794,6 +822,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnCameraShoot(InputAction.CallbackContext context);
         void OnRecenter(InputAction.CallbackContext context);
         void OnCycleFilter(InputAction.CallbackContext context);
+        void OnPhotoBook(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {

@@ -109,6 +109,9 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraShoot(InputValue val) {
         camControl.camSystem.shoot = val.Get<float>();
     }
+    public void OnPhotoBook(InputValue val) {
+        if(val.Get<float>() >= 0.5f) camControl.photoBook = !camControl.photoBook;
+    }
 
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;

@@ -92,6 +92,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "PhotoBook",
+                    "type": "PassThrough",
+                    "id": "e0bf7e2c-01ba-4551-99fb-69d1290e1962",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -512,6 +520,17 @@
                     "action": "CycleFilter",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "7a3e5dd7-c275-43df-96ea-4f3048333ef9",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "PhotoBook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

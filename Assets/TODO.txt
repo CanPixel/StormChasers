@@ -3,13 +3,24 @@
 
 
 
-- Recenter lerp
 - physical cam meedraaien
 - Boost meter? Hold instead of press
 - Force on boost
 
 
 - arrow dingetjes voor snap to orientation?
+
+
+
+
+
+AUDIO:
+- Landing
+- Go to Camera Aiming 
+- Shooting Picture
+- Beep beep achteruit?
+- SlowMo Effect
+- Boost effect
 
 
 
@@ -22,7 +33,7 @@
 TESTEN:
 - Picture quality == boost feedback
 
-- or reward with boost amount (boost bar)
+- Reward with boost amount in fuel (boost bar)
 
 - Center frame
 - object orientation
@@ -39,4 +50,8 @@ TESTEN:
 
 
 ========= DONE:
-
+- Recenter lerp
+- Screenshot mechanic
+- The Reel of Filters now works!
+- Soundjes
+- Pictures get saved in temporary UI element. Press Select to access this menu
