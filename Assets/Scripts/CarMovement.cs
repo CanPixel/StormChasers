@@ -51,7 +51,7 @@ public class CarMovement : MonoBehaviour {
             kart.IsDrifting = true;
         }
 
-        camControl.rotationInput = rotationInput;
+        if(camControl != null) camControl.rotationInput = rotationInput;
 
         if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
 
@@ -98,22 +98,30 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
+        if(camControl != null && camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
     }
     public void OnChangeFocus(InputValue val) {
-        camCanvas.ChangeFocus(val.Get<float>());
+        if(camCanvas != null) camCanvas.ChangeFocus(val.Get<float>());
+    }
+
+    public void OnLooking(InputValue val) {
+        rotationInput = val.Get<Vector2>();
+        if(camCanvas != null) camCanvas.SynchLook();
     }
 
     public void OnCameraAim(InputValue val) {
+        if(camControl == null) return;
         camControl.camSystem.aim = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f) camControl.AnimateCameraMascotte();
         else camControl.Recenter();
         //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
     }
     public void OnCameraShoot(InputValue val) {
+        if(camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
     }
     public void OnPhotoBook(InputValue val) {
+        if(camControl == null) return;
         if(val.Get<float>() >= 0.5f) camControl.photoBook = !camControl.photoBook;
     }
 
@@ -142,11 +150,6 @@ public class CarMovement : MonoBehaviour {
 
         moveVec = new Vector2(steering, baseVel * driftStop);
         move = (moveVec != Vector2.zero);
-    }
-
-    public void OnLooking(InputValue val) {
-        rotationInput = val.Get<Vector2>();
-        camCanvas.SynchLook();
     }
 
     private void ChangeBinding() {
