@@ -12,7 +12,6 @@ public class LockedObjects
 
 public class LockOnSystem : MonoBehaviour
 {
-    bool locked;
     public GameObject crossHair;
     public GameObject canvas;
     Camera cam;
