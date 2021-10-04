@@ -28,6 +28,11 @@ AUDIO:
 
 
 
+[[[BUGS]]:
+- Snelheid drift brake als variabel
+
+
+
 - Double reticle for stability / motion blur (Ohm My Lord)
 - Responsive reticle / Color change? 
 

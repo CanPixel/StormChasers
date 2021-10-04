@@ -158,9 +158,9 @@ public class CarMovement : MonoBehaviour {
         //triggerAction.action.ApplyBindingOverride(0, binding);
     }
 
-    protected void SwitchControlMap(string map) {
+    /* protected void SwitchControlMap(string map) {
         playerInput.SwitchCurrentActionMap(map);
-    }
+    } */
 
     public float IsGassing() {
         return moveVec.y;
