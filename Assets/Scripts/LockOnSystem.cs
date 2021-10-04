@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class LockedObjects
-{
+public class LockedObjects {
     public GameObject target;
     public GameObject crosshair;
 }
 
 
-public class LockOnSystem : MonoBehaviour
-{
+public class LockOnSystem : MonoBehaviour {
+    public Animator animator;
     public GameObject crossHair;
     public GameObject canvas;
-    Camera cam;
+    public Camera cam;
 
     Transform target;
 
@@ -22,27 +21,25 @@ public class LockOnSystem : MonoBehaviour
     public List<GameObject> targetsInFrame = new List<GameObject>();
     List<LockedObjects> crossHairs = new List<LockedObjects>();
 
-
-    void Start()
-    {
-        cam = GetComponent<Camera>();
-        GameObject[] allTargets = GameObject.FindGameObjectsWithTag("Target");
-
-        foreach (GameObject t in allTargets)
-        {
-            targetsInGame.Add(t);
-        }
+    public PhotoItem[] allTargets {
+        get; private set;
     }
 
-    void Update()
-    {
-        var tempList = crossHairs;
-        if (targetsInGame.Count > 0)
-        {
-            for (int i = 0; i < targetsInGame.Count; i++)
-            {
-                Vector3 targetPos = cam.WorldToViewportPoint(targetsInGame[i].transform.position);
+    void Start() {
+ //       GameObject[] allTargets = GameObject.FindGameObjectsWithTag("Target");
+        allTargets = GameObject.FindObjectsOfType<PhotoItem>();
 
+        foreach (PhotoItem t in allTargets) if(t.showLockOnMarker) targetsInGame.Add(t.gameObject);
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+    }
+
+    void Update() {
+        var tempList = crossHairs;
+        if (targetsInGame.Count > 0) {
+            for (int i = 0; i < targetsInGame.Count; i++) {
+                if(targetsInGame.Count <= i) return;
+                
+                Vector3 targetPos = cam.WorldToViewportPoint(targetsInGame[i].transform.position);
                 bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
                 if (isOnScreen && !targetsInFrame.Contains(targetsInGame[i]))
@@ -64,13 +61,15 @@ public class LockOnSystem : MonoBehaviour
                     var tempCrossHair = crossHairs.Where(x => x.target == tempTargetInGame).ToList()[0];
                     tempList.Remove(tempCrossHair);
                     Destroy(tempCrossHair.crosshair);
-                    Debug.Log("Kill M e");
                 }
+                if(targetsInFrame.Count <= 0 || crossHairs.Count <= 0) break;
             }
         }
         crossHairs = tempList;
+        if(targetsInFrame.Count <= 0 || crossHairs.Count <= 0) return;
         for (int k = 0; k < targetsInFrame.Count; k++)
         {
+            if(crossHairs.Count <= k || targetsInFrame.Count <= k) break;
             target = targetsInFrame[k].transform;
             crossHairs[k].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }

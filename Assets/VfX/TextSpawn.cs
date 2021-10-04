@@ -4,13 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class TextSpawn : MonoBehaviour
-{
+public class TextSpawn : MonoBehaviour {
     public GameObject floatingTextPrefab;
 
-    void CreateText()
-    {
-        Debug.Log("POK!");
+    void CreateText() {
         Instantiate(floatingTextPrefab, transform.position, Quaternion.identity,transform);
     }
 }

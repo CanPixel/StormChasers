@@ -1,47 +1,59 @@
+== [Optional]
 - wobble on land
 - vehicle damage ontrigger
 
 
-- Force on boost
+- Arrow dingetjes voor snap to orientation?
+
+        - je probeert eigenlijk de best mogelijke Production op te stellen voor je foto
 
 
-- arrow dingetjes voor snap to orientation?
+- smoke grenades / priming the picture
 
+pushing objects into composition should be +++++
+
+EXPLOSIVES should be ++++
+
+exhaust should be ------
 
 
 - 1st person camera Recenter
-- Fix Portfolio
 - Portfolio interaction
 - Freeze frame after photo
-- SplashManager
+
+
+- LockOnSystem fixen
+
+
+- Betere haptics
+
 
 
 
 AUDIO:
 - Landing
-- Go to Camera Aiming 
-- Shooting Picture
 - Beep beep achteruit?
-- SlowMo Effect
-- Boost effect
+- Better Boost effect   (Dolly Shot / Dolly Zoom)
 
+
+
+- BOOST CAP
 
 
 
 [[[BUGS]]:
 - Snelheid drift brake als variabel
 
-
-
-- Double reticle for stability / motion blur (Ohm My Lord)
 - Responsive reticle / Color change? 
 
 
 
 TESTEN:
 - Picture quality == boost feedback
+- Reward with boost amount in fuel (boost bar)                  of              direct boost reward in force
+- AutoFocus (based on reticle)
 
-- Reward with boost amount in fuel (boost bar)
+
 
 `````` PICTURE SCORING SYSTEM
 - Center frame
@@ -50,19 +62,10 @@ TESTEN:
 - Special Focal points
 
 
-        - Depth of field / focus
-- AutoFocus
+
 - Slider minigame focus
-
-
-
 - warioware minigame for zoom / focus
 
 
 
 ========= DONE:
-- Recenter lerp
-- Screenshot mechanic
-- The Reel of Filters now works!
-- Soundjes
-- Pictures get saved in temporary UI element. Press Select to access this menu

@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using KartGame.KartSystems;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
+    public Image boostOverlay;
 
     public CameraControl camControl;
     public CameraCanvas camCanvas;
@@ -30,8 +32,12 @@ public class CarMovement : MonoBehaviour {
 
     private Vector2 rotationInput;
 
+    private Gamepad gamepad;
+    private float hapticDuration = 0;
+
     void Start() {
         baseSuspension = kart.SuspensionHeight;
+        gamepad = Gamepad.current;
     }
 
     public void OnEnable() {
@@ -51,12 +57,13 @@ public class CarMovement : MonoBehaviour {
             kart.IsDrifting = true;
         }
 
+        if(hapticDuration > 0) hapticDuration -= Time.unscaledDeltaTime;
+        else InputSystem.ResetHaptics();
+        boostOverlay.color = Color.Lerp(boostOverlay.color, new Color(1, 1, 1, 0), Time.unscaledDeltaTime * 2.3f);
+
         if(camControl != null) camControl.rotationInput = rotationInput;
 
         if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
-
-        //freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
-        //freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
 
         kart.SuspensionHeight = Mathf.Lerp(kart.SuspensionHeight, baseSuspension, Time.deltaTime * SuspensionResetSpeed);
     }
@@ -112,9 +119,11 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraAim(InputValue val) {
         if(camControl == null) return;
         camControl.camSystem.aim = val.Get<float>();
-        if(camControl.camSystem.aim >= 0.5f) camControl.AnimateCameraMascotte();
+        if(camControl.camSystem.aim >= 0.5f) {
+            camControl.AnimateCameraMascotte();
+            SoundManager.PlayUnscaledSound("CamMode", 2f);
+        }
         else camControl.Recenter();
-        //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
     }
     public void OnCameraShoot(InputValue val) {
         if(camControl == null) return;
@@ -129,10 +138,17 @@ public class CarMovement : MonoBehaviour {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
         SoundManager.PlaySound("Jump");
     }
-
     protected void Boost() {
         statBoost.TriggerStatBoost();
         SoundManager.PlaySound("Boost");
+        boostOverlay.color = new Color(1, 1, 1, 0.5f);
+        HapticFeedback();
+    }
+
+    public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1) {
+        if(gamepad == null) return;
+        gamepad.SetMotorSpeeds(lowFreq, hiFreq);
+        hapticDuration = duration;
     }
 
     protected void SetBrakeLights(bool on) {
