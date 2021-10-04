@@ -35538,20 +35538,20 @@ MonoBehaviour:
   splashPrefab: {fileID: 5535085123773796265, guid: 39fdd9c9f910abe44b6e5ea7488bbd94,
     type: 3}
   pictureScore:
-  - text: Picture!
+  - text: Picture taken!
     splash: {fileID: 0}
     pos: {x: 0, y: 0, z: 0}
-    duration: 1
+    duration: 1.5
     font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
-  - text: Very nicu!
+  - text: Radical!1!
     splash: {fileID: 0}
-    pos: {x: 0, y: -10, z: 0}
-    duration: 1
-    font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  - text: Eyo fuck this picture mang >:(
+    pos: {x: 0, y: 20, z: 0}
+    duration: 0.9
+    font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
+  - text: Real grooovy!
     splash: {fileID: 0}
-    pos: {x: 0, y: -20, z: 0}
-    duration: 2
+    pos: {x: 0, y: 30, z: 0}
+    duration: 2.3
     font: {fileID: 12800000, guid: 2a414371c337cc04f91316d5626bf449, type: 3}
   ready: 1
 --- !u!1001 &940017336
@@ -44547,7 +44547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
+  m_Color: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 0.7607843}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
