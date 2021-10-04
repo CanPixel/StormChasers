@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using KartGame.KartSystems;
+using Cinemachine;
 
-public class CameraMovement : MonoBehaviour {
+public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
 
-    public ArcadeKart kart;
-    public Cinemachine.CinemachineFreeLook freeLook;
+    public CameraControl camControl;
 
-    public float cameraRotateSpeedX = 10.0f, cameraRotateSpeedY = 10.0f;
+    public ArcadeKart kart;
+
     public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
 
     private float baseSuspension;
@@ -21,9 +22,10 @@ public class CameraMovement : MonoBehaviour {
     private PlayerInput playerInput;
     private Controls controls;
     private Rigidbody rb;
+    private StatBoost statBoost;
 
     private bool move = false;
-    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
+    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0, boost = 0;
 
     private Vector2 rotationInput;
 
@@ -32,6 +34,7 @@ public class CameraMovement : MonoBehaviour {
     }
 
     public void OnEnable() {
+        statBoost = GetComponent<StatBoost>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
@@ -42,8 +45,17 @@ public class CameraMovement : MonoBehaviour {
     }
 
     void Update() {
-        freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
-        freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
+        if(steering == 0 && drift >= 0.5f) {
+            kart.ActivateDriftVFX(true);
+            kart.IsDrifting = true;
+        }
+
+        camControl.rotationInput = rotationInput;
+
+        if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+
+        //freeLook.m_XAxis.Value += rotationInput.x * cameraRotateSpeedX * Time.deltaTime;
+        //freeLook.m_YAxis.Value += rotationInput.y * cameraRotateSpeedY * Time.deltaTime;
 
         kart.SuspensionHeight = Mathf.Lerp(kart.SuspensionHeight, baseSuspension, Time.deltaTime * SuspensionResetSpeed);
     }
@@ -65,11 +77,47 @@ public class CameraMovement : MonoBehaviour {
     public void OnDrift(InputValue val) {
         drift = val.Get<float>();
         MoveCalc();
-        if(drift == 1 && steering != 0) kart.LockDriftDirection(steering);
+        if(drift >= 0.5f) {
+            if(steering != 0) kart.LockDriftDirection(steering);
+            else MoveCalc();
+        } 
     }
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
-        if(jump >= 0.5f) kart.SuspensionHeight = baseSuspension * jumpHeight;
+        if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
+    }
+    public void OnBoost(InputValue val) {
+        if(statBoost == null) return;
+        boost = val.Get<float>();
+        if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
+    }
+
+    public void OnRecenter(InputValue val) {
+        if(val.Get<float>() >= 0.4f) camControl.Recenter();
+    }
+    public void OnCycleFilter(InputValue val) {
+        var fl = val.Get<float>();
+        if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
+    }
+
+    public void OnCameraAim(InputValue val) {
+        camControl.camSystem.aim = val.Get<float>();
+        if(camControl.camSystem.aim >= 0.5f) camControl.AnimateCameraMascotte();
+        else camControl.Recenter();
+        //SwitchControlMap(camControl.camSys.aim >= 0.5 ? "CameraControls" : "VehicleControls");
+    }
+    public void OnCameraShoot(InputValue val) {
+        camControl.camSystem.shoot = val.Get<float>();
+    }
+
+    protected void Jump() {
+        kart.SuspensionHeight = baseSuspension * jumpHeight;
+        SoundManager.PlaySound("Jump");
+    }
+
+    protected void Boost() {
+        statBoost.TriggerStatBoost();
+        SoundManager.PlaySound("Boost");
     }
 
     protected void SetBrakeLights(bool on) {
@@ -79,7 +127,13 @@ public class CameraMovement : MonoBehaviour {
     }
 
     protected void MoveCalc() {
-        moveVec = new Vector2(steering, gas - brake);
+        float driftStop = 1;
+        if(steering == 0 && drift >= 0.5f) driftStop = 0;
+        float baseVel = gas * driftStop - brake * (1 - driftStop);
+        if(gas > 0 && brake > 0) baseVel = 0;
+        if(gas <= 0 && brake > 0) baseVel = -1;
+
+        moveVec = new Vector2(steering, baseVel * driftStop);
         move = (moveVec != Vector2.zero);
     }
 
@@ -93,22 +147,19 @@ public class CameraMovement : MonoBehaviour {
         //triggerAction.action.ApplyBindingOverride(0, binding);
     }
 
-    protected void SwitchControls(string map) {
+    protected void SwitchControlMap(string map) {
         playerInput.SwitchCurrentActionMap(map);
     }
 
     public float IsGassing() {
         return moveVec.y;
     }
-
     public float IsSteering() {
         return moveVec.x;
     }
-
     public bool IsBraking() {
         return brake > 0;
     }
-
     public bool IsDrifting() {
         return drift > 0;
     }

@@ -5,7 +5,7 @@ using KartGame.KartSystems;
 
 public class CarAnimation : MonoBehaviour {
     public ParticleSystem[] fumes;
-    public CameraMovement movement;
+    public CarMovement movement;
     public ArcadeKart kart;
     public Rigidbody rb;
 

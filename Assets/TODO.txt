@@ -1,5 +1,42 @@
-- speed boost / cam adjustment vlak na drift exit
-
 - wobble on land
-
 - vehicle damage ontrigger
+
+
+
+- Recenter lerp
+- physical cam meedraaien
+- Boost meter? Hold instead of press
+- Force on boost
+
+
+- arrow dingetjes voor snap to orientation?
+
+
+
+
+- Double reticle for stability / motion blur (Ohm My Lord)
+- Responsive reticle / Color change? 
+
+
+
+TESTEN:
+- Picture quality == boost feedback
+
+- or reward with boost amount (boost bar)
+
+- Center frame
+- object orientation
+- anti-objects
+- Special Focal points
+
+
+        - Depth of field / focus
+- AutoFocus
+- Slider minigame focus
+
+
+
+
+
+========= DONE:
+

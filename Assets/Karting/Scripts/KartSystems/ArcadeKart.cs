@@ -76,7 +76,7 @@ namespace KartGame.KartSystems
         public float AirPercent    { get; private set; }
         public float GroundPercent { get; private set; }
         
-        public Cinemachine.CinemachineFreeLook look;
+        public Cinemachine.CinemachineVirtualCamera look;
 
         public ArcadeKart.Stats baseStats = new ArcadeKart.Stats
         {
@@ -173,7 +173,7 @@ namespace KartGame.KartSystems
 
         // Drift params
         public bool WantsToDrift { get; private set; } = false;
-        public bool IsDrifting { get; private set; } = false;
+        public bool IsDrifting { get; set; } = false;
         float m_CurrentGrip = 1.0f;
         float m_DriftTurningPower = 0.0f;
         float m_PreviousGroundPercent = 1.0f;
@@ -195,7 +195,7 @@ namespace KartGame.KartSystems
         public void SetCanMove(bool move) => m_CanMove = move;
         public float GetMaxSpeed() => Mathf.Max(m_FinalStats.TopSpeed, m_FinalStats.ReverseSpeed);
 
-        private void ActivateDriftVFX(bool active)
+        public void ActivateDriftVFX(bool active)
         {
             foreach (var vfx in m_DriftSparkInstances)
             {
