@@ -2,7 +2,7 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "VehicleControls",
+            "name": "GameControls",
             "id": "e01c862e-2886-4f72-9f9d-fd11072e60dd",
             "actions": [
                 {
@@ -97,6 +97,14 @@
                     "name": "PhotoBook",
                     "type": "PassThrough",
                     "id": "e0bf7e2c-01ba-4551-99fb-69d1290e1962",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ChangeFocus",
+                    "type": "PassThrough",
+                    "id": "bfaeeb31-67e4-41ea-aa3a-18dafd92c436",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -414,7 +422,7 @@
                 {
                     "name": "",
                     "id": "9f0d93fc-c2fb-49ba-9a50-f425c544423e",
-                    "path": "<Keyboard>/z",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -489,7 +497,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "CycleFilter",
+                    "name": "Gamepad",
                     "id": "5a07f5ec-beeb-4ffd-a84a-2edf6aca4b3c",
                     "path": "1DAxis",
                     "interactions": "",
@@ -522,6 +530,39 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "Mouse",
+                    "id": "b3b8d831-4367-4cd4-bdce-03aae41bf386",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CycleFilter",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "343f7fe7-c6cf-47c0-9dcd-01861cd436d2",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CycleFilter",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "9f5ae378-c287-4e8e-a47f-b56cea357b33",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CycleFilter",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "7a3e5dd7-c275-43df-96ea-4f3048333ef9",
                     "path": "<Gamepad>/select",
@@ -531,14 +572,52 @@
                     "action": "PhotoBook",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4481135f-0a19-4841-99b7-9b09685c9122",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "PhotoBook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "83e9e22f-b360-43c5-91b4-d1a1010355db",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeFocus",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "8e554b4d-fec7-480d-b530-1a09fbd4eeb7",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeFocus",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "90b54965-c466-4ff9-ac65-f6778176734a",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeFocus",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
-        },
-        {
-            "name": "CameraControls",
-            "id": "2c29fd32-6eb0-497a-b0b8-084854160b87",
-            "actions": [],
-            "bindings": []
         }
     ],
     "controlSchemes": [

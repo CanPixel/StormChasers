@@ -10,6 +10,7 @@ public class CarMovement : MonoBehaviour {
     public Material brakeMaterial;
 
     public CameraControl camControl;
+    public CameraCanvas camCanvas;
 
     public ArcadeKart kart;
 
@@ -99,6 +100,9 @@ public class CarMovement : MonoBehaviour {
         var fl = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
     }
+    public void OnChangeFocus(InputValue val) {
+        camCanvas.ChangeFocus(val.Get<float>());
+    }
 
     public void OnCameraAim(InputValue val) {
         camControl.camSystem.aim = val.Get<float>();
@@ -142,6 +146,7 @@ public class CarMovement : MonoBehaviour {
 
     public void OnLooking(InputValue val) {
         rotationInput = val.Get<Vector2>();
+        camCanvas.SynchLook();
     }
 
     private void ChangeBinding() {
@@ -165,5 +170,9 @@ public class CarMovement : MonoBehaviour {
     }
     public bool IsDrifting() {
         return drift > 0;
+    }
+
+    public Vector2 GetLooking() {
+        return rotationInput;
     }
 }

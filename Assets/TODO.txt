@@ -2,15 +2,18 @@
 - vehicle damage ontrigger
 
 
-
-- physical cam meedraaien
-- Boost meter? Hold instead of press
 - Force on boost
 
 
 - arrow dingetjes voor snap to orientation?
 
 
+
+- 1st person camera Recenter
+- Fix Portfolio
+- Portfolio interaction
+- Freeze frame after photo
+- SplashManager
 
 
 
@@ -35,6 +38,7 @@ TESTEN:
 
 - Reward with boost amount in fuel (boost bar)
 
+`````` PICTURE SCORING SYSTEM
 - Center frame
 - object orientation
 - anti-objects
@@ -46,6 +50,8 @@ TESTEN:
 - Slider minigame focus
 
 
+
+- warioware minigame for zoom / focus
 
 
 

@@ -15,7 +15,7 @@ public class @Controls : IInputActionCollection, IDisposable
     ""name"": ""Controls"",
     ""maps"": [
         {
-            ""name"": ""VehicleControls"",
+            ""name"": ""GameControls"",
             ""id"": ""e01c862e-2886-4f72-9f9d-fd11072e60dd"",
             ""actions"": [
                 {
@@ -110,6 +110,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""name"": ""PhotoBook"",
                     ""type"": ""PassThrough"",
                     ""id"": ""e0bf7e2c-01ba-4551-99fb-69d1290e1962"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ChangeFocus"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""bfaeeb31-67e4-41ea-aa3a-18dafd92c436"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -427,7 +435,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9f0d93fc-c2fb-49ba-9a50-f425c544423e"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -502,7 +510,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""CycleFilter"",
+                    ""name"": ""Gamepad"",
                     ""id"": ""5a07f5ec-beeb-4ffd-a84a-2edf6aca4b3c"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
@@ -535,6 +543,39 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Mouse"",
+                    ""id"": ""b3b8d831-4367-4cd4-bdce-03aae41bf386"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""343f7fe7-c6cf-47c0-9dcd-01861cd436d2"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""9f5ae378-c287-4e8e-a47f-b56cea357b33"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""CycleFilter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""7a3e5dd7-c275-43df-96ea-4f3048333ef9"",
                     ""path"": ""<Gamepad>/select"",
@@ -544,14 +585,52 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""PhotoBook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4481135f-0a19-4841-99b7-9b09685c9122"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PhotoBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""83e9e22f-b360-43c5-91b4-d1a1010355db"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeFocus"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""8e554b4d-fec7-480d-b530-1a09fbd4eeb7"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ChangeFocus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""90b54965-c466-4ff9-ac65-f6778176734a"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ChangeFocus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
-        },
-        {
-            ""name"": ""CameraControls"",
-            ""id"": ""2c29fd32-6eb0-497a-b0b8-084854160b87"",
-            ""actions"": [],
-            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -584,22 +663,21 @@ public class @Controls : IInputActionCollection, IDisposable
         }
     ]
 }");
-        // VehicleControls
-        m_VehicleControls = asset.FindActionMap("VehicleControls", throwIfNotFound: true);
-        m_VehicleControls_Brake = m_VehicleControls.FindAction("Brake", throwIfNotFound: true);
-        m_VehicleControls_Gas = m_VehicleControls.FindAction("Gas", throwIfNotFound: true);
-        m_VehicleControls_Steer = m_VehicleControls.FindAction("Steer", throwIfNotFound: true);
-        m_VehicleControls_Drift = m_VehicleControls.FindAction("Drift", throwIfNotFound: true);
-        m_VehicleControls_Looking = m_VehicleControls.FindAction("Looking", throwIfNotFound: true);
-        m_VehicleControls_Jump = m_VehicleControls.FindAction("Jump", throwIfNotFound: true);
-        m_VehicleControls_Boost = m_VehicleControls.FindAction("Boost", throwIfNotFound: true);
-        m_VehicleControls_CameraAim = m_VehicleControls.FindAction("CameraAim", throwIfNotFound: true);
-        m_VehicleControls_CameraShoot = m_VehicleControls.FindAction("CameraShoot", throwIfNotFound: true);
-        m_VehicleControls_Recenter = m_VehicleControls.FindAction("Recenter", throwIfNotFound: true);
-        m_VehicleControls_CycleFilter = m_VehicleControls.FindAction("CycleFilter", throwIfNotFound: true);
-        m_VehicleControls_PhotoBook = m_VehicleControls.FindAction("PhotoBook", throwIfNotFound: true);
-        // CameraControls
-        m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
+        // GameControls
+        m_GameControls = asset.FindActionMap("GameControls", throwIfNotFound: true);
+        m_GameControls_Brake = m_GameControls.FindAction("Brake", throwIfNotFound: true);
+        m_GameControls_Gas = m_GameControls.FindAction("Gas", throwIfNotFound: true);
+        m_GameControls_Steer = m_GameControls.FindAction("Steer", throwIfNotFound: true);
+        m_GameControls_Drift = m_GameControls.FindAction("Drift", throwIfNotFound: true);
+        m_GameControls_Looking = m_GameControls.FindAction("Looking", throwIfNotFound: true);
+        m_GameControls_Jump = m_GameControls.FindAction("Jump", throwIfNotFound: true);
+        m_GameControls_Boost = m_GameControls.FindAction("Boost", throwIfNotFound: true);
+        m_GameControls_CameraAim = m_GameControls.FindAction("CameraAim", throwIfNotFound: true);
+        m_GameControls_CameraShoot = m_GameControls.FindAction("CameraShoot", throwIfNotFound: true);
+        m_GameControls_Recenter = m_GameControls.FindAction("Recenter", throwIfNotFound: true);
+        m_GameControls_CycleFilter = m_GameControls.FindAction("CycleFilter", throwIfNotFound: true);
+        m_GameControls_PhotoBook = m_GameControls.FindAction("PhotoBook", throwIfNotFound: true);
+        m_GameControls_ChangeFocus = m_GameControls.FindAction("ChangeFocus", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -646,84 +724,89 @@ public class @Controls : IInputActionCollection, IDisposable
         asset.Disable();
     }
 
-    // VehicleControls
-    private readonly InputActionMap m_VehicleControls;
-    private IVehicleControlsActions m_VehicleControlsActionsCallbackInterface;
-    private readonly InputAction m_VehicleControls_Brake;
-    private readonly InputAction m_VehicleControls_Gas;
-    private readonly InputAction m_VehicleControls_Steer;
-    private readonly InputAction m_VehicleControls_Drift;
-    private readonly InputAction m_VehicleControls_Looking;
-    private readonly InputAction m_VehicleControls_Jump;
-    private readonly InputAction m_VehicleControls_Boost;
-    private readonly InputAction m_VehicleControls_CameraAim;
-    private readonly InputAction m_VehicleControls_CameraShoot;
-    private readonly InputAction m_VehicleControls_Recenter;
-    private readonly InputAction m_VehicleControls_CycleFilter;
-    private readonly InputAction m_VehicleControls_PhotoBook;
-    public struct VehicleControlsActions
+    // GameControls
+    private readonly InputActionMap m_GameControls;
+    private IGameControlsActions m_GameControlsActionsCallbackInterface;
+    private readonly InputAction m_GameControls_Brake;
+    private readonly InputAction m_GameControls_Gas;
+    private readonly InputAction m_GameControls_Steer;
+    private readonly InputAction m_GameControls_Drift;
+    private readonly InputAction m_GameControls_Looking;
+    private readonly InputAction m_GameControls_Jump;
+    private readonly InputAction m_GameControls_Boost;
+    private readonly InputAction m_GameControls_CameraAim;
+    private readonly InputAction m_GameControls_CameraShoot;
+    private readonly InputAction m_GameControls_Recenter;
+    private readonly InputAction m_GameControls_CycleFilter;
+    private readonly InputAction m_GameControls_PhotoBook;
+    private readonly InputAction m_GameControls_ChangeFocus;
+    public struct GameControlsActions
     {
         private @Controls m_Wrapper;
-        public VehicleControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Brake => m_Wrapper.m_VehicleControls_Brake;
-        public InputAction @Gas => m_Wrapper.m_VehicleControls_Gas;
-        public InputAction @Steer => m_Wrapper.m_VehicleControls_Steer;
-        public InputAction @Drift => m_Wrapper.m_VehicleControls_Drift;
-        public InputAction @Looking => m_Wrapper.m_VehicleControls_Looking;
-        public InputAction @Jump => m_Wrapper.m_VehicleControls_Jump;
-        public InputAction @Boost => m_Wrapper.m_VehicleControls_Boost;
-        public InputAction @CameraAim => m_Wrapper.m_VehicleControls_CameraAim;
-        public InputAction @CameraShoot => m_Wrapper.m_VehicleControls_CameraShoot;
-        public InputAction @Recenter => m_Wrapper.m_VehicleControls_Recenter;
-        public InputAction @CycleFilter => m_Wrapper.m_VehicleControls_CycleFilter;
-        public InputAction @PhotoBook => m_Wrapper.m_VehicleControls_PhotoBook;
-        public InputActionMap Get() { return m_Wrapper.m_VehicleControls; }
+        public GameControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Brake => m_Wrapper.m_GameControls_Brake;
+        public InputAction @Gas => m_Wrapper.m_GameControls_Gas;
+        public InputAction @Steer => m_Wrapper.m_GameControls_Steer;
+        public InputAction @Drift => m_Wrapper.m_GameControls_Drift;
+        public InputAction @Looking => m_Wrapper.m_GameControls_Looking;
+        public InputAction @Jump => m_Wrapper.m_GameControls_Jump;
+        public InputAction @Boost => m_Wrapper.m_GameControls_Boost;
+        public InputAction @CameraAim => m_Wrapper.m_GameControls_CameraAim;
+        public InputAction @CameraShoot => m_Wrapper.m_GameControls_CameraShoot;
+        public InputAction @Recenter => m_Wrapper.m_GameControls_Recenter;
+        public InputAction @CycleFilter => m_Wrapper.m_GameControls_CycleFilter;
+        public InputAction @PhotoBook => m_Wrapper.m_GameControls_PhotoBook;
+        public InputAction @ChangeFocus => m_Wrapper.m_GameControls_ChangeFocus;
+        public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(VehicleControlsActions set) { return set.Get(); }
-        public void SetCallbacks(IVehicleControlsActions instance)
+        public static implicit operator InputActionMap(GameControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IGameControlsActions instance)
         {
-            if (m_Wrapper.m_VehicleControlsActionsCallbackInterface != null)
+            if (m_Wrapper.m_GameControlsActionsCallbackInterface != null)
             {
-                @Brake.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
-                @Brake.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
-                @Brake.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBrake;
-                @Gas.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
-                @Gas.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
-                @Gas.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnGas;
-                @Steer.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
-                @Steer.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
-                @Steer.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnSteer;
-                @Drift.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
-                @Drift.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
-                @Drift.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnDrift;
-                @Looking.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
-                @Looking.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
-                @Looking.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnLooking;
-                @Jump.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
-                @Jump.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
-                @Jump.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnJump;
-                @Boost.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
-                @Boost.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
-                @Boost.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnBoost;
-                @CameraAim.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
-                @CameraAim.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
-                @CameraAim.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraAim;
-                @CameraShoot.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
-                @CameraShoot.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
-                @CameraShoot.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCameraShoot;
-                @Recenter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
-                @Recenter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
-                @Recenter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnRecenter;
-                @CycleFilter.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
-                @CycleFilter.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
-                @CycleFilter.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnCycleFilter;
-                @PhotoBook.started -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
-                @PhotoBook.performed -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
-                @PhotoBook.canceled -= m_Wrapper.m_VehicleControlsActionsCallbackInterface.OnPhotoBook;
+                @Brake.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBrake;
+                @Brake.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBrake;
+                @Brake.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBrake;
+                @Gas.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnGas;
+                @Gas.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnGas;
+                @Gas.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnGas;
+                @Steer.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSteer;
+                @Steer.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSteer;
+                @Steer.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSteer;
+                @Drift.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDrift;
+                @Drift.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDrift;
+                @Drift.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDrift;
+                @Looking.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnLooking;
+                @Looking.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnLooking;
+                @Looking.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnLooking;
+                @Jump.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnJump;
+                @Boost.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBoost;
+                @CameraAim.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraAim;
+                @CameraAim.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraAim;
+                @CameraShoot.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraShoot;
+                @CameraShoot.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCameraShoot;
+                @Recenter.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnRecenter;
+                @Recenter.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnRecenter;
+                @CycleFilter.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCycleFilter;
+                @CycleFilter.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCycleFilter;
+                @CycleFilter.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnCycleFilter;
+                @PhotoBook.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnPhotoBook;
+                @PhotoBook.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnPhotoBook;
+                @PhotoBook.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnPhotoBook;
+                @ChangeFocus.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
+                @ChangeFocus.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
+                @ChangeFocus.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
             }
-            m_Wrapper.m_VehicleControlsActionsCallbackInterface = instance;
+            m_Wrapper.m_GameControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Brake.started += instance.OnBrake;
@@ -762,35 +845,13 @@ public class @Controls : IInputActionCollection, IDisposable
                 @PhotoBook.started += instance.OnPhotoBook;
                 @PhotoBook.performed += instance.OnPhotoBook;
                 @PhotoBook.canceled += instance.OnPhotoBook;
+                @ChangeFocus.started += instance.OnChangeFocus;
+                @ChangeFocus.performed += instance.OnChangeFocus;
+                @ChangeFocus.canceled += instance.OnChangeFocus;
             }
         }
     }
-    public VehicleControlsActions @VehicleControls => new VehicleControlsActions(this);
-
-    // CameraControls
-    private readonly InputActionMap m_CameraControls;
-    private ICameraControlsActions m_CameraControlsActionsCallbackInterface;
-    public struct CameraControlsActions
-    {
-        private @Controls m_Wrapper;
-        public CameraControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CameraControlsActions set) { return set.Get(); }
-        public void SetCallbacks(ICameraControlsActions instance)
-        {
-            if (m_Wrapper.m_CameraControlsActionsCallbackInterface != null)
-            {
-            }
-            m_Wrapper.m_CameraControlsActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-            }
-        }
-    }
-    public CameraControlsActions @CameraControls => new CameraControlsActions(this);
+    public GameControlsActions @GameControls => new GameControlsActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -809,7 +870,7 @@ public class @Controls : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_GamepadSchemeIndex];
         }
     }
-    public interface IVehicleControlsActions
+    public interface IGameControlsActions
     {
         void OnBrake(InputAction.CallbackContext context);
         void OnGas(InputAction.CallbackContext context);
@@ -823,8 +884,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnRecenter(InputAction.CallbackContext context);
         void OnCycleFilter(InputAction.CallbackContext context);
         void OnPhotoBook(InputAction.CallbackContext context);
-    }
-    public interface ICameraControlsActions
-    {
+        void OnChangeFocus(InputAction.CallbackContext context);
     }
 }

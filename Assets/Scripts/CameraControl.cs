@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using Cinemachine.PostFX;
 
 public class CameraControl : MonoBehaviour {
     public float cameraRotateSpeedX = 200.0f, cameraRotateSpeedY = 3.0f;
@@ -13,8 +14,9 @@ public class CameraControl : MonoBehaviour {
     public Cinemachine.CinemachineBrain cinemachineBrain;
     public GameObject photoBookUI, polaroidPrefab;
     public Transform photoBookScrollPanel;
+    public UIBob reticleBob;
 
-    public bool photoBook = false;
+    [HideInInspector] public bool photoBook = false;
 
     public Image polaroidUI, polaroidScreenshot;
     public float polaroidBottomPos = 0, polaroidTopPos = 100;
@@ -108,8 +110,8 @@ public class CameraControl : MonoBehaviour {
 
             if(screenshotTimer > 10) ResetScreenshot();
 
-            if(screenshotTimer > 7f) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.deltaTime * 5f), polaroidUI.transform.position.z);
-            else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.deltaTime * 16f), polaroidUI.transform.position.z);
+            if(screenshotTimer > 7f) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
+            else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
         }
     }
 
@@ -118,13 +120,17 @@ public class CameraControl : MonoBehaviour {
     }
 
     public void CycleFilters(float add) {
+        //postProcessing.m_FocusTracking = Cinemachine.PostFX.CinemachinePostProcessing.FocusTrackingMode.None;
         camSystem.filterIndex += (int)add;
         if(camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
         if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
         postProcessing.m_Profile = camSystem.shaderFilters[camSystem.filterIndex].profile;
         shaderReel.current = camSystem.filterIndex;
 
+        //postProcessing.m_FocusTracking = Cinemachine.PostFX.CinemachinePostProcessing.FocusTrackingMode.LookAtTarget;
         SoundManager.PlaySound("ShaderSwitch");
+
+        reticleBob.Bob();
     }
 
     protected void FirstPersonLook() {
