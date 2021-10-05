@@ -3,6 +3,12 @@
 - vehicle damage ontrigger
 
 
+- 2 SHADERS AT A TIME BLENDING - Continu 
+
+
+
+
+
 - Arrow dingetjes voor snap to orientation?
 
         - je probeert eigenlijk de best mogelijke Production op te stellen voor je foto
