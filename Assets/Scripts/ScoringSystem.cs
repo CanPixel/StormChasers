@@ -10,7 +10,7 @@ public class ScoringSystem : MonoBehaviour {
     private float pictureScoreTimer = 0;
     private int scoringSplashIndex = 0;
 
-    public bool ready = true;
+    [HideInInspector] public bool ready = true;
 
     [System.Serializable]
     public class PictureScoring {

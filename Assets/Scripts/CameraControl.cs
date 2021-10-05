@@ -7,55 +7,49 @@ using UnityEngine.UI;
 using Cinemachine.PostFX;
 
 public class CameraControl : MonoBehaviour {
-    public float cameraRotateSpeedX = 200.0f, cameraRotateSpeedY = 3.0f;
-    public Cinemachine.CinemachineVirtualCamera firstPersonLook, thirdPersonLook;
-    private Cinemachine.CinemachinePOV pov;
-    private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
-    public Cinemachine.CinemachineBrain cinemachineBrain;
-    public GameObject photoBookUI, polaroidPrefab;
-    public Transform photoBookScrollPanel;
-    public UIBob reticleBob;
-    public CarMovement carMovement;
-
-    public LockOnSystem lockOnSystem;
-    public ScoringSystem scoringSystem;
-
-/*     public Transform splashParent;
-    public GameObject splashPrefab; */
-/*     public List<PictureScoring> pictureScore = new List<PictureScoring>();
-    private float pictureScoreTimer = 0; */
+    public GameObject[] enableOnFirstPerson;
+    public CameraSystem camSystem;
 
     [HideInInspector] public bool photoBook = false;
 
-    public Text polaroidTitle;
-    public Image polaroidUI, polaroidScreenshot;
     public float polaroidBottomPos = 0, polaroidTopPos = 100;
-
     public int maxPhotosInPortfolio = 5;
 
     public int resWidth = 1600, resHeight = 900;
 
-    public Cinemachine.PostFX.CinemachinePostProcessing postProcessing;
-
     public float slowMotionDamping = 3f, slowMotionTime = 0.1f;
-
-    public GameObject[] enableOnFirstPerson;
 
     public enum CameraState {
         CARVIEW = 0, CAMVIEW, DASHVIEW
     }
     public CameraState cameraState = CameraState.CARVIEW;
 
-    public Vector3 rotationOffset;
-    public GameObject cameraMascotte;
+    public Vector3 mascotteRotationOffset = new Vector3(-90, 90, 0);
 
     [HideInInspector] public Vector2 rotationInput;
 
     private float screenshotTimer = 0;
+
+    [System.Serializable]
+    public class PictureScore {
+        public Screenshot screenshot;
+        
+        public string name;
+        public bool onScreen;
+        public float physicalDistance;
+        public float centerFrame;
+        public float focus, motion;
+
+        public override string ToString() {
+            return "[" + name + "]: Physical Dist: " + physicalDistance + " || OnScreen: " + onScreen + " || MOTION BLUR: " + motion;
+        }
+    }
+
     [System.Serializable]
     public class Screenshot {
         public string name;
         public Texture2D image;
+
         [Range(0, 100)]
         public int score = 0;
 
@@ -86,8 +80,6 @@ public class CameraControl : MonoBehaviour {
             return "Aim: " + aim + " || Shoot: " + shoot;
         }
     }
-    public CameraSystem camSystem;
-    public ShaderReel shaderReel;
 
     private float recenterTime = 0;
     public float recenterDuration = 1f;
@@ -95,14 +87,45 @@ public class CameraControl : MonoBehaviour {
     public List<Screenshot> screenshots = new List<Screenshot>();
     private List<GameObject> photoBookShots = new List<GameObject>();
 
+    [Space(10)]
+    public Cinemachine.PostFX.CinemachinePostProcessing postProcessing;
+    public Cinemachine.CinemachineVirtualCamera firstPersonLook;
+    public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
+    private Cinemachine.CinemachinePOV pov;
+    private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
+    public Cinemachine.CinemachineBrain cinemachineBrain;
+    public GameObject photoBookUI, polaroidPrefab;
+    public GameObject cameraMascotte;
+    public Transform photoBookScrollPanel;
+    public UIBob reticleBob;
+    public CarMovement carMovement;
+    public CameraCanvas cameraCanvas;
+    public Text polaroidTitle;
+    public Image polaroidUI, polaroidScreenshot;
+    public LockOnSystem lockOnSystem;
+    public ScoringSystem scoringSystem;
+    public ShaderReel shaderReel;
+    private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
+
+    private float motion;
+
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
+
+        motionBlur = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
     }
 
     void Update() {
+        ////MOTION BLUR
+        var motionDist = Vector3.Distance(cameraCanvas.movementReticle.transform.position, cameraCanvas.baseReticle.transform.position) * 1.5f;
+        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
+        if(motionDist < 100) motionBlur.enabled.value = false;
+        else motionBlur.enabled.value = true; 
+        motion = motionDist;
+
         photoBookUI.SetActive(photoBook);
 
         Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming()) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
@@ -168,7 +191,7 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.SetActive(true);
 
         cameraMascotte.transform.rotation = firstPersonLook.transform.rotation;
-        cameraMascotte.transform.Rotate(rotationOffset);
+        cameraMascotte.transform.Rotate(mascotteRotationOffset);
         cameraMascotte.transform.eulerAngles += new Vector3(0, orbitalTransposer.m_XAxis.Value + transform.eulerAngles.y, 0);
         
         pov.m_HorizontalAxis.Value = cameraMascotte.transform.localEulerAngles.z + transform.eulerAngles.y;
@@ -216,6 +239,7 @@ public class CameraControl : MonoBehaviour {
         var sf = pol.GetComponent<ShaderFilter>();
         sf.icon.sprite = temp;
 
+        //[Photo Naming - Object Prioritization - Scoring section]
         string photoName = "";
         int photoScore = 0;
         foreach(var i in lockOnSystem.allTargets) {
@@ -229,13 +253,18 @@ public class CameraControl : MonoBehaviour {
                     photoScore = 200 - dist;
                     photoName = i.name + "!";
                 }
-                Debug.Log("[" + i.name + "]: Physical Dist: " + dist + " || OnScreen: " + isOnScreen + " : ");
+                var score = new PictureScore();
+                score.name = photoName;
+                score.screenshot = scren;
+                score.physicalDistance = dist;
+                score.onScreen = isOnScreen;
+                score.motion = motion;
+                Debug.Log(score);
             }
         }
         polaroidTitle.text = sf.text.text = photoName;
         scoringSystem.CalculatePictureScore(scren);
 
-        // sf.text.text = scren.name;
         photoBookShots.Add(pol);
 
         if(screenshots.Count >= maxPhotosInPortfolio) {

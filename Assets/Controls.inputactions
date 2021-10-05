@@ -508,20 +508,9 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
-                    "id": "9a9220e6-1361-4fcf-92e5-87f9f80c8617",
-                    "path": "<Gamepad>/dpad/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "CycleFilter",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "positive",
                     "id": "d0ea811e-f51f-4de3-9e3c-3f36b0ced15a",
-                    "path": "<Gamepad>/dpad/right",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

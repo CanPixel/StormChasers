@@ -22,8 +22,7 @@ public class ArcadeKartPowerup : MonoBehaviour {
     private Vector3 baseScale;
     public float animateSpeed = 4f, animateRange = 0.1f;
 
-    private void Awake()
-    {
+    private void Awake() {
         baseScale = transform.localScale;
         lastActivatedTimestamp = -9999f;
 
@@ -45,15 +44,12 @@ public class ArcadeKartPowerup : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
+    private void OnTriggerEnter(Collider other) {
         if (isCoolingDown) return;
 
         var rb = other.attachedRigidbody;
         if (rb) {
-
             var kart = rb.GetComponent<ArcadeKart>();
-
             if (kart)
             { 
                 lastActivatedTimestamp = Time.time;
