@@ -13326,7 +13326,7 @@ MonoBehaviour:
   movementDamping: 10
   movementRange: 400
   movementSensitivityThreshold: 0.2
-  maxFocusRange: 300
+  maxFocusRange: 200
   focusSensitivity: 1
 --- !u!1 &469379968
 GameObject:
@@ -18375,7 +18375,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 4a19cadf2b55c2e4f8828e2979bb38cf, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.29
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -34101,8 +34101,6 @@ MonoBehaviour:
     type: 3}
   canvas: {fileID: 1663860200}
   cam: {fileID: 892070512}
-  targetsInFrame:
-  - {fileID: 2805368772294919107}
 --- !u!1001 &892638005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35095,8 +35093,8 @@ GameObject:
   - component: {fileID: 939766219}
   - component: {fileID: 939766218}
   - component: {fileID: 939766217}
-  - component: {fileID: 939766221}
   - component: {fileID: 939766220}
+  - component: {fileID: 939766230}
   - component: {fileID: 939766229}
   - component: {fileID: 939766228}
   - component: {fileID: 939766226}
@@ -35180,111 +35178,12 @@ MonoBehaviour:
   - {fileID: 2068112264}
   - {fileID: 190303009}
   brakeMaterial: {fileID: 2100000, guid: e741194cfbcff8145bea0c93e2c5f500, type: 2}
-  boostOverlay: {fileID: 76635091}
   camControl: {fileID: 939766228}
   camCanvas: {fileID: 467422062}
+  boostScript: {fileID: 939766230}
   kart: {fileID: 939766223}
   SuspensionResetSpeed: 5
   jumpHeight: 17
---- !u!114 &939766221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939766216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7502470b7a9bb6a43bd1ae029ecdf31f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  doorLeftStatic: {fileID: 2072404129}
-  doorRightStatic: {fileID: 981275954}
-  doorLeft: {fileID: 3229224392770380539}
-  doorRight: {fileID: 1035326855340170546}
-  kart: {fileID: 939766223}
-  boostStats:
-    modifiers:
-      TopSpeed: 20
-      Acceleration: 10
-      ReverseSpeed: 0
-      ReverseAcceleration: 0
-      AccelerationCurve: 0
-      Braking: 0
-      CoastingDrag: 0
-      Grip: 0
-      Steer: 0
-      AddedGravity: 0
-    PowerUpID: 
-    ElapsedTime: 0
-    MaxTime: 3
-  cooldown: 3
-  onPowerupActivated:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 775267194}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 939766221}
-        m_TargetAssemblyTypeName: StatBoost, Assembly-CSharp
-        m_MethodName: IncreaseFOV
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 75
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  onPowerupFinishCooldown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 775267194}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 939766221}
-        m_TargetAssemblyTypeName: StatBoost, Assembly-CSharp
-        m_MethodName: IncreaseFOV
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 50
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 939766221}
-        m_TargetAssemblyTypeName: StatBoost, Assembly-CSharp
-        m_MethodName: SetHingesStatic
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &939766222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35543,7 +35442,7 @@ MonoBehaviour:
     pos: {x: 0, y: 0, z: 0}
     duration: 1.5
     font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
-  - text: Radical!1!
+  - text: Radical!
     splash: {fileID: 0}
     pos: {x: 0, y: 20, z: 0}
     duration: 0.9
@@ -35554,6 +35453,38 @@ MonoBehaviour:
     duration: 2.3
     font: {fileID: 12800000, guid: 2a414371c337cc04f91316d5626bf449, type: 3}
   ready: 1
+--- !u!114 &939766230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939766216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d700f2f28e91f847808422772baaf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fovChange: {x: 50, y: 75}
+  fovChangeSpeed: 5
+  currentBoostFuel: 100
+  maxBoostFuel: 100
+  minBoostFuel: 0
+  boostExpandAmount: 20
+  boostRegenSpeed: 25
+  boostRegenCooldown: 3
+  boostForce: 8
+  impulseBoostForce: 0
+  boostSpamCap: 0.5
+  carRb: {fileID: 939766224}
+  boostFill: {fileID: 2081990200}
+  doorLeftStatic: {fileID: 2072404129}
+  doorRightStatic: {fileID: 981275954}
+  doorLeft: {fileID: 3229224392770380539}
+  doorRight: {fileID: 1035326855340170546}
+  virtualCamera: {fileID: 6691645747756642081}
+  speedLinesFX: {fileID: 775267194}
+  boostOverlay: {fileID: 76635091}
 --- !u!1001 &940017336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78788,7 +78719,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
-  m_LocalRotation: {x: 0.09154601, y: 0.000000004283532, z: -3.9379386e-10, w: 0.99580085}
+  m_LocalRotation: {x: 0.09154601, y: -0.000000004283532, z: 3.9379386e-10, w: 0.99580085}
   m_LocalPosition: {x: -14.71, y: 3.750001, z: -214.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

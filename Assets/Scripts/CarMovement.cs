@@ -9,10 +9,10 @@ using UnityEngine.UI;
 public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
-    public Image boostOverlay;
 
     public CameraControl camControl;
     public CameraCanvas camCanvas;
+    public Boost boostScript;
 
     public ArcadeKart kart;
 
@@ -59,7 +59,6 @@ public class CarMovement : MonoBehaviour {
 
         if(hapticDuration > 0) hapticDuration -= Time.unscaledDeltaTime;
         else InputSystem.ResetHaptics();
-        boostOverlay.color = Color.Lerp(boostOverlay.color, new Color(1, 1, 1, 0), Time.unscaledDeltaTime * 2.3f);
 
         if(camControl != null) camControl.rotationInput = rotationInput;
 
@@ -95,9 +94,10 @@ public class CarMovement : MonoBehaviour {
         if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
     }
     public void OnBoost(InputValue val) {
-        if(statBoost == null) return;
+        //if(statBoost == null) return;
         boost = val.Get<float>();
-        if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
+        Boost();
+        //if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
     }
 
     public void OnRecenter(InputValue val) {
@@ -117,7 +117,7 @@ public class CarMovement : MonoBehaviour {
     }
 
     public void OnCameraAim(InputValue val) {
-        if(camControl == null) return;
+        //if(camControl == null) return;
         camControl.camSystem.aim = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f) {
             camControl.AnimateCameraMascotte();
@@ -139,10 +139,11 @@ public class CarMovement : MonoBehaviour {
         SoundManager.PlaySound("Jump");
     }
     protected void Boost() {
-        statBoost.TriggerStatBoost();
-        SoundManager.PlaySound("Boost");
-        boostOverlay.color = new Color(1, 1, 1, 0.5f);
-        HapticFeedback();
+        //statBoost.TriggerStatBoost();
+        if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) {
+            boostScript.StartBoostState();
+            HapticFeedback();
+        } else if(boost < 0.3f) boostScript.EndBoostState();
     }
 
     public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1) {

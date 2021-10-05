@@ -229,7 +229,7 @@ public class CameraControl : MonoBehaviour {
                     photoScore = 200 - dist;
                     photoName = i.name + "!";
                 }
-                Debug.Log(i.name + ": " + dist + " || OnScreen: " + isOnScreen);
+                Debug.Log("[" + i.name + "]: Physical Dist: " + dist + " || OnScreen: " + isOnScreen + " : ");
             }
         }
         polaroidTitle.text = sf.text.text = photoName;

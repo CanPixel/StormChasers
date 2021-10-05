@@ -18,7 +18,7 @@ public class LockOnSystem : MonoBehaviour {
     Transform target;
 
     List<GameObject> targetsInGame = new List<GameObject>();
-    public List<GameObject> targetsInFrame = new List<GameObject>();
+    private List<GameObject> targetsInFrame = new List<GameObject>();
     List<LockedObjects> crossHairs = new List<LockedObjects>();
 
     public PhotoItem[] allTargets {

@@ -1,35 +1,38 @@
 == [Optional]
 - wobble on land
 - vehicle damage ontrigger
+- Screen diagonal split for cutscene / different visuals
+- Stunting moves? Picture score feedback
+- Arrow dingetjes voor snap to orientation?
+- Responsive reticle / Color change? 
 
 
 - 2 SHADERS AT A TIME BLENDING - Continu 
 
+- Snelheid drift brake als variabel
+- BOOST CAP
+
+====== LockOnSystem fixen
+- PhotoItem reticles, scalen op distance + scalen op centerframeness
+
+
+======== je probeert eigenlijk de best mogelijke Production op te stellen voor je foto
+- 180 flipped photo bonus (transform.up)
+- smoke grenades / priming the picture ---- pushing objects into composition should be +++++ bonus
+- EXPLOSIVES should be ++++ bonus
+- exhaust on picture should be ------ farting CO2 bonus reduction
 
 
 
-
-- Arrow dingetjes voor snap to orientation?
-
-        - je probeert eigenlijk de best mogelijke Production op te stellen voor je foto
-
-
-- smoke grenades / priming the picture
-
-pushing objects into composition should be +++++
-
-EXPLOSIVES should be ++++
-
-exhaust should be ------
-
-
-- 1st person camera Recenter
+- 1st person camera Recenter Lerp
 - Portfolio interaction
-- Freeze frame after photo
 
 
-- LockOnSystem fixen
+- Freeze frame after photo ////// Photo scoring visuals
 
+
+
+- Boost cancel force
 
 - Betere haptics
 
@@ -43,14 +46,10 @@ AUDIO:
 
 
 
-- BOOST CAP
-
 
 
 [[[BUGS]]:
-- Snelheid drift brake als variabel
-
-- Responsive reticle / Color change? 
+- PRESS X IN MID AIR LMAO
 
 
 
@@ -61,12 +60,16 @@ TESTEN:
 
 
 
-`````` PICTURE SCORING SYSTEM
-- Center frame
-- object orientation
-- anti-objects
+================== PICTURE SCORING SYSTEM
+- OnScreen (bool)
+- Physical Distance (float)
+- Center frame (float)
+- Anti-objects (bool)
+- Focus
 - Special Focal points
+- Object orientation ()
 
+- STUNTING BONUS MULTIPLIER   
 
 
 - Slider minigame focus
