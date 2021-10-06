@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PhotoItem : MonoBehaviour {
+    public MeshRenderer render;
     public bool showLockOnMarker = true;
     public int baseScore = 10;
 
