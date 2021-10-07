@@ -10,6 +10,11 @@ public class CameraControl : MonoBehaviour {
     public GameObject[] enableOnFirstPerson;
     public CameraSystem camSystem;
 
+    public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
+    public float BoostFollowDamping = 2f;
+
+    public float physicalDistanceFactor = 0.5f;
+
     [HideInInspector] public bool photoBook = false;
 
     public float polaroidBottomPos = 0, polaroidTopPos = 100;
@@ -99,6 +104,7 @@ public class CameraControl : MonoBehaviour {
     public Transform photoBookScrollPanel;
     public UIBob reticleBob;
     public CarMovement carMovement;
+    public CarAnimation carAnimation;
     public CameraCanvas cameraCanvas;
     public Text polaroidTitle;
     public Image polaroidUI, polaroidScreenshot;
@@ -107,13 +113,17 @@ public class CameraControl : MonoBehaviour {
     public ShaderReel shaderReel;
     private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
 
-    private float motion;
+    private Vector3 baseFollowOffset;
+    private float motion, baseZDamping;
 
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
+
+        baseFollowOffset = orbitalTransposer.m_FollowOffset;
+        baseZDamping = orbitalTransposer.m_ZDamping;
 
         motionBlur = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
     }
@@ -198,6 +208,10 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.transform.eulerAngles += new Vector3(0, orbitalTransposer.m_XAxis.Value + transform.eulerAngles.y, 0);
         
         pov.m_HorizontalAxis.Value = cameraMascotte.transform.localEulerAngles.z + transform.eulerAngles.y;
+
+
+        orbitalTransposer.m_FollowOffset = Vector3.Lerp(orbitalTransposer.m_FollowOffset, (carMovement.boostScript.isBoosting) ? BoostFollowOffset : baseFollowOffset, Time.deltaTime * BoostFollowDamping);
+        orbitalTransposer.m_ZDamping = Mathf.Lerp(orbitalTransposer.m_ZDamping, (carMovement.boostScript.isBoosting) ? 0.05f : baseZDamping, Time.deltaTime * BoostFollowDamping / 2f);
     }
 
     public void AnimateCameraMascotte() {
@@ -254,14 +268,11 @@ public class CameraControl : MonoBehaviour {
             bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
             if(isOnScreen) {
-                if(photoScore < 200 - dist) {
-                    photoScore = 200 - dist;
-                    photoName = i.name + "!";
-                }
+                photoName = i.name + "!";
                 var score = new PictureScore();
                 score.name = photoName;
                 score.screenshot = scren;
-                score.physicalDistance = dist;
+                score.physicalDistance = (int)(dist * physicalDistanceFactor);
                 score.onScreen = isOnScreen;
                 score.motion = (int)motion;
                 score.focus = (int)cameraCanvas.GetFocusValue();
