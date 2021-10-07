@@ -41,7 +41,7 @@ public class CameraControl : MonoBehaviour {
         public float focus, motion;
 
         public override string ToString() {
-            return "[" + name + "]: Physical Dist: " + physicalDistance + " || OnScreen: " + onScreen + " || MOTION BLUR: " + motion;
+            return "[" + name + "]: Physical Dist: " + physicalDistance + " || Center Frame: " + centerFrame + " || Motion Instability: " + motion + " || Focus: " + focus;
         }
     }
 
@@ -63,7 +63,7 @@ public class CameraControl : MonoBehaviour {
 
     [System.Serializable]
     public class CameraSystem {
-        public float aim, shoot, focus;
+        public float aim, shoot;
 
         [System.Serializable]
         public class ShaderFilter {
@@ -103,7 +103,7 @@ public class CameraControl : MonoBehaviour {
     public Text polaroidTitle;
     public Image polaroidUI, polaroidScreenshot;
     public LockOnSystem lockOnSystem;
-    public ScoringSystem scoringSystem;
+    public SplashSystem splashSystem;
     public ShaderReel shaderReel;
     private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
 
@@ -119,13 +119,8 @@ public class CameraControl : MonoBehaviour {
     }
 
     void Update() {
-        ////MOTION BLUR
-        var motionDist = Vector3.Distance(cameraCanvas.movementReticle.transform.position, cameraCanvas.baseReticle.transform.position) * 1.5f;
-        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
-        if(motionDist < 100) motionBlur.enabled.value = false;
-        else motionBlur.enabled.value = true; 
-        motion = motionDist;
-
+        MotionBlurReticle();
+        
         photoBookUI.SetActive(photoBook);
 
         Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming()) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
@@ -149,6 +144,14 @@ public class CameraControl : MonoBehaviour {
             if(screenshotTimer > 7f) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
             else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
         }
+    }
+
+    protected void MotionBlurReticle() {
+        var motionDist = Vector3.Distance(cameraCanvas.movementReticle.transform.position, cameraCanvas.baseReticle.transform.position) * 1.5f;
+        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
+        if(motionDist < 100) motionBlur.enabled.value = false;
+        else motionBlur.enabled.value = true; 
+        motion = motionDist;
     }
 
     protected bool IsAiming() {
@@ -212,7 +215,7 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void TakePicture() {
-        if(!scoringSystem.ready) return;
+        if(!splashSystem.ready) return;
 
         carMovement.HapticFeedback(0f, 0.5f, 0.4f);
 
@@ -242,7 +245,9 @@ public class CameraControl : MonoBehaviour {
         //[Photo Naming - Object Prioritization - Scoring section]
         string photoName = "";
         int photoScore = 0;
-        foreach(var i in lockOnSystem.allTargets) {
+        //foreach(var i in lockOnSystem.allTargets) {
+        var i = cameraCanvas.targetedObject;
+        if(i != null) {
             var dist = (int)Mathf.Clamp(Mathf.Abs(Vector3.Distance(transform.position, i.transform.position)), 1, 200);
 
             Vector3 targetPos = cam.WorldToViewportPoint(i.transform.position);
@@ -258,12 +263,20 @@ public class CameraControl : MonoBehaviour {
                 score.screenshot = scren;
                 score.physicalDistance = dist;
                 score.onScreen = isOnScreen;
-                score.motion = motion;
+                score.motion = (int)motion;
+                score.focus = (int)cameraCanvas.GetFocusValue();
+
+                var camPos = cam.WorldToViewportPoint(i.transform.position);
+                camPos.z = 0;
+                var centerFrame = Vector3.Distance(new Vector3(0.5f, 0.5f, 0), camPos) * 800f;
+                score.centerFrame = 100 - (int)Mathf.Clamp(centerFrame, 0, 100);
+
                 Debug.Log(score);
             }
         }
+        //}
         polaroidTitle.text = sf.text.text = photoName;
-        scoringSystem.CalculatePictureScore(scren);
+        splashSystem.CalculatePictureScore(scren);
 
         photoBookShots.Add(pol);
 

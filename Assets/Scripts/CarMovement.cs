@@ -19,7 +19,6 @@ public class CarMovement : MonoBehaviour {
     public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
 
     private float baseSuspension;
-    private float currentSpeed = 0;
     protected Vector2 moveVec = Vector2.zero;
 
     private PlayerInput playerInput;
@@ -48,7 +47,6 @@ public class CarMovement : MonoBehaviour {
         if(controls == null) controls = new Controls();
         if(rb == null) rb = GetComponent<Rigidbody>();
         if(playerInput == null) playerInput = GetComponent<PlayerInput>();
-        currentSpeed = 0;
     }
 
     void Update() {

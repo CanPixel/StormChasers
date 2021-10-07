@@ -28,9 +28,25 @@
 
 
 
+voor Physics / forces FixedUpdate?
+
+
+
+
 - Photographic memory ||| level selection screen ||| Level defining picture ||| your pictures in main menu defining the levels |||| hall of fame
 - Export functie || exporter building printing your picture into local desktop drive file. Costs money too.
 
+
+
+
+=========================== NEXT SPRINT         \\\             BOSS FIGHT
+- Tornado
+- Weak points \\ composite objects 
+- Indirect attacking (nukes)
+- Destruction
+- Dynamic AI
+- Fun Physics
+- Fun interactions
 
 
 
