@@ -5,6 +5,7 @@ using KartGame.KartSystems;
 
 public class CarAnimation : MonoBehaviour {
     public ParticleSystem[] fumes;
+    public ParticleSystem[] flames;
     public CarMovement movement;
     public ArcadeKart kart;
     public Rigidbody rb;
@@ -27,12 +28,25 @@ public class CarAnimation : MonoBehaviour {
         baseScale = chassis.transform.localScale;
     }
 
+    void Update() {
+        for(int i = 0; i < flames.Length; i++) {
+            if(movement.boostScript.isBoosting) {
+                flames[i].Play();
+                fumes[i].Stop();
+            }
+            else {
+                flames[i].Stop();
+                fumes[i].Play();
+            }
+        }
+    }
+
     void LateUpdate() {
         var speed = rb.velocity.magnitude / kart.baseStats.TopSpeed;
 
         for(int i = 0; i < fumes.Length; i++) {
-            if(movement.IsGassing() > 0.01f) fumes[i].Play();
-            else fumes[i].Stop();
+            var em = fumes[i].emission;
+            em.rateOverTimeMultiplier = (int)((movement.IsGassing() + 0.5f) * 12);
         }
 
         float wiggle = Mathf.Sin(Time.time * Mathf.Clamp(speed * wiggleSpeed, 0, wiggleSpeedCap)) * Mathf.Clamp(speed * wiggleRange, 0, wiggleRangeCap);//Mathf.Sin(Time.time * Mathf.Clamp(speed * wiggleSpeed, 0, wiggleSpeedCap)) * Mathf.Clamp(speed * wiggleRange, 0, wiggleRangeCap);

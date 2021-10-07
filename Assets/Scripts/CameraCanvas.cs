@@ -41,7 +41,7 @@ public class CameraCanvas : MonoBehaviour {
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, 0, maxFocusRange);
-        focusMeter.value = dof.focusDistance.value / maxFocusRange;
+        focusMeter.value = (dof.focusDistance.value / maxFocusRange);
 
         PhotoItem target;
         target = RaycastFromReticle(baseReticle.transform);
