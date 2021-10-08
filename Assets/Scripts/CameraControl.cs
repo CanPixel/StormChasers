@@ -17,6 +17,7 @@ public class CameraControl : MonoBehaviour {
 
     [HideInInspector] public bool photoBook = false;
 
+    public Vector2 polaroidInterval = new Vector2(12, 14);
     public float polaroidBottomPos = 0, polaroidTopPos = 100;
     public int maxPhotosInPortfolio = 5;
 
@@ -36,17 +37,33 @@ public class CameraControl : MonoBehaviour {
     private float screenshotTimer = 0;
 
     [System.Serializable]
+    public class ScoringObject {
+        public GameObject obj;
+        public float scoreReduction = 1;
+    }
+
+    [System.Serializable]
     public class PictureScore {
         public Screenshot screenshot;
+
+        public List<ScoringObject> scoringObjects = new List<ScoringObject>();
         
         public string name;
         public bool onScreen;
         public float physicalDistance;
         public float centerFrame;
         public float focus, motion;
+        public float objectSharpness {
+            get; private set;
+        }
 
         public override string ToString() {
-            return "[" + name + "]: Physical Dist: " + physicalDistance + " || Center Frame: " + centerFrame + " || Motion Instability: " + motion + " || Focus: " + focus;
+            return "[" + name + "]  || Center Frame: " + centerFrame + " || Motion Stability: " + motion + " || Sharpness: " + objectSharpness + " [Focus: " + focus + ", PhysDist: " + physicalDistance + "]";
+        }
+
+        public void CalculateSharpness() {
+            objectSharpness = (int)Mathf.Clamp(focus - physicalDistance, 0, 100);
+            objectSharpness = 100 - objectSharpness;
         }
     }
 
@@ -104,7 +121,6 @@ public class CameraControl : MonoBehaviour {
     public Transform photoBookScrollPanel;
     public UIBob reticleBob;
     public CarMovement carMovement;
-    public CarAnimation carAnimation;
     public CameraCanvas cameraCanvas;
     public Text polaroidTitle;
     public Image polaroidUI, polaroidScreenshot;
@@ -140,6 +156,7 @@ public class CameraControl : MonoBehaviour {
             recenterTime -= Time.deltaTime * 2f;
             orbitalTransposer.m_XAxis.Value = Mathf.Lerp(orbitalTransposer.m_XAxis.Value, 0, Time.deltaTime * 6f);
         }
+        if(carMovement.GetLooking().magnitude >= 0.65f && recenterTime > 0) recenterTime = 0;
 
         if(camSystem.aim > 0.4) FirstPersonLook();
         else ThirdPersonLook();
@@ -149,9 +166,9 @@ public class CameraControl : MonoBehaviour {
         if(screenshotTimer > 0) {
             screenshotTimer += Time.unscaledDeltaTime * 2f;
 
-            if(screenshotTimer > 10) ResetScreenshot();
+            if(screenshotTimer > polaroidInterval.y) screenshotTimer = 0;
 
-            if(screenshotTimer > 7f) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
+            if(screenshotTimer > polaroidInterval.x) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
             else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
         }
     }
@@ -203,12 +220,10 @@ public class CameraControl : MonoBehaviour {
 
         cameraMascotte.SetActive(true);
 
-        cameraMascotte.transform.rotation = firstPersonLook.transform.rotation;
-        cameraMascotte.transform.Rotate(mascotteRotationOffset);
-        cameraMascotte.transform.eulerAngles += new Vector3(0, orbitalTransposer.m_XAxis.Value + transform.eulerAngles.y, 0);
+        cameraMascotte.transform.rotation = transform.rotation;
+        cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
         
         pov.m_HorizontalAxis.Value = cameraMascotte.transform.localEulerAngles.z + transform.eulerAngles.y;
-
 
         orbitalTransposer.m_FollowOffset = Vector3.Lerp(orbitalTransposer.m_FollowOffset, (carMovement.boostScript.isBoosting) ? BoostFollowOffset : baseFollowOffset, Time.deltaTime * BoostFollowDamping);
         orbitalTransposer.m_ZDamping = Mathf.Lerp(orbitalTransposer.m_ZDamping, (carMovement.boostScript.isBoosting) ? 0.05f : baseZDamping, Time.deltaTime * BoostFollowDamping / 2f);
@@ -223,10 +238,10 @@ public class CameraControl : MonoBehaviour {
         recenterTime = recenterDuration;
     }
 
-    private void ResetScreenshot() {
+/*     private void ResetScreenshot() {
         screenshotTimer = 0;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
-    }
+    } */
 
     protected void TakePicture() {
         if(!splashSystem.ready) return;
@@ -258,24 +273,24 @@ public class CameraControl : MonoBehaviour {
 
         //[Photo Naming - Object Prioritization - Scoring section]
         string photoName = "";
-        int photoScore = 0;
+        PictureScore score = new PictureScore();
         //foreach(var i in lockOnSystem.allTargets) {
         var i = cameraCanvas.targetedObject;
         if(i != null) {
-            var dist = (int)Mathf.Clamp(Mathf.Abs(Vector3.Distance(transform.position, i.transform.position)), 1, 200);
-
             Vector3 targetPos = cam.WorldToViewportPoint(i.transform.position);
             bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
             if(isOnScreen) {
+                var dist = Mathf.Clamp(Mathf.Abs(Vector3.Distance(transform.position, i.transform.position)), 1, cameraCanvas.maxDistance);
+
                 photoName = i.name + "!";
-                var score = new PictureScore();
                 score.name = photoName;
                 score.screenshot = scren;
-                score.physicalDistance = (int)(dist * physicalDistanceFactor);
+                score.physicalDistance = (int)Mathf.Clamp(dist * physicalDistanceFactor, 0, 100);
                 score.onScreen = isOnScreen;
-                score.motion = (int)motion;
+                score.motion = 100 - (int)Mathf.Clamp(motion, 0, 100);
                 score.focus = (int)cameraCanvas.GetFocusValue();
+                score.CalculateSharpness();
 
                 var camPos = cam.WorldToViewportPoint(i.transform.position);
                 camPos.z = 0;
@@ -287,7 +302,7 @@ public class CameraControl : MonoBehaviour {
         }
         //}
         polaroidTitle.text = sf.text.text = photoName;
-        splashSystem.CalculatePictureScore(scren);
+        splashSystem.VisualizeScore(score, scren);
 
         photoBookShots.Add(pol);
 
@@ -299,7 +314,7 @@ public class CameraControl : MonoBehaviour {
         }
 
         screenshotTimer = 0.1f;
-        SoundManager.PlayUnscaledSound("PhotoShoot");
+        SoundManager.PlayUnscaledSound("PhotoShoot", 0.8f);
 
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
     }

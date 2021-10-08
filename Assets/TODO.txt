@@ -1,18 +1,31 @@
 
 - 2 SHADERS AT A TIME BLENDING - Continu 
 
+- camera meedraaien met angle
+
+- coyote time jumping before 0.25f groundpercent
+- Cap / delay op jumpen (soms doe je multiple geluid)
+
+
+
 ========= Snelheid
 - Snelheid drift brake als variabel
 - BOOST CAP
 
+
 ====== LockOnSystem fixen
-- PhotoItem reticles, scalen op distance + scalen op centerframeness
+- PhotoItem reticles, dont reanimate if it had been on screen before shortly
+
+
 
 ======== Best Possible Photo Production
 - 180 flipped photo bonus (transform.up)        [STUNT]
 - smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
 - EXPLOSIVES should be ++++ bonus
 - exhaust on picture should be ------ farting CO2 bonus reduction
+
+
+        =       Accelerated gravity as you fall
 
 
 

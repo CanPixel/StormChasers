@@ -21,10 +21,9 @@ public class CarMovement : MonoBehaviour {
     private float baseSuspension;
     protected Vector2 moveVec = Vector2.zero;
 
-    private PlayerInput playerInput;
+    public PlayerInput playerInput;
     private Controls controls;
-    private Rigidbody rb;
-    private StatBoost statBoost;
+    public Rigidbody rb;
 
     private bool move = false;
     private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0, boost = 0;
@@ -37,16 +36,13 @@ public class CarMovement : MonoBehaviour {
     void Start() {
         baseSuspension = kart.SuspensionHeight;
         gamepad = Gamepad.current;
+        controls = new Controls();
     }
 
     public void OnEnable() {
-        statBoost = GetComponent<StatBoost>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
-        if(controls == null) controls = new Controls();
-        if(rb == null) rb = GetComponent<Rigidbody>();
-        if(playerInput == null) playerInput = GetComponent<PlayerInput>();
     }
 
     void Update() {

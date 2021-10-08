@@ -13,7 +13,8 @@ public class Splash : MonoBehaviour {
 
     public Vector3 targetScale;
 
-    public bool markForDestroy = false;
+    private bool markForDestroy = false;
+    public bool DestroyAfterDuration = false;
 
     public UnityEvent OnDestroyCalled;
 
@@ -30,9 +31,11 @@ public class Splash : MonoBehaviour {
             targetScale = Vector3.one * -0.1f;
         }
 
-        if(markForDestroy && transform.localScale.x <= 0) {
-            OnDestroyCalled.Invoke();
-            Destroy(gameObject);
-        }
+        if(DestroyAfterDuration && markForDestroy && transform.localScale.x <= 0) ManualDestroy();
+    }
+
+    public void ManualDestroy() {
+        OnDestroyCalled.Invoke();
+        Destroy(gameObject);
     }
 }

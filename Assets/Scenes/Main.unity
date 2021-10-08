@@ -13526,14 +13526,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32563
   raycastRadius: 2.5
   maxDistance: 300
   movementDamping: 19
   movementRange: 400
   movementSensitivityThreshold: 0.2
+  minFocusRange: 5
   maxFocusRange: 150
   focusSensitivity: 1.1
+  apertureSensitivity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0010868208
+      value: 4.32783
+      inSlope: 0.04618269
+      outSlope: 0.04618269
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.51647586
+    - serializedVersion: 3
+      time: 0.37807217
+      value: 5.176675
+      inSlope: -3.1073098
+      outSlope: -3.1073098
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.15800676
+      outWeight: 0.44600418
+    - serializedVersion: 3
+      time: 0.548635
+      value: 3.4479127
+      inSlope: -7.8850636
+      outSlope: -7.8850636
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2652375
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.69817233
+      value: 1.3907077
+      inSlope: 1.3872811
+      outSlope: 1.3872811
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.1485443
+    - serializedVersion: 3
+      time: 0.99950004
+      value: 0.50741345
+      inSlope: -0.08631271
+      outSlope: -0.08631271
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32893607
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  apertureFactor: 4.5
   lockOnSystem: {fileID: 892070515}
   cam: {fileID: 892070512}
   cameraControl: {fileID: 939766228}
@@ -13543,7 +13596,7 @@ MonoBehaviour:
   highlightedObjectText: {fileID: 1946946601}
   baseReticle: {fileID: 1746089534}
   movementReticle: {fileID: 1945636055}
-  targetedObject: {fileID: 0}
+  targetedObject: {fileID: 2124853047}
 --- !u!1 &469379968
 GameObject:
   m_ObjectHideFlags: 0
@@ -34531,8 +34584,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.09154601, y: 0.000000004283532, z: -3.9379386e-10, w: 0.99580085}
-  m_LocalPosition: {x: -14.71, y: 3.750001, z: -214.6}
+  m_LocalRotation: {x: -0.025141371, y: 0.9575121, z: -0.08802613, w: -0.27347755}
+  m_LocalPosition: {x: -10.484864, y: 3.750001, z: -199.80676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -35657,6 +35710,8 @@ MonoBehaviour:
   kart: {fileID: 939766223}
   SuspensionResetSpeed: 5
   jumpHeight: 17
+  playerInput: {fileID: 939766217}
+  rb: {fileID: 939766224}
 --- !u!114 &939766222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35707,7 +35762,7 @@ MonoBehaviour:
     CoastingDrag: 16
     Grip: 1
     Steer: 4.2
-    AddedGravity: 2.4
+    AddedGravity: 4
   airSteeringFactor: 1.3
   groundSteeringFactor: 1
   m_VisualWheels:
@@ -35771,7 +35826,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939766216}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.96154976, z: -0, w: -0.2746306}
   m_LocalPosition: {x: -14.71, y: 0.2500009, z: -206.6}
   m_LocalScale: {x: 0.9, y: 0.8, z: 0.8}
   m_Children:
@@ -35782,7 +35837,7 @@ Transform:
   - {fileID: 723159256}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 211.88, z: 0}
 --- !u!114 &939766226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35868,15 +35923,16 @@ MonoBehaviour:
   BoostFollowDamping: 6
   physicalDistanceFactor: 0.5
   photoBook: 0
+  polaroidInterval: {x: 12, y: 14}
   polaroidBottomPos: -538.8
-  polaroidTopPos: 300
+  polaroidTopPos: 475
   maxPhotosInPortfolio: 5
   resWidth: 1400
   resHeight: 900
   slowMotionDamping: 3
   slowMotionTime: 0.1
   cameraState: 0
-  mascotteRotationOffset: {x: -90, y: 90, z: 0}
+  mascotteRotationOffset: {x: -90, y: 0, z: 0}
   rotationInput: {x: 0, y: 0}
   recenterDuration: 2
   screenshots: []
@@ -35891,7 +35947,6 @@ MonoBehaviour:
   photoBookScrollPanel: {fileID: 696834648}
   reticleBob: {fileID: 478043519}
   carMovement: {fileID: 939766220}
-  carAnimation: {fileID: 0}
   cameraCanvas: {fileID: 467422062}
   polaroidTitle: {fileID: 1815026296}
   polaroidUI: {fileID: 1254578237}
@@ -35914,28 +35969,68 @@ MonoBehaviour:
   splashParent: {fileID: 2142355415}
   splashPrefab: {fileID: 5535085123773796265, guid: 39fdd9c9f910abe44b6e5ea7488bbd94,
     type: 3}
+  scoreGradient:
+    serializedVersion: 2
+    key0: {r: 0.6132076, g: 0.06786487, b: 0, a: 1}
+    key1: {r: 0.8867924, g: 0.634903, b: 0.29615515, a: 1}
+    key2: {r: 0.87195444, g: 0.9056604, b: 0.45624778, a: 0}
+    key3: {r: 0.4936376, g: 0.8490566, b: 0, a: 0}
+    key4: {r: 0.6132076, g: 0.06786487, b: 0, a: 0}
+    key5: {r: 0.990566, g: 0.11131677, b: 0, a: 0}
+    key6: {r: 0.990566, g: 0.11131677, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 16384
+    ctime2: 49151
+    ctime3: 65535
+    ctime4: 65535
+    ctime5: 65535
+    ctime6: 55512
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2
   splashes:
   - text: Picture shot!
     splash: {fileID: 0}
-    pos: {x: 0, y: 150, z: 0}
+    pos: {x: 0, y: 170, z: 0}
     rot: 0
-    scale: 1
-    duration: 1
-    font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
-  - text: Radical!
-    splash: {fileID: 0}
-    pos: {x: 0, y: 150, z: 0}
-    rot: -8
-    scale: 1
-    duration: 1
-    font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
+    scale: 0.8
+    duration: 0.7
+    font: {fileID: 12800000, guid: 2a414371c337cc04f91316d5626bf449, type: 3}
+    color: {r: 0.26415092, g: 0.26253113, b: 0.16048414, a: 1}
+    isRating: 0
+    rating: 
   - text: Real groooovy!
     splash: {fileID: 0}
-    pos: {x: 0, y: 150, z: 0}
+    pos: {x: 0, y: 170, z: 0}
     rot: 8
     scale: 1
-    duration: 1
+    duration: 1.2
     font: {fileID: 12800000, guid: 2a414371c337cc04f91316d5626bf449, type: 3}
+    color: {r: 1, g: 0.99607843, b: 0.7490196, a: 1}
+    isRating: 0
+    rating: 
+  scoreFormat:
+    text: 
+    splash: {fileID: 0}
+    pos: {x: 0, y: 200, z: 0}
+    rot: 1
+    scale: 0.9
+    duration: 1.2
+    font: {fileID: 12800000, guid: 59a160d8c4f30e24291daa9584f48b8d, type: 3}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    isRating: 0
+    rating: 
+    pictureObjects: []
   ready: 1
 --- !u!114 &939766230
 MonoBehaviour:
@@ -38082,21 +38177,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   render: {fileID: 995352979}
   showLockOnMarker: 1
-  baseScore: 10
-  pictureScore:
-    pictureQualifications:
-    - pictureMechanic: 0
-      weight: 0.5
-      score: 0
-    - pictureMechanic: 1
-      weight: 0.5
-      score: 0
-    - pictureMechanic: 2
-      weight: 0.5
-      score: 0
-    antiObject: []
-    antiObjectFactor: 0
-    minDistance: 10
 --- !u!54 &995352977
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -44950,16 +45030,16 @@ RectTransform:
   m_GameObject: {fileID: 1254578235}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4, y: 1.4, z: 1.5}
+  m_LocalScale: {x: 2, y: 2, z: 1.5}
   m_Children:
   - {fileID: 2092940566}
   - {fileID: 1815026295}
   m_Father: {fileID: 42666161}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 466.86, y: 304.19922}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -103.99}
   m_SizeDelta: {x: 520, y: 440}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1254578237
@@ -46948,7 +47028,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -73769,7 +73849,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -83971,21 +84051,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   render: {fileID: 2124853049}
   showLockOnMarker: 1
-  baseScore: 50
-  pictureScore:
-    pictureQualifications:
-    - pictureMechanic: 0
-      weight: 0.5
-      score: 0
-    - pictureMechanic: 1
-      weight: 0.5
-      score: 0
-    - pictureMechanic: 2
-      weight: 0.5
-      score: 0
-    antiObject: []
-    antiObjectFactor: 0
-    minDistance: 10
 --- !u!65 &2124853048
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83997,8 +84062,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 14.999997, y: 20.224155, z: 32.123974}
-  m_Center: {x: -7.4999995, y: 7.612077, z: 2.5024078}
+  m_Size: {x: 14.999998, y: 21.230148, z: 34.285538}
+  m_Center: {x: -7.50003, y: 8.115074, z: 2.8051245}
 --- !u!23 &2124853049 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2373268, guid: ecf4e1c9068d83f4d9d991b1c0903616,
@@ -85261,7 +85326,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: -0.00068392407, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.69421667, y: 1.4556736, z: -1.4099312}
+  m_ConnectedAnchor: {x: 0.6942118, y: 1.4556736, z: -1.4099329}
   m_UseSpring: 1
   m_Spring:
     spring: 1
@@ -86627,7 +86692,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: -0.0006656101, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.6912528, y: 1.4615196, z: -1.4099312}
+  m_ConnectedAnchor: {x: -0.6912483, y: 1.4615196, z: -1.4099461}
   m_UseSpring: 1
   m_Spring:
     spring: 1
@@ -88729,8 +88794,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
-  m_LocalRotation: {x: 0.09154601, y: 0.000000004283532, z: -3.9379386e-10, w: 0.99580085}
-  m_LocalPosition: {x: -14.71, y: 3.750001, z: -214.6}
+  m_LocalRotation: {x: -0.025141371, y: 0.9575121, z: -0.08802613, w: -0.27347755}
+  m_LocalPosition: {x: -10.484864, y: 3.750001, z: -199.80676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 988124023}

@@ -130,6 +130,10 @@ MonoBehaviour:
   icon: {fileID: 5535085125611383610}
   duration: 5
   targetScale: {x: 1.1, y: 1.1, z: 1.1}
+  DestroyAfterDuration: 1
+  OnDestroyCalled:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5535085124887519139
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +170,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 537.313, y: 174.9976}
+  m_SizeDelta: {x: 1552.9695, y: 174.9976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5535085124887519132
 CanvasRenderer:

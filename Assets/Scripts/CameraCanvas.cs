@@ -18,8 +18,11 @@ public class CameraCanvas : MonoBehaviour {
     public float movementRange = 400f, movementSensitivityThreshold = 0.2f;
 
     [Header("Focus")]
+    public float minFocusRange = 10;
     public float maxFocusRange = 300;
-    public float focusSensitivity = 0.5f; 
+    public float focusSensitivity = 0.5f;
+    public AnimationCurve apertureSensitivity; 
+    public float apertureFactor = 1f;
 
     [Space(10)]
     public LockOnSystem lockOnSystem;
@@ -40,8 +43,10 @@ public class CameraCanvas : MonoBehaviour {
     void Update() {
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
-        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, 0, maxFocusRange);
+        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
+        var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
+        dof.aperture.value = ding;
 
         PhotoItem target;
         target = RaycastFromReticle(baseReticle.transform);
