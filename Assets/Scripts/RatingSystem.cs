@@ -8,18 +8,9 @@ public class RatingSystem : MonoBehaviour {
     public PictureQualifier[] pictureQualifiers;
     private Dictionary<Criteria, PictureQualifier> qualifierByCriteria = new Dictionary<Criteria, PictureQualifier>(); 
 
-    [SerializeField] private CameraControl camControl;
-    [SerializeField] private VerticalLayoutGroup layoutGroup; 
-    [SerializeField] private Transform splashParent;
-    [SerializeField] private GameObject splashPrefab, crosshair, crosshairAnti, crosshairOmcirkel;
-    [SerializeField] private Image fadeScreen;
-    private float baseFadeAlpha;
-    [SerializeField] private Text polaroidTitle, polaroidSkip;
-    [SerializeField] private Image polaroidUI, polaroidScreenshot;
     [SerializeField] private Vector2 polaroidInterval = new Vector2(12, 14);
     [SerializeField] private float polaroidBottomPos = 0;
     private float polaroidTopPos;
-    [SerializeField] private InputActionReference skipBinding;
 
     [System.Serializable]
     public class PictureQualifier {
@@ -38,10 +29,13 @@ public class RatingSystem : MonoBehaviour {
 
     public Gradient scoreGradient;
 
-    public List<SplashElement> ratings = new List<SplashElement>();
-    private int splashIndex = 0;
-
-    //private float skipDelay = 0;
+    [System.Serializable]
+    public class Rating {
+        public string name;
+        [Range(0, 100)]
+        public int range;
+    }
+    public Rating[] ratings;
 
     [System.Serializable]
     public enum Criteria {
@@ -50,6 +44,18 @@ public class RatingSystem : MonoBehaviour {
     public Dictionary<string, float> scoreUnits = new Dictionary<string, float>();
 
     [HideInInspector] public bool ready = true;
+    [Space(10)]
+    [SerializeField] private CameraControl camControl;
+    [SerializeField] private VerticalLayoutGroup layoutGroup; 
+    private float baseSpacing;
+
+    [SerializeField] private Transform splashParent;
+    [SerializeField] private GameObject splashPrefab, crosshair, crosshairAnti, crosshairOmcirkel;
+    [SerializeField] private Image fadeScreen;
+    private float baseFadeAlpha;
+    [SerializeField] private Text polaroidTitle, polaroidSkip, totalScoreBase, totalScoreValue;
+    [SerializeField] private Image polaroidUI, polaroidScreenshot;
+    [SerializeField] private InputActionReference skipBinding;
 
     private float screenshotTimer = 0;
     private int totalScore;
@@ -68,15 +74,15 @@ public class RatingSystem : MonoBehaviour {
         scoreUnits.Clear();
         baseFadeAlpha = fadeScreen.color.a;
         SetFade(0);
+        baseSpacing = layoutGroup.spacing;
         
         polaroidTopPos = polaroidUI.transform.position.y;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
+        Reset();
 
-        int ind = 0;
         foreach(var i in pictureQualifiers) {
             qualifierByCriteria.Add(i.ratingName, i);
             scoreUnits.Add(i.ratingName.ToString().Replace('_', ' ').ToLower().Trim(), 0);
-            ind++;
         } 
     }
 
@@ -87,12 +93,25 @@ public class RatingSystem : MonoBehaviour {
             screenshotTimer = polaroidInterval.x;
         }
 
-        SetFade(Mathf.Lerp(fadeScreen.color.a, (HasTakenPicture() ? baseFadeAlpha : 0), Time.unscaledDeltaTime * 4f));
+        SetFade(Mathf.Lerp(fadeScreen.color.a, (HasTakenPicture() ? baseFadeAlpha : 0), Time.unscaledDeltaTime * 5.5f));
 
         if(HasTakenPicture()) {
             screenshotTimer += Time.unscaledDeltaTime * 2f;
 
-            if(screenshotTimer > polaroidInterval.y) screenshotTimer = 0;
+            for(int i = 0; i < pictureQualifiers.Length; i++) {
+                if(screenshotTimer < polaroidInterval.x / 4f) {
+                    pictureQualifiers[i].criteriaTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].criteriaTxt.transform.localScale, Vector3.one, screenshotTimer / 10f);
+                }
+                if(screenshotTimer > polaroidInterval.x / 4f + (i / 3f)) pictureQualifiers[i].scoreTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].scoreTxt.transform.localScale, Vector3.one, screenshotTimer / 45f);
+            } 
+            if(screenshotTimer > polaroidInterval.x / 8f) layoutGroup.spacing = Mathf.Lerp(layoutGroup.spacing, baseSpacing, screenshotTimer / 14f);
+
+
+            if(screenshotTimer > polaroidInterval.x / 4f) totalScoreBase.transform.localScale = Vector3.Lerp(totalScoreBase.transform.localScale, Vector3.one, screenshotTimer / 10f);
+            if(screenshotTimer > polaroidInterval.x / 3f) totalScoreValue.transform.localScale = Vector3.Lerp(totalScoreValue.transform.localScale, Vector3.one, screenshotTimer / 10f);
+            ///////
+
+            if(screenshotTimer > polaroidInterval.y) Reset();
 
             if(screenshotTimer > polaroidInterval.x) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
             else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
@@ -115,28 +134,25 @@ public class RatingSystem : MonoBehaviour {
         polaroidScreenshot.sprite = spr;
     }
 
-    protected void CycleSplash() {
-        splashIndex++;
-        Spawn(splashIndex);
-    }
-
-    private void ResetSplash() {
+    private void Reset() {
         ready = true;
-        splashIndex = 0;
+        screenshotTimer = 0;
+        totalScore = 0;
+        polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
+        layoutGroup.spacing = -170;
+        foreach(var i in pictureQualifiers) i.criteriaTxt.transform.localScale = i.scoreTxt.transform.localScale = Vector3.zero;
+        totalScoreBase.transform.localScale = totalScoreValue.transform.localScale = Vector3.zero;
     }
 
     public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen, PhotoItem photoItem) {
         if(!ready || photoItem == null) return;
+        Reset();
+
         ready = false;
-        splashIndex = 0;
-        Spawn(splashIndex);
 
         int index = 0;
-        totalScore = 0;
-        foreach(var i in System.Enum.GetNames(typeof(Criteria))) {
-            //ScoreElement scoreElement = scoreFormat;
-            //scoreElement.pos = scoreFormat.pos + new Vector3(0, index, 0);
-            var str = i.Replace('_', ' ').ToLower().Trim();
+        foreach(KeyValuePair<Criteria, PictureQualifier> i in qualifierByCriteria) {
+            var str = i.Key.ToString().Replace('_', ' ').ToLower().Trim();
             switch(str) {
                 case "center frame":
                     scoreUnits[str] = pic.centerFrame;
@@ -149,46 +165,19 @@ public class RatingSystem : MonoBehaviour {
                     break;
                 default: break;
             }
-            //scoreElement.text = i + ": " + (int)scoreUnits[str];
+            qualifierByCriteria[i.Key].scoreTxt.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)scoreUnits[str] / 100f)) + "'>" + ((int)scoreUnits[str]).ToString() + "</color>";
             totalScore += (int)scoreUnits[str];
             index++;
         }
         totalScore /= index;
-        screen.score = totalScore;
-    }
-
-    private void Spawn(int index) {
-        if(index < 0) {
-            ResetSplash();
-            return;
-        }
-        var ob = splashes[index];
-        var spl = SpawnSplash(ob.text, ob.pos, ob.rot, ob.scale, ob.duration, ob.alignment);
-        if(ob.rating.ToLower().Trim().Length > 1 && scoreUnits.ContainsKey(ob.rating.ToLower().Trim())) {
-            spl.text.text = ob.text + ": <color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate(scoreUnits[ob.rating.ToLower().Trim()] / 100f)) + "'>" + scoreUnits[ob.rating.ToLower().Trim()] + "</color>";
-        }
-        spl.text.font = ob.font;
-        spl.text.alignment = ob.alignment;
-        spl.text.color = ob.color;
-        CycleSplash();
-    }
-    private Splash SpawnSplash(string text, Vector3 pos, float rot, float scale, float duration, TextAnchor align) {
-        var obj = Instantiate(splashPrefab);
-        var spl = obj.GetComponent<Splash>();
-        spl.targetScale = Vector3.one * 1.1f;
-        obj.transform.SetParent(splashParent);
-        obj.transform.localScale = Vector3.zero;
-        obj.transform.localPosition = pos;
-        obj.transform.localEulerAngles = new Vector3(0, 0, rot);
-        spl.targetScale = Vector3.one * scale;
-        spl.text.text = text;
-        spl.text.alignment = align;
-        spl.duration = duration;
-        return spl;
+        screen.score = (int)totalScore;
+        totalScoreValue.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)totalScore / 100f)) + "'>" + screen.score.ToString() + "</color>";
     }
 
     public void Skip() {
-        splashIndex = 100;
+        screenshotTimer = 0;
+        Reset();
+        SetFade(0);
     }
 
     public bool HasTakenPicture() {
