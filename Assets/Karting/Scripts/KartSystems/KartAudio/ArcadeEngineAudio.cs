@@ -8,6 +8,8 @@ namespace KartGame.KartSystems
     /// </summary>
     public class ArcadeEngineAudio : MonoBehaviour
     {
+        public float DriftVolumeReduction = 0.2f;
+
         [Tooltip("What audio clip should play when the kart starts?")]
         public AudioSource StartSound;
         [Tooltip("What audio clip should play when the kart does nothing?")]
@@ -40,7 +42,7 @@ namespace KartGame.KartSystems
             if (arcadeKart != null)
             {
                 kartSpeed = arcadeKart.LocalSpeed();
-                Drift.volume = arcadeKart.IsDrifting && arcadeKart.GroundPercent > 0.0f ? arcadeKart.Rigidbody.velocity.magnitude / arcadeKart.GetMaxSpeed() : 0.0f;
+                Drift.volume = arcadeKart.IsDrifting && arcadeKart.GroundPercent > 0.0f ? arcadeKart.Rigidbody.velocity.magnitude / arcadeKart.GetMaxSpeed() : 0.0f - DriftVolumeReduction;
             }
 
             IdleSound.volume    = Mathf.Lerp(0.6f, 0.0f, kartSpeed * 4);

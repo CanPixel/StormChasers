@@ -6,7 +6,6 @@ using UnityEngine.Events;
 
 public class Splash : MonoBehaviour {
     public Text text;
-    public Image icon;
 
     public float duration;
     private float time = 0;
@@ -17,11 +16,6 @@ public class Splash : MonoBehaviour {
     public bool DestroyAfterDuration = false;
 
     public UnityEvent OnDestroyCalled;
-
-    void Start() {
-        text = GetComponentInChildren<Text>();
-        icon = GetComponentInChildren<Image>();
-    }
 
     void Update() {
         time += Time.unscaledDeltaTime;

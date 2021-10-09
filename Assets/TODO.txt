@@ -1,8 +1,6 @@
 
 - 2 SHADERS AT A TIME BLENDING - Continu 
 
-- camera meedraaien met angle
-
 - coyote time jumping before 0.25f groundpercent
 - Cap / delay op jumpen (soms doe je multiple geluid)
 
@@ -25,11 +23,7 @@
 - exhaust on picture should be ------ farting CO2 bonus reduction
 
 
-        =       Accelerated gravity as you fall
 
-
-
-- Freeze frame after photo ////// Photo scoring visuals
 
 
 
@@ -118,3 +112,10 @@ TESTEN:
 
 
 ========= DONE:
+- Te veel dingen om te herinneren tbh
+- Camera recentert alleen nadat je een foto hebt gemaakt, dus wordt niet elke keer gereset als je AIM mode uit gaat
+- Camera draait mee met model
+- Skip button voor polaroid sequence
+- Drift sound is minder luid
+- Betere 3rd -> 1st person transitie mbt mascotte camera
+- CAM ROTATE BETER MEE. ROTATIES WORDEN ONTHOUDEN TUSSEN 1st PERSON POV EN CAMERA MASCOTTE IN 3rd PERSON OKE DIT WAS MOEILIJK

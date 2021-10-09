@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - BoostPad
+  - Target
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - CrashObject
   - Kart
   - TrainingCheckpoints
-  - 
+  - 1stPersonIgnore
   - 
   - 
   - 

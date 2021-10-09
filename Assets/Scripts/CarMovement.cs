@@ -54,8 +54,6 @@ public class CarMovement : MonoBehaviour {
         if(hapticDuration > 0) hapticDuration -= Time.unscaledDeltaTime;
         else InputSystem.ResetHaptics();
 
-        if(camControl != null) camControl.rotationInput = rotationInput;
-
         if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
 
         kart.SuspensionHeight = Mathf.Lerp(kart.SuspensionHeight, baseSuspension, Time.deltaTime * SuspensionResetSpeed);
@@ -88,10 +86,8 @@ public class CarMovement : MonoBehaviour {
         if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
     }
     public void OnBoost(InputValue val) {
-        //if(statBoost == null) return;
         boost = val.Get<float>();
         Boost();
-        //if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
     }
 
     public void OnRecenter(InputValue val) {
@@ -107,17 +103,19 @@ public class CarMovement : MonoBehaviour {
 
     public void OnLooking(InputValue val) {
         rotationInput = val.Get<Vector2>();
-        if(camCanvas != null) camCanvas.SynchLook();
+        camCanvas.SynchLook();
     }
 
     public void OnCameraAim(InputValue val) {
-        //if(camControl == null) return;
         camControl.camSystem.aim = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f) {
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
         }
-        else camControl.Recenter();
+        else {
+            if(camControl.HasTakenPicture()) camControl.Recenter();
+            camControl.RecenterY();
+        }
     }
     public void OnCameraShoot(InputValue val) {
         if(camControl == null) return;
@@ -130,10 +128,9 @@ public class CarMovement : MonoBehaviour {
 
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
-        SoundManager.PlaySound("Jump");
+        SoundManager.PlaySound("Jump", 0.6f);
     }
     protected void Boost() {
-        //statBoost.TriggerStatBoost();
         if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) {
             boostScript.StartBoostState();
             HapticFeedback();
@@ -163,15 +160,11 @@ public class CarMovement : MonoBehaviour {
         move = (moveVec != Vector2.zero);
     }
 
-    private void ChangeBinding() {
+    //private void ChangeBinding() {
         //InputBinding binding = triggerAction.action.bindings[0];
         //binding.overridePath = "<Keyboard>/#(g)";
         //triggerAction.action.ApplyBindingOverride(0, binding);
-    }
-
-    /* protected void SwitchControlMap(string map) {
-        playerInput.SwitchCurrentActionMap(map);
-    } */
+    //}
 
     public float IsGassing() {
         return moveVec.y;

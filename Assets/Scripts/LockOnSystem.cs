@@ -18,6 +18,7 @@ public class LockOnSystem : MonoBehaviour {
     public Camera cam;
 
     public Dictionary<PhotoItem, LockedObjects> onScreenTargets = new Dictionary<PhotoItem, LockedObjects>();
+    [HideInInspector] public List<PhotoItem> sortedScreenObjects = new List<PhotoItem>();
 
     public PhotoItem[] allTargets {
         get; private set;
@@ -53,6 +54,25 @@ public class LockOnSystem : MonoBehaviour {
             target = onScreenTargets[k.Key].target.transform;
             onScreenTargets[k.Key].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }
+
+        PhotoItem tar;
+        tar = cameraCanvas.RaycastFromReticle(cameraCanvas.baseReticle.transform);
+        sortedScreenObjects = onScreenTargets.Keys.ToList().OrderBy(x => Vector3.Distance(cam.WorldToViewportPoint(FormatVector(x.transform.position)), new Vector3(0.5f, 0.5f, 0))).ToList();
+
+        cameraCanvas.highlightedObjectText.text = "";
+        if(sortedScreenObjects.Count > 0) {
+            string objects = "";
+            foreach(var k in sortedScreenObjects) {
+                objects += k.name + "! \n";
+            }
+            cameraCanvas.highlightedObjectText.text = objects;
+        }
+        if(tar != null) RemoveCrosshair(tar);
+    }
+
+    private Vector3 FormatVector(Vector3 vec) {
+        vec.z = 0;
+        return vec;
     }
 
     private bool CanSee(GameObject origin, PhotoItem toCheck) {

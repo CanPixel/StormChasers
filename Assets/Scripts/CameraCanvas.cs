@@ -34,8 +34,6 @@ public class CameraCanvas : MonoBehaviour {
     public Text highlightedObjectText;
     public Image baseReticle, movementReticle;
 
-    [HideInInspector] public PhotoItem targetedObject;
-    
     void Start() {
         dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
     }
@@ -47,18 +45,9 @@ public class CameraCanvas : MonoBehaviour {
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
         var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
         dof.aperture.value = ding;
-
-        PhotoItem target;
-        target = RaycastFromReticle(baseReticle.transform);
-        if(target != null) {
-            highlightedObjectText.text = target.gameObject.name;
-            lockOnSystem.RemoveCrosshair(target);
-        }
-        else highlightedObjectText.text = "";
-        targetedObject = target;
     }
 
-    protected PhotoItem RaycastFromReticle(Transform trans) {
+    public PhotoItem RaycastFromReticle(Transform trans) {
         PhotoItem photoItem = null;
         RaycastHit hit;
         if(Physics.SphereCast(cam.ScreenPointToRay(trans.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
@@ -69,6 +58,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void SynchLook() {
+        if(!cameraControl.cinemachineBrain.IsLive(cameraControl.firstPersonLook) || cameraControl.cinemachineBrain.IsBlending) return;
         var look = player.GetLooking();
         if(look == Vector2.zero || look.magnitude < movementSensitivityThreshold) return;
         movementReticle.transform.localPosition = new Vector3(look.x, look.y, 0) * -movementRange;
