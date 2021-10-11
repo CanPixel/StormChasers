@@ -4,7 +4,6 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using Cinemachine.PostFX;
 
 public class CameraControl : MonoBehaviour {
@@ -14,12 +13,8 @@ public class CameraControl : MonoBehaviour {
     public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
     public float BoostFollowDamping = 2f;
 
-    public float physicalDistanceFactor = 0.5f;
-
     [HideInInspector] public bool photoBook = false;
 
-/*     public Vector2 polaroidInterval = new Vector2(12, 14);
-    public float polaroidBottomPos = 0, polaroidTopPos = 100; */
     public int maxPhotosInPortfolio = 5;
 
     public int resWidth = 1600, resHeight = 900;
@@ -33,36 +28,28 @@ public class CameraControl : MonoBehaviour {
 
     public Vector3 mascotteRotationOffset = new Vector3(-90, 90, 0);
 
-    //private float screenshotTimer = 0;
-
-    [System.Serializable]
+/*     [System.Serializable]
     public class ScoringObject {
         public GameObject obj;
         public float scoreReduction = 1;
-    }
+    } */
 
     [System.Serializable]
     public class PictureScore {
         public Screenshot screenshot;
 
-        public List<ScoringObject> scoringObjects = new List<ScoringObject>();
+        public PhotoItem item;
+        public List<PictureScore> subScore = new List<PictureScore>();
         
         public string name;
         public bool onScreen;
         public float physicalDistance;
         public float centerFrame;
         public float focus, motion;
-        public float objectSharpness {
-            get; private set;
-        }
+        public float objectSharpness;
 
         public override string ToString() {
             return "[" + name + "]  || Center Frame: " + centerFrame + " || Motion Stability: " + motion + " || Sharpness: " + objectSharpness + " [Focus: " + focus + ", PhysDist: " + physicalDistance + "]";
-        }
-
-        public void CalculateSharpness() {
-            objectSharpness = (int)Mathf.Clamp(focus - physicalDistance, 0, 100);
-            objectSharpness = 100 - objectSharpness;
         }
     }
 
@@ -124,25 +111,19 @@ public class CameraControl : MonoBehaviour {
     public UIBob reticleBob;
     public CarMovement carMovement;
     public CameraCanvas cameraCanvas;
-/*     public Text polaroidTitle, polaroidSkip;
-    public Image polaroidUI, polaroidScreenshot; */
     public LockOnSystem lockOnSystem;
     public SplashSystem splashSystem;
     public RatingSystem ratingSystem;
     public ShaderReel shaderReel;
-//    public InputActionReference skipBinding;
     private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
 
     private Vector3 baseFollowOffset;
     private float motion, baseZDamping;
 
-//    private float skipDelay = 0;
-
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
-//        polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
         baseZDamping = orbitalTransposer.m_ZDamping;
@@ -151,12 +132,6 @@ public class CameraControl : MonoBehaviour {
     }
 
     void Update() {
-/*         polaroidSkip.text = "<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color> to Skip";
-        if(camSystem.shoot >= 0.7f && screenshotTimer > 1f) {
-            ratingSystem.Skip();
-            screenshotTimer = polaroidInterval.x;
-        } */
-
         MotionBlurReticle();
         
         photoBookUI.SetActive(photoBook);
@@ -176,15 +151,6 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.transform.rotation = transform.rotation;
         cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
-
-/*         if(screenshotTimer > 0) {
-            screenshotTimer += Time.unscaledDeltaTime * 2f;
-
-            if(screenshotTimer > polaroidInterval.y) screenshotTimer = 0;
-
-            if(screenshotTimer > polaroidInterval.x) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
-            else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
-        } */
     }
 
     protected void MotionBlurReticle() {
@@ -258,7 +224,6 @@ public class CameraControl : MonoBehaviour {
         pov.m_VerticalAxis.Value = 0;
         recenterTime = recenterDuration;
     }
-
     public void RecenterY() {
         pov.m_VerticalAxis.Value = 0;     
     }
@@ -297,14 +262,15 @@ public class CameraControl : MonoBehaviour {
         //=============== [Photo Naming - Object Prioritization - Scoring section]
         string photoName = "", photoWithoutScore = "";
         PictureScore score = new PictureScore();
-        //foreach(var i in lockOnSystem.allTargets) {
 
-        //No photo objects
+        var allObjects = lockOnSystem.GetOnScreenObjects();
+        List<PhotoItem> restItems = new List<PhotoItem>();
+
         PhotoItem i = null;
         Vector3 targetPos = Vector3.zero;
         bool isOnScreen = true;
-        if(lockOnSystem.sortedScreenObjects.Count > 0) {
-            i = lockOnSystem.sortedScreenObjects[0];
+        if(allObjects.Count > 0) {
+            i = allObjects[0];
             if(i != null) {
                 targetPos = cam.WorldToViewportPoint(i.transform.position);
                 isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
@@ -312,28 +278,42 @@ public class CameraControl : MonoBehaviour {
         }
 
         if(isOnScreen) {
-            var dist = Mathf.Clamp(Mathf.Abs(Vector3.Distance(transform.position, (i != null) ? i.transform.position : transform.position)), 1, cameraCanvas.maxDistance);
-
             photoName = photoWithoutScore = (i != null) ? i.name : "Random Picture";
+            score.item = i;
             score.name = photoName;
             score.screenshot = scren;
-            score.physicalDistance = (int)Mathf.Clamp(dist * physicalDistanceFactor, 0, 100);
+            score.physicalDistance = cameraCanvas.GetPhysicalDistance(i);
             score.onScreen = isOnScreen;
             score.motion = 100 - (int)Mathf.Clamp(motion, 0, 100);
-            score.focus = (int)cameraCanvas.GetFocusValue();
-            score.CalculateSharpness();
-
-            var camPos = targetPos;
-            camPos.z = 0;
-            var centerFrame = Vector3.Distance(new Vector3(0.5f, 0.5f, 0), camPos) * 800f;
-            score.centerFrame = 100 - (int)Mathf.Clamp(centerFrame, 0, 100);
-            
-            ratingSystem.VisualizeScore(score, scren, i);
-            photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
-            
+            score.centerFrame = lockOnSystem.GetCrosshairCenter(i);
+            score.focus = cameraCanvas.GetFocusValue();
+            score.objectSharpness = lockOnSystem.GetObjectSharpness(i);
 //                Debug.Log(score);
         }
-        //}
+        foreach(var obj in allObjects) if(obj != i) restItems.Add(obj);
+
+        //SubScores with multiple objects
+        foreach(var rest in restItems) {
+            PictureScore sub = new PictureScore();
+            targetPos = cam.WorldToViewportPoint(rest.transform.position);
+            isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
+
+            photoName = photoWithoutScore = (rest != null) ? rest.name : "Random Picture";
+            sub.name = photoName;
+            sub.item = rest;
+            sub.screenshot = scren;
+            sub.physicalDistance = cameraCanvas.GetPhysicalDistance(rest);
+            sub.onScreen = isOnScreen;
+            sub.motion = 100 - (int)Mathf.Clamp(motion, 0, 100);
+            sub.centerFrame = lockOnSystem.GetCrosshairCenter(rest);
+            sub.focus = cameraCanvas.GetFocusValue();
+            sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);
+            score.subScore.Add(sub);
+        }
+
+        ratingSystem.VisualizeScore(score, scren);
+        photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
+
         ratingSystem.SetPolaroidTitle(photoWithoutScore);
         sf.text.text = score.name = photoName;
 

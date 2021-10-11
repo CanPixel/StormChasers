@@ -22,7 +22,9 @@ public class CameraCanvas : MonoBehaviour {
     public float maxFocusRange = 300;
     public float focusSensitivity = 0.5f;
     public AnimationCurve apertureSensitivity; 
+    public AnimationCurve physicalDistanceFocusModifier;
     public float apertureFactor = 1f;
+    public float physicalDistanceFactor = 0.5f;
 
     [Space(10)]
     public LockOnSystem lockOnSystem;
@@ -33,6 +35,8 @@ public class CameraCanvas : MonoBehaviour {
     public Slider focusMeter;
     public Text highlightedObjectText;
     public Image baseReticle, movementReticle;
+    public Outline focusMeterOutline;
+    public Outline focusMeterImg;
 
     void Start() {
         dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
@@ -68,7 +72,19 @@ public class CameraCanvas : MonoBehaviour {
         focusInput = i;
     }
 
-    public float GetFocusValue() {
-        return (dof.focusDistance.value / maxFocusRange) * 100f;
+    public int GetFocusValue() {
+        return (int)((dof.focusDistance.value / maxFocusRange) * 100f);
+    }
+
+    public float GetPhysicalDistance(PhotoItem i) {
+        var dist = Mathf.Clamp(Mathf.Abs(Vector3.Distance(player.transform.position, (i != null) ? i.transform.position : player.transform.position)), 1, maxDistance);
+        return (int)Mathf.Clamp(dist * physicalDistanceFactor, 0, 100);
+    }
+
+    public void SetFocusResponse(float focus) {
+        cameraControl.carMovement.HapticFeedback(focus / 2f, focus, 0.05f);
+        focusMeterOutline.effectDistance = Vector2.one * ((1f - focus) * 2 - 1);
+        focusMeterOutline.transform.localScale = Vector3.one * ((focus + 1) / 2f + 0.25f);
+        focusMeterImg.effectDistance = Vector2.one * (1f - focus) * 3;
     }
 }

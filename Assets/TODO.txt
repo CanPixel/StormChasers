@@ -4,15 +4,10 @@
 - coyote time jumping before 0.25f groundpercent
 - Cap / delay op jumpen (soms doe je multiple geluid)
 
-
-
 ========= Snelheid
 - Snelheid drift brake als variabel
 - BOOST CAP
-
-
-====== LockOnSystem fixen
-- PhotoItem reticles, dont reanimate if it had been on screen before shortly
+- Boost cancel force
 
 
 
@@ -26,22 +21,9 @@
 
 
 
-
-- Boost cancel force
-
-- Betere haptics
-
-
-
-
-
-voor Physics / forces FixedUpdate?
-
-
-
-
 - Photographic memory ||| level selection screen ||| Level defining picture ||| your pictures in main menu defining the levels |||| hall of fame
-- Export functie || exporter building printing your picture into local desktop drive file. Costs money too.
+- Export functie || exporter building printing your picture into local desktop drive file. Costs money too. External location 4th wall break.
+- Print screen is money down easter egg
 
 
 

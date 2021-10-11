@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class Splash : MonoBehaviour {
     public Text text;
+    public Image image;
 
     public float duration;
     private float time = 0;

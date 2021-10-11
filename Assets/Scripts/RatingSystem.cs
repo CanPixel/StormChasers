@@ -59,6 +59,8 @@ public class RatingSystem : MonoBehaviour {
 
     private float screenshotTimer = 0;
     private int totalScore;
+    private bool crosshairRestObjects;
+    private CameraControl.PictureScore mainScore;
 
     [System.Serializable]
     public class SplashElement {
@@ -93,7 +95,9 @@ public class RatingSystem : MonoBehaviour {
             screenshotTimer = polaroidInterval.x;
         }
 
-        SetFade(Mathf.Lerp(fadeScreen.color.a, (HasTakenPicture() ? baseFadeAlpha : 0), Time.unscaledDeltaTime * 5.5f));
+        if(polaroidScreenshot.fillAmount < 1) polaroidScreenshot.fillAmount += Time.unscaledDeltaTime * 2f;
+
+        SetFade(Mathf.Lerp(fadeScreen.color.a, (HasTakenPicture() && !IsFading() ? baseFadeAlpha : 0), Time.unscaledDeltaTime * 6.5f));
 
         if(HasTakenPicture()) {
             screenshotTimer += Time.unscaledDeltaTime * 2f;
@@ -102,14 +106,26 @@ public class RatingSystem : MonoBehaviour {
                 if(screenshotTimer < polaroidInterval.x / 4f) {
                     pictureQualifiers[i].criteriaTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].criteriaTxt.transform.localScale, Vector3.one, screenshotTimer / 10f);
                 }
-                if(screenshotTimer > polaroidInterval.x / 4f + (i / 3f)) pictureQualifiers[i].scoreTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].scoreTxt.transform.localScale, Vector3.one, screenshotTimer / 45f);
+                if(screenshotTimer > polaroidInterval.x / 4f + (i / 2f)) pictureQualifiers[i].scoreTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].scoreTxt.transform.localScale, Vector3.one, screenshotTimer / 45f);
             } 
-            if(screenshotTimer > polaroidInterval.x / 8f) layoutGroup.spacing = Mathf.Lerp(layoutGroup.spacing, baseSpacing, screenshotTimer / 14f);
+            if(screenshotTimer > polaroidInterval.x / 8f) layoutGroup.spacing = Mathf.Lerp(layoutGroup.spacing, baseSpacing, screenshotTimer / 18f);
 
 
-            if(screenshotTimer > polaroidInterval.x / 4f) totalScoreBase.transform.localScale = Vector3.Lerp(totalScoreBase.transform.localScale, Vector3.one, screenshotTimer / 10f);
-            if(screenshotTimer > polaroidInterval.x / 3f) totalScoreValue.transform.localScale = Vector3.Lerp(totalScoreValue.transform.localScale, Vector3.one, screenshotTimer / 10f);
+            if(screenshotTimer > polaroidInterval.x / 2f) totalScoreBase.transform.localScale = Vector3.Lerp(totalScoreBase.transform.localScale, Vector3.one, screenshotTimer / 10f);
+            if(screenshotTimer > polaroidInterval.x / 2f + 1) totalScoreValue.transform.localScale = Vector3.Lerp(totalScoreValue.transform.localScale, Vector3.one, screenshotTimer / 10f);
             ///////
+            
+            if(screenshotTimer > polaroidInterval.x / 2f && !crosshairRestObjects) {
+                crosshairRestObjects = true;
+                foreach(var sub in mainScore.subScore) {
+                    SpawnCrosshair(sub.item);
+                    var s = Instantiate(splashPrefab);
+                    s.transform.SetParent(polaroidScreenshot.transform);
+                    s.transform.localPosition = new Vector3(0, 100, 0);
+                    s.transform.localScale = Vector3.one * 0.1f;
+                    s.GetComponent<Splash>().text.text = "Center Frame: " + sub.centerFrame;
+                }
+            }
 
             if(screenshotTimer > polaroidInterval.y) Reset();
 
@@ -136,6 +152,8 @@ public class RatingSystem : MonoBehaviour {
 
     private void Reset() {
         ready = true;
+        mainScore = null;
+        crosshairRestObjects = false;
         screenshotTimer = 0;
         totalScore = 0;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
@@ -144,11 +162,28 @@ public class RatingSystem : MonoBehaviour {
         totalScoreBase.transform.localScale = totalScoreValue.transform.localScale = Vector3.zero;
     }
 
-    public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen, PhotoItem photoItem) {
-        if(!ready || photoItem == null) return;
+    protected void SpawnCrosshair(PhotoItem item) {
+        if(camControl.lockOnSystem.GetScreenCrosshair(item) == null) return;
+        var spl = Instantiate(crosshairOmcirkel);
+        spl.transform.SetParent(polaroidScreenshot.transform);
+        var screenPos = camControl.lockOnSystem.GetScreenCrosshair(item).transform.localPosition;
+        screenPos.z = 0;
+        screenPos /= 3f;
+        spl.transform.localPosition = screenPos;
+        spl.transform.localScale = Vector3.one * 0.5f;
+    }
+
+    public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+        if(!ready || pic.item == null) return;
         Reset();
 
+        polaroidScreenshot.fillAmount = 0;
+
         ready = false;
+
+        mainScore = pic;
+        SpawnCrosshair(pic.item);
+        crosshairRestObjects = false;
 
         int index = 0;
         foreach(KeyValuePair<Criteria, PictureQualifier> i in qualifierByCriteria) {
@@ -175,12 +210,15 @@ public class RatingSystem : MonoBehaviour {
     }
 
     public void Skip() {
-        screenshotTimer = 0;
+        screenshotTimer = polaroidInterval.x;
         Reset();
-        SetFade(0);
     }
 
     public bool HasTakenPicture() {
         return screenshotTimer > 0;
+    }
+
+    public bool IsFading() {
+        return screenshotTimer > polaroidInterval.x;
     }
 }

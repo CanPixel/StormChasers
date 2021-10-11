@@ -6,7 +6,7 @@ using System.Linq;
 [System.Serializable]
 public struct LockedObjects {
     public GameObject target;
-    public GameObject crosshair;
+    public Crosshair crosshair;
 }
 
 public class LockOnSystem : MonoBehaviour {
@@ -43,7 +43,7 @@ public class LockOnSystem : MonoBehaviour {
                 createImage.transform.SetParent(canvas.transform, true);
                 createImage.SetActive(true);
                 var lockedObject = new LockedObjects();
-                lockedObject.crosshair = createImage;
+                lockedObject.crosshair = createImage.GetComponent<Crosshair>();
                 lockedObject.target = allTargets[i].gameObject;
                 onScreenTargets.Add(allTargets[i], lockedObject);
             } 
@@ -64,15 +64,52 @@ public class LockOnSystem : MonoBehaviour {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
                 objects += k.name + "! \n";
+                FadeCrosshair(k);
             }
             cameraCanvas.highlightedObjectText.text = objects;
         }
-        if(tar != null) RemoveCrosshair(tar);
+
+        //Focus haptics
+        if(sortedScreenObjects.Count > 0 && cameraCanvas.cameraControl.camSystem.aim >= 0.5f) {
+           /*  var priority = sortedScreenObjects[0];
+            var focusVal = cameraCanvas.GetFocusValue();
+            var dist = cameraCanvas.GetPhysicalDistance(priority);
+
+            var focusNormalized = Mathf.Clamp(100 - Mathf.Abs(dist - focusVal), 0, 100);
+            var modifier = cameraCanvas.physicalDistanceFocusModifier.Evaluate(focusNormalized / 100f); */
+            var finFocus = GetObjectSharpness(sortedScreenObjects[0]);//focusNormalized * modifier;
+            var hapticFocus = Mathf.Clamp((finFocus / 100f) * 1.5f - 1f, 0, 0.4f);
+
+            cameraCanvas.SetFocusResponse(hapticFocus);
+
+            //bool aboveMin = focusVal >= dist - 3;             `\\ check if true
+            //bool roof = (focusVal <= dist + 15);                      \\ check if true
+        }
+    }
+
+    public List<PhotoItem> GetOnScreenObjects() {
+        return sortedScreenObjects;
+    }
+
+    public float GetObjectSharpness(PhotoItem priority) {
+        var focusVal = cameraCanvas.GetFocusValue();
+        var dist = cameraCanvas.GetPhysicalDistance(priority);
+
+        var focusNormalized = Mathf.Clamp(100 - Mathf.Abs(dist - focusVal), 0, 100);
+        var modifier = cameraCanvas.physicalDistanceFocusModifier.Evaluate(focusNormalized / 100f);
+        var finFocus = focusNormalized * modifier;
+
+        return finFocus;
     }
 
     private Vector3 FormatVector(Vector3 vec) {
         vec.z = 0;
         return vec;
+    }
+
+    public Crosshair GetScreenCrosshair(PhotoItem pi) {
+        if(onScreenTargets.ContainsKey(pi)) return onScreenTargets[pi].crosshair;
+        return null;
     }
 
     private bool CanSee(GameObject origin, PhotoItem toCheck) {
@@ -95,7 +132,25 @@ public class LockOnSystem : MonoBehaviour {
 
     public void RemoveCrosshair(PhotoItem pi) {
         if(!onScreenTargets.ContainsKey(pi)) return;
-        Destroy(onScreenTargets[pi].crosshair);
+        Destroy(onScreenTargets[pi].crosshair.gameObject);
         onScreenTargets.Remove(pi);
+    }
+
+    public void FadeCrosshair(PhotoItem pi) {
+        if(!onScreenTargets.ContainsKey(pi)) return;
+
+        var screenPos = new Vector3(0.5f, 0.5f, 0) - FormatVector(cam.WorldToViewportPoint(onScreenTargets[pi].target.transform.position));
+        var uF = 100 - (((screenPos.magnitude - 0.01f) * 100f) * 2);
+        var screen = (int)Mathf.Clamp(100 - uF, 0, 100);
+
+        onScreenTargets[pi].crosshair.SetAlpha(screen * 0.01f);
+    }
+
+    public float GetCrosshairCenter(PhotoItem pi) {
+        if(!onScreenTargets.ContainsKey(pi)) return -1;
+        var screenPos = new Vector3(0.5f, 0.5f, 0) - FormatVector(cam.WorldToViewportPoint(onScreenTargets[pi].target.transform.position));
+        var uF = 100 - (((screenPos.magnitude - 0.01f) * 100f) * 2);
+        var screen = (int)Mathf.Clamp(uF, 0, 100);
+        return screen;
     }
 }

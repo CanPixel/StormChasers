@@ -892,7 +892,7 @@ MonoBehaviour:
   m_VerticalAxis:
     Value: 0
     m_SpeedMode: 1
-    m_MaxSpeed: 0.8
+    m_MaxSpeed: 0.9
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: 
@@ -916,7 +916,7 @@ MonoBehaviour:
   m_HorizontalAxis:
     Value: -90
     m_SpeedMode: 1
-    m_MaxSpeed: 0.8
+    m_MaxSpeed: 0.9
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: 
@@ -5696,7 +5696,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 66.5, y: -800}
+  m_AnchoredPosition: {x: 66.5, y: -791.77}
   m_SizeDelta: {x: 666.6, y: 173.2933}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &175690556
@@ -13824,54 +13824,70 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.0010868208
-      value: 4.32783
-      inSlope: 0.04618269
-      outSlope: 0.04618269
+      time: -0.0024337769
+      value: 0.19909668
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.51647586
-    - serializedVersion: 3
-      time: 0.37807217
-      value: 5.176675
-      inSlope: -3.1073098
-      outSlope: -3.1073098
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.15800676
-      outWeight: 0.44600418
-    - serializedVersion: 3
-      time: 0.548635
-      value: 3.4479127
-      inSlope: -7.8850636
-      outSlope: -7.8850636
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.2652375
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.69817233
-      value: 1.3907077
-      inSlope: 1.3872811
-      outSlope: 1.3872811
+      time: 0.73601323
+      value: 0.5761141
+      inSlope: 1.2393024
+      outSlope: 1.2393024
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.1485443
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.99950004
-      value: 0.50741345
-      inSlope: -0.08631271
-      outSlope: -0.08631271
+      time: 0.8605428
+      value: 0.20572501
+      inSlope: 0.04658898
+      outSlope: 0.04658898
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.32893607
+      inWeight: 0.33333334
+      outWeight: 0.6348756
+    - serializedVersion: 3
+      time: 1
+      value: 0.20186806
+      inSlope: 0.054888215
+      outSlope: 0.054888215
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6909301
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  apertureFactor: 4.5
+  physicalDistanceFocusModifier:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  apertureFactor: 5.5
+  physicalDistanceFactor: 0.5
   lockOnSystem: {fileID: 892070515}
   cam: {fileID: 892070512}
   cameraControl: {fileID: 939766228}
@@ -13881,6 +13897,8 @@ MonoBehaviour:
   highlightedObjectText: {fileID: 1946946601}
   baseReticle: {fileID: 1746089534}
   movementReticle: {fileID: 1945636055}
+  focusMeterOutline: {fileID: 636720569}
+  focusMeterImg: {fileID: 29010999}
 --- !u!1 &469379968
 GameObject:
   m_ObjectHideFlags: 0
@@ -19359,6 +19377,7 @@ GameObject:
   - component: {fileID: 636720566}
   - component: {fileID: 636720568}
   - component: {fileID: 636720567}
+  - component: {fileID: 636720569}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -19423,6 +19442,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636720565}
   m_CullTransparentMesh: 1
+--- !u!114 &636720569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636720565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.78039217}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 0
 --- !u!1001 &637650966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21257,7 +21291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -106.31, y: -46.3}
+  m_AnchoredPosition: {x: -106.31, y: -53.69}
   m_SizeDelta: {x: 281.2, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &703928613
@@ -35039,8 +35073,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892070508}
-  m_LocalRotation: {x: 0.06473278, y: 0.70413756, z: -0.06473278, w: 0.7041375}
-  m_LocalPosition: {x: -22.710001, y: 3.750001, z: -206.6}
+  m_LocalRotation: {x: -0.009155918, y: 0.9908079, z: -0.09108709, w: -0.0995943}
+  m_LocalPosition: {x: -13.117796, y: 3.750001, z: -198.76006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -36282,7 +36316,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939766216}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.994986, z: -0, w: -0.10001424}
   m_LocalPosition: {x: -14.71, y: 0.2500009, z: -206.6}
   m_LocalScale: {x: 0.9, y: 0.8, z: 0.8}
   m_Children:
@@ -36293,7 +36327,7 @@ Transform:
   - {fileID: 723159256}
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 191.48, z: 0}
 --- !u!114 &939766226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36379,7 +36413,6 @@ MonoBehaviour:
     filterIndex: 0
   BoostFollowOffset: {x: 0, y: 2.55, z: -5.7}
   BoostFollowDamping: 6
-  physicalDistanceFactor: 0.5
   photoBook: 0
   maxPhotosInPortfolio: 5
   resWidth: 1400
@@ -40985,10 +41018,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 128afd373c6f34f43bd58b7bd0815ec9, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
+  m_Type: 3
+  m_PreserveAspect: 1
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -85300,7 +85333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.36862746}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -86331,7 +86364,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: -0.00068392407, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.6942243, y: 1.4556736, z: -1.4099407}
+  m_ConnectedAnchor: {x: 0.6942163, y: 1.4556736, z: -1.4099396}
   m_UseSpring: 1
   m_Spring:
     spring: 1
@@ -87014,7 +87047,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -115.19, y: 124.3}
+  m_AnchoredPosition: {x: -115.19, y: 121.3}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2022331713049958397
@@ -87880,7 +87913,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: -0.0006656101, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.691257, y: 1.4615196, z: -1.409941}
+  m_ConnectedAnchor: {x: -0.6912523, y: 1.4615196, z: -1.40994}
   m_UseSpring: 1
   m_Spring:
     spring: 1
@@ -90000,8 +90033,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6691645747756642080}
-  m_LocalRotation: {x: 0.06473278, y: 0.70413756, z: -0.06473278, w: 0.7041375}
-  m_LocalPosition: {x: -22.710001, y: 3.750001, z: -206.6}
+  m_LocalRotation: {x: -0.009155918, y: 0.9908079, z: -0.09108709, w: -0.0995943}
+  m_LocalPosition: {x: -13.117796, y: 3.750001, z: -198.76006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 988124023}

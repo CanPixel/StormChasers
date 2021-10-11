@@ -77,7 +77,9 @@ public class CarMovement : MonoBehaviour {
         drift = val.Get<float>();
         MoveCalc();
         if(drift >= 0.5f) {
-            if(steering != 0) kart.LockDriftDirection(steering);
+            if(steering != 0) {
+                kart.LockDriftDirection(steering);
+            }
             else MoveCalc();
         } 
     }
@@ -129,11 +131,12 @@ public class CarMovement : MonoBehaviour {
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
         SoundManager.PlaySound("Jump", 0.6f);
+        HapticFeedback(0.4f, 0.3f, 0.2f);
     }
     protected void Boost() {
         if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) {
             boostScript.StartBoostState();
-            HapticFeedback();
+            HapticFeedback(0.5f, 0.5f, 1);
         } else if(boost < 0.3f) boostScript.EndBoostState();
     }
 
@@ -158,6 +161,16 @@ public class CarMovement : MonoBehaviour {
 
         moveVec = new Vector2(steering, baseVel * driftStop);
         move = (moveVec != Vector2.zero);
+
+        float left = 0.1f;
+        float right = 0.1f;
+        if(steering > 0) left = 0;
+        if(steering < 0) right = 0;
+        if(drift >= 0.5f) {
+            right *= 2f;
+            left *= 2f;
+        }
+        HapticFeedback(left, right, gas / 3f);
     }
 
     //private void ChangeBinding() {
