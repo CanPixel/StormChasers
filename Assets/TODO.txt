@@ -72,9 +72,6 @@ TESTEN:
 - STUNTING BONUS MULTIPLIER   
 
 
-[check if works] - Special Focal points 
-
-
 
 
 == [Optional]
