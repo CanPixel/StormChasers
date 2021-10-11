@@ -21,10 +21,9 @@ public class CarMovement : MonoBehaviour {
     private float baseSuspension;
     protected Vector2 moveVec = Vector2.zero;
 
-    private PlayerInput playerInput;
+    public PlayerInput playerInput;
     private Controls controls;
-    private Rigidbody rb;
-    private StatBoost statBoost;
+    public Rigidbody rb;
 
     private bool move = false;
     private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0, boost = 0;
@@ -37,16 +36,13 @@ public class CarMovement : MonoBehaviour {
     void Start() {
         baseSuspension = kart.SuspensionHeight;
         gamepad = Gamepad.current;
+        controls = new Controls();
     }
 
     public void OnEnable() {
-        statBoost = GetComponent<StatBoost>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
-        if(controls == null) controls = new Controls();
-        if(rb == null) rb = GetComponent<Rigidbody>();
-        if(playerInput == null) playerInput = GetComponent<PlayerInput>();
     }
 
     void Update() {
@@ -57,8 +53,6 @@ public class CarMovement : MonoBehaviour {
 
         if(hapticDuration > 0) hapticDuration -= Time.unscaledDeltaTime;
         else InputSystem.ResetHaptics();
-
-        if(camControl != null) camControl.rotationInput = rotationInput;
 
         if(Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
 
@@ -83,7 +77,9 @@ public class CarMovement : MonoBehaviour {
         drift = val.Get<float>();
         MoveCalc();
         if(drift >= 0.5f) {
-            if(steering != 0) kart.LockDriftDirection(steering);
+            if(steering != 0) {
+                kart.LockDriftDirection(steering);
+            }
             else MoveCalc();
         } 
     }
@@ -92,10 +88,8 @@ public class CarMovement : MonoBehaviour {
         if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
     }
     public void OnBoost(InputValue val) {
-        //if(statBoost == null) return;
         boost = val.Get<float>();
         Boost();
-        //if(boost >= 0.4f && gas > 0 && brake < 0.5f) Boost();
     }
 
     public void OnRecenter(InputValue val) {
@@ -111,17 +105,19 @@ public class CarMovement : MonoBehaviour {
 
     public void OnLooking(InputValue val) {
         rotationInput = val.Get<Vector2>();
-        if(camCanvas != null) camCanvas.SynchLook();
+        camCanvas.SynchLook();
     }
 
     public void OnCameraAim(InputValue val) {
-        //if(camControl == null) return;
         camControl.camSystem.aim = val.Get<float>();
         if(camControl.camSystem.aim >= 0.5f) {
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
         }
-        else camControl.Recenter();
+        else {
+            if(camControl.HasTakenPicture()) camControl.Recenter();
+            camControl.RecenterY();
+        }
     }
     public void OnCameraShoot(InputValue val) {
         if(camControl == null) return;
@@ -134,13 +130,13 @@ public class CarMovement : MonoBehaviour {
 
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
-        SoundManager.PlaySound("Jump");
+        SoundManager.PlaySound("Jump", 0.6f);
+        HapticFeedback(0.4f, 0.3f, 0.2f);
     }
     protected void Boost() {
-        //statBoost.TriggerStatBoost();
         if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) {
             boostScript.StartBoostState();
-            HapticFeedback();
+            HapticFeedback(0.5f, 0.5f, 1);
         } else if(boost < 0.3f) boostScript.EndBoostState();
     }
 
@@ -165,17 +161,23 @@ public class CarMovement : MonoBehaviour {
 
         moveVec = new Vector2(steering, baseVel * driftStop);
         move = (moveVec != Vector2.zero);
+
+        float left = 0.1f;
+        float right = 0.1f;
+        if(steering > 0) left = 0;
+        if(steering < 0) right = 0;
+        if(drift >= 0.5f) {
+            right *= 2f;
+            left *= 2f;
+        }
+        HapticFeedback(left, right, gas / 3f);
     }
 
-    private void ChangeBinding() {
+    //private void ChangeBinding() {
         //InputBinding binding = triggerAction.action.bindings[0];
         //binding.overridePath = "<Keyboard>/#(g)";
         //triggerAction.action.ApplyBindingOverride(0, binding);
-    }
-
-    /* protected void SwitchControlMap(string map) {
-        playerInput.SwitchCurrentActionMap(map);
-    } */
+    //}
 
     public float IsGassing() {
         return moveVec.y;

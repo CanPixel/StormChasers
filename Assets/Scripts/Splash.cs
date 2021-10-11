@@ -6,21 +6,17 @@ using UnityEngine.Events;
 
 public class Splash : MonoBehaviour {
     public Text text;
-    public Image icon;
+    public Image image;
 
     public float duration;
     private float time = 0;
 
     public Vector3 targetScale;
 
-    public bool markForDestroy = false;
+    private bool markForDestroy = false;
+    public bool DestroyAfterDuration = false;
 
     public UnityEvent OnDestroyCalled;
-
-    void Start() {
-        text = GetComponentInChildren<Text>();
-        icon = GetComponentInChildren<Image>();
-    }
 
     void Update() {
         time += Time.unscaledDeltaTime;
@@ -30,9 +26,11 @@ public class Splash : MonoBehaviour {
             targetScale = Vector3.one * -0.1f;
         }
 
-        if(markForDestroy && transform.localScale.x <= 0) {
-            OnDestroyCalled.Invoke();
-            Destroy(gameObject);
-        }
+        if(DestroyAfterDuration && markForDestroy && transform.localScale.x <= 0) ManualDestroy();
+    }
+
+    public void ManualDestroy() {
+        OnDestroyCalled.Invoke();
+        Destroy(gameObject);
     }
 }

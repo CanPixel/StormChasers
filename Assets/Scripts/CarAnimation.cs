@@ -46,7 +46,7 @@ public class CarAnimation : MonoBehaviour {
 
         for(int i = 0; i < fumes.Length; i++) {
             var em = fumes[i].emission;
-            em.rateOverTimeMultiplier = (int)((movement.IsGassing() + 0.5f) * 12);
+            em.rateOverTimeMultiplier = (int)((movement.IsGassing() + 0.5f) * 12) - 2;
         }
 
         float wiggle = Mathf.Sin(Time.time * Mathf.Clamp(speed * wiggleSpeed, 0, wiggleSpeedCap)) * Mathf.Clamp(speed * wiggleRange, 0, wiggleRangeCap);//Mathf.Sin(Time.time * Mathf.Clamp(speed * wiggleSpeed, 0, wiggleSpeedCap)) * Mathf.Clamp(speed * wiggleRange, 0, wiggleRangeCap);

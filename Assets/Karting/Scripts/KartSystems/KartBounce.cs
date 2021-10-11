@@ -36,15 +36,10 @@ namespace KartGame.KartSystems
         [Tooltip("What audio clip should play when the kart collides with a wall")]
         public AudioClip BounceSound;
 
-        ArcadeKart kart;
+        public ArcadeKart kart;
         float resumeTime;
         bool hasCollided;
         Vector3 reflectionVector;
-
-        void Start()
-        {
-            kart = GetComponent<ArcadeKart>();
-        }
 
         void Update()
         {

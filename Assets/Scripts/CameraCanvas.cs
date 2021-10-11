@@ -18,8 +18,13 @@ public class CameraCanvas : MonoBehaviour {
     public float movementRange = 400f, movementSensitivityThreshold = 0.2f;
 
     [Header("Focus")]
+    public float minFocusRange = 10;
     public float maxFocusRange = 300;
-    public float focusSensitivity = 0.5f; 
+    public float focusSensitivity = 0.5f;
+    public AnimationCurve apertureSensitivity; 
+    public AnimationCurve physicalDistanceFocusModifier;
+    public float apertureFactor = 1f;
+    public float physicalDistanceFactor = 0.5f;
 
     [Space(10)]
     public LockOnSystem lockOnSystem;
@@ -30,9 +35,9 @@ public class CameraCanvas : MonoBehaviour {
     public Slider focusMeter;
     public Text highlightedObjectText;
     public Image baseReticle, movementReticle;
+    public Outline focusMeterOutline;
+    public Outline focusMeterImg;
 
-    [HideInInspector] public PhotoItem targetedObject;
-    
     void Start() {
         dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
     }
@@ -40,20 +45,13 @@ public class CameraCanvas : MonoBehaviour {
     void Update() {
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
-        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, 0, maxFocusRange);
+        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
-
-        PhotoItem target;
-        target = RaycastFromReticle(baseReticle.transform);
-        if(target != null) {
-            highlightedObjectText.text = target.gameObject.name;
-            lockOnSystem.RemoveCrosshair(target);
-        }
-        else highlightedObjectText.text = "";
-        targetedObject = target;
+        var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
+        dof.aperture.value = ding;
     }
 
-    protected PhotoItem RaycastFromReticle(Transform trans) {
+    public PhotoItem RaycastFromReticle(Transform trans) {
         PhotoItem photoItem = null;
         RaycastHit hit;
         if(Physics.SphereCast(cam.ScreenPointToRay(trans.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
@@ -64,6 +62,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void SynchLook() {
+        if(!cameraControl.cinemachineBrain.IsLive(cameraControl.firstPersonLook) || cameraControl.cinemachineBrain.IsBlending) return;
         var look = player.GetLooking();
         if(look == Vector2.zero || look.magnitude < movementSensitivityThreshold) return;
         movementReticle.transform.localPosition = new Vector3(look.x, look.y, 0) * -movementRange;
@@ -73,7 +72,19 @@ public class CameraCanvas : MonoBehaviour {
         focusInput = i;
     }
 
-    public float GetFocusValue() {
-        return (dof.focusDistance.value / maxFocusRange) * 100f;
+    public int GetFocusValue() {
+        return (int)((dof.focusDistance.value / maxFocusRange) * 100f);
+    }
+
+    public float GetPhysicalDistance(PhotoItem i) {
+        var dist = Mathf.Clamp(Mathf.Abs(Vector3.Distance(player.transform.position, (i != null) ? i.transform.position : player.transform.position)), 1, maxDistance);
+        return (int)Mathf.Clamp(dist * physicalDistanceFactor, 0, 100);
+    }
+
+    public void SetFocusResponse(float focus) {
+        cameraControl.carMovement.HapticFeedback(focus / 2f, focus, 0.05f);
+        focusMeterOutline.effectDistance = Vector2.one * ((1f - focus) * 2 - 1);
+        focusMeterOutline.transform.localScale = Vector3.one * ((focus + 1) / 2f + 0.25f);
+        focusMeterImg.effectDistance = Vector2.one * (1f - focus) * 3;
     }
 }

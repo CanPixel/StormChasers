@@ -121,6 +121,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SkipPicture"",
+                    ""type"": ""Button"",
+                    ""id"": ""3b2e73f5-75b3-4c46-abe3-a44adb12fd19"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -618,6 +626,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""ChangeFocus"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20d6d1c1-c932-4a6e-b711-e522c2865995"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SkipPicture"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -667,6 +686,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_GameControls_CycleFilter = m_GameControls.FindAction("CycleFilter", throwIfNotFound: true);
         m_GameControls_PhotoBook = m_GameControls.FindAction("PhotoBook", throwIfNotFound: true);
         m_GameControls_ChangeFocus = m_GameControls.FindAction("ChangeFocus", throwIfNotFound: true);
+        m_GameControls_SkipPicture = m_GameControls.FindAction("SkipPicture", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -729,6 +749,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_GameControls_CycleFilter;
     private readonly InputAction m_GameControls_PhotoBook;
     private readonly InputAction m_GameControls_ChangeFocus;
+    private readonly InputAction m_GameControls_SkipPicture;
     public struct GameControlsActions
     {
         private @Controls m_Wrapper;
@@ -746,6 +767,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @CycleFilter => m_Wrapper.m_GameControls_CycleFilter;
         public InputAction @PhotoBook => m_Wrapper.m_GameControls_PhotoBook;
         public InputAction @ChangeFocus => m_Wrapper.m_GameControls_ChangeFocus;
+        public InputAction @SkipPicture => m_Wrapper.m_GameControls_SkipPicture;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -794,6 +816,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @ChangeFocus.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
                 @ChangeFocus.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
                 @ChangeFocus.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
+                @SkipPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
+                @SkipPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
+                @SkipPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
             }
             m_Wrapper.m_GameControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -837,6 +862,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @ChangeFocus.started += instance.OnChangeFocus;
                 @ChangeFocus.performed += instance.OnChangeFocus;
                 @ChangeFocus.canceled += instance.OnChangeFocus;
+                @SkipPicture.started += instance.OnSkipPicture;
+                @SkipPicture.performed += instance.OnSkipPicture;
+                @SkipPicture.canceled += instance.OnSkipPicture;
             }
         }
     }
@@ -874,5 +902,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnCycleFilter(InputAction.CallbackContext context);
         void OnPhotoBook(InputAction.CallbackContext context);
         void OnChangeFocus(InputAction.CallbackContext context);
+        void OnSkipPicture(InputAction.CallbackContext context);
     }
 }

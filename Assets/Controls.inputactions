@@ -108,6 +108,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "SkipPicture",
+                    "type": "Button",
+                    "id": "3b2e73f5-75b3-4c46-abe3-a44adb12fd19",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -605,6 +613,17 @@
                     "action": "ChangeFocus",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "20d6d1c1-c932-4a6e-b711-e522c2865995",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SkipPicture",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

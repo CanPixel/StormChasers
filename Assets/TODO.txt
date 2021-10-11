@@ -1,12 +1,15 @@
 
 - 2 SHADERS AT A TIME BLENDING - Continu 
 
+- coyote time jumping before 0.25f groundpercent
+- Cap / delay op jumpen (soms doe je multiple geluid)
+
 ========= Snelheid
 - Snelheid drift brake als variabel
 - BOOST CAP
+- Boost cancel force
 
-====== LockOnSystem fixen
-- PhotoItem reticles, scalen op distance + scalen op centerframeness
+
 
 ======== Best Possible Photo Production
 - 180 flipped photo bonus (transform.up)        [STUNT]
@@ -16,25 +19,11 @@
 
 
 
-- Freeze frame after photo ////// Photo scoring visuals
-
-
-
-- Boost cancel force
-
-- Betere haptics
-
-
-
-
-
-voor Physics / forces FixedUpdate?
-
-
 
 
 - Photographic memory ||| level selection screen ||| Level defining picture ||| your pictures in main menu defining the levels |||| hall of fame
-- Export functie || exporter building printing your picture into local desktop drive file. Costs money too.
+- Export functie || exporter building printing your picture into local desktop drive file. Costs money too. External location 4th wall break.
+- Print screen is money down easter egg
 
 
 
@@ -105,3 +94,10 @@ TESTEN:
 
 
 ========= DONE:
+- Te veel dingen om te herinneren tbh
+- Camera recentert alleen nadat je een foto hebt gemaakt, dus wordt niet elke keer gereset als je AIM mode uit gaat
+- Camera draait mee met model
+- Skip button voor polaroid sequence
+- Drift sound is minder luid
+- Betere 3rd -> 1st person transitie mbt mascotte camera
+- CAM ROTATE BETER MEE. ROTATIES WORDEN ONTHOUDEN TUSSEN 1st PERSON POV EN CAMERA MASCOTTE IN 3rd PERSON OKE DIT WAS MOEILIJK
