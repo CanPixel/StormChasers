@@ -117,13 +117,16 @@ public class RatingSystem : MonoBehaviour {
             
             if(screenshotTimer > polaroidInterval.x / 2f && !crosshairRestObjects) {
                 crosshairRestObjects = true;
-                foreach(var sub in mainScore.subScore) {
-                    SpawnCrosshair(sub.item);
-                    var s = Instantiate(splashPrefab);
-                    s.transform.SetParent(polaroidScreenshot.transform);
-                    s.transform.localPosition = new Vector3(0, 100, 0);
-                    s.transform.localScale = Vector3.one * 0.1f;
-                    s.GetComponent<Splash>().text.text = "Center Frame: " + sub.centerFrame;
+                if(mainScore != null && mainScore.subScore != null) {
+                    foreach(var sub in mainScore.subScore) {
+                        if(sub == null || sub.item == null || mainScore.subScore == null) continue;
+                        SpawnCrosshair(sub.item);
+                        var s = Instantiate(splashPrefab);
+                        s.transform.SetParent(polaroidScreenshot.transform);
+                        s.transform.localPosition = new Vector3(0, 100, 0);
+                        s.transform.localScale = Vector3.one * 0.1f;
+                        s.GetComponent<Splash>().text.text = "Center Frame: " + sub.centerFrame;
+                    }
                 }
             }
 

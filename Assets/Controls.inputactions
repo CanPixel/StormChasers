@@ -116,6 +116,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "BarrelRoll",
+                    "type": "PassThrough",
+                    "id": "80d98f6b-91a1-4371-aebc-ca1667a519d1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "MultiTap(tapTime=0.2,tapDelay=0.3)"
                 }
             ],
             "bindings": [
@@ -622,6 +630,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "SkipPicture",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5626214f-1338-4f9c-8f18-e5825803b3b8",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "BarrelRoll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

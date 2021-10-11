@@ -10,6 +10,7 @@ public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
 
+    public Transform carMesh;
     public CameraControl camControl;
     public CameraCanvas camCanvas;
     public Boost boostScript;
@@ -32,6 +33,12 @@ public class CarMovement : MonoBehaviour {
 
     private Gamepad gamepad;
     private float hapticDuration = 0;
+    public float barrelRollSpeed = 2f, slowMotionBarrelRollSpeed = 1f, barrelRollDuration = 1f;
+    private float barrelRoll = 0, barrelRollDirection = 0;
+    private bool isBarrelRolling = false;
+    private float barrelRollDelay = 0;
+    public float minDistanceForBarrelRoll = 200;
+    public LayerMask groundCheckLayerMask;
 
     void Start() {
         baseSuspension = kart.SuspensionHeight;
@@ -46,6 +53,16 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
+        if(barrelRollDelay > 0) barrelRollDelay -= Time.unscaledDeltaTime;
+
+        if(barrelRoll > 0) {
+            carMesh.transform.rotation = Quaternion.Euler(carMesh.transform.eulerAngles.x, carMesh.transform.eulerAngles.y, barrelRollDirection * barrelRoll * 360f);
+            barrelRoll -= Time.unscaledDeltaTime * ((camControl.camSystem.aim >= 0.5f) ? slowMotionBarrelRollSpeed : barrelRollSpeed);
+        } else if(isBarrelRolling) {        //Reset barrel roll
+            camControl.SetCameraPriority(camControl.stuntLook, 11);
+            isBarrelRolling = false;
+        }
+
         if(steering == 0 && drift >= 0.5f) {
             kart.ActivateDriftVFX(true);
             kart.IsDrifting = true;
@@ -85,7 +102,10 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnJump(InputValue val) {
         jump = val.Get<float>();
-        if(jump >= 0.5f && kart.GroundPercent > 0.0f) Jump();
+        if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
+    }
+    public void OnBarrelRoll(InputValue val) {
+        BarrelRoll();
     }
     public void OnBoost(InputValue val) {
         boost = val.Get<float>();
@@ -113,6 +133,7 @@ public class CarMovement : MonoBehaviour {
         if(camControl.camSystem.aim >= 0.5f) {
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
+            InputSystem.ResetHaptics();
         }
         else {
             if(camControl.HasTakenPicture()) camControl.Recenter();
@@ -128,16 +149,33 @@ public class CarMovement : MonoBehaviour {
         if(val.Get<float>() >= 0.5f) camControl.photoBook = !camControl.photoBook;
     }
 
+    protected void BarrelRoll() {
+        if(barrelRollDelay > 0 || isBarrelRolling || steering == 0) return;
+
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position + new Vector3(0, -1, 0), new Vector3(0, -1, 0), out hit, float.MaxValue, groundCheckLayerMask)) {
+            var dist = Mathf.Abs(hit.transform.position.y - transform.position.y);
+            if(dist < minDistanceForBarrelRoll) return;
+        }
+
+        barrelRollDelay = 0.6f;
+        barrelRollDirection = steering * 1f;
+        barrelRoll = barrelRollDuration;
+        isBarrelRolling = true;
+        if(camControl.camSystem.aim >= 0.5f) return;
+        camControl.SetCameraPriority(camControl.stuntLook, 12);
+        camControl.stuntTransposer.m_RollDamping = 400;
+        camControl.stuntLook.transform.rotation = Quaternion.Euler(0, rb.transform.eulerAngles.y, 0);
+    }
+
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
         SoundManager.PlaySound("Jump", 0.6f);
         HapticFeedback(0.4f, 0.3f, 0.2f);
     }
     protected void Boost() {
-        if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) {
-            boostScript.StartBoostState();
-            HapticFeedback(0.5f, 0.5f, 1);
-        } else if(boost < 0.3f) boostScript.EndBoostState();
+        if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) boostScript.StartBoostState();
+        else if(boost < 0.3f) boostScript.EndBoostState();
     }
 
     public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1) {

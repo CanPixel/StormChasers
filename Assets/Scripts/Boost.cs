@@ -33,6 +33,7 @@ public class Boost : MonoBehaviour {
     public Image boostFill; 
     public GameObject doorLeftStatic, doorRightStatic, doorLeft, doorRight;
     public Cinemachine.CinemachineVirtualCamera virtualCamera;
+    public CarMovement carMovement;
     public GameObject speedLinesFX;
     public Image boostOverlay;
 
@@ -83,6 +84,7 @@ public class Boost : MonoBehaviour {
             speedLinesFX.SetActive(true);
             fovTarget = fovChange.y;
             carRb.AddForce(carRb.transform.forward * impulseBoostForce, ForceMode.VelocityChange);
+            carMovement.HapticFeedback(0.8f, 0.2f, 0.3f);
             
             SoundManager.PlaySound("Boost");
             boostOverlay.color = new Color(1, 1, 1, 0.35f);
@@ -111,6 +113,7 @@ public class Boost : MonoBehaviour {
 
     public void ApplyBoost() {    
         carRb.AddForce(carRb.transform.forward * boostForce, ForceMode.Acceleration);
+        carMovement.HapticFeedback(0.4f, 0.8f, 0.5f);
     }
 
     private void RegenFuel() {

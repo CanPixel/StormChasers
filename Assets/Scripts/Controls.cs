@@ -129,6 +129,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""BarrelRoll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""80d98f6b-91a1-4371-aebc-ca1667a519d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.3)""
                 }
             ],
             ""bindings"": [
@@ -637,6 +645,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""SkipPicture"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5626214f-1338-4f9c-8f18-e5825803b3b8"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""BarrelRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -687,6 +706,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_GameControls_PhotoBook = m_GameControls.FindAction("PhotoBook", throwIfNotFound: true);
         m_GameControls_ChangeFocus = m_GameControls.FindAction("ChangeFocus", throwIfNotFound: true);
         m_GameControls_SkipPicture = m_GameControls.FindAction("SkipPicture", throwIfNotFound: true);
+        m_GameControls_BarrelRoll = m_GameControls.FindAction("BarrelRoll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -750,6 +770,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_GameControls_PhotoBook;
     private readonly InputAction m_GameControls_ChangeFocus;
     private readonly InputAction m_GameControls_SkipPicture;
+    private readonly InputAction m_GameControls_BarrelRoll;
     public struct GameControlsActions
     {
         private @Controls m_Wrapper;
@@ -768,6 +789,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @PhotoBook => m_Wrapper.m_GameControls_PhotoBook;
         public InputAction @ChangeFocus => m_Wrapper.m_GameControls_ChangeFocus;
         public InputAction @SkipPicture => m_Wrapper.m_GameControls_SkipPicture;
+        public InputAction @BarrelRoll => m_Wrapper.m_GameControls_BarrelRoll;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -819,6 +841,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SkipPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
+                @BarrelRoll.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
+                @BarrelRoll.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
+                @BarrelRoll.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
             }
             m_Wrapper.m_GameControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -865,6 +890,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SkipPicture.started += instance.OnSkipPicture;
                 @SkipPicture.performed += instance.OnSkipPicture;
                 @SkipPicture.canceled += instance.OnSkipPicture;
+                @BarrelRoll.started += instance.OnBarrelRoll;
+                @BarrelRoll.performed += instance.OnBarrelRoll;
+                @BarrelRoll.canceled += instance.OnBarrelRoll;
             }
         }
     }
@@ -903,5 +931,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnPhotoBook(InputAction.CallbackContext context);
         void OnChangeFocus(InputAction.CallbackContext context);
         void OnSkipPicture(InputAction.CallbackContext context);
+        void OnBarrelRoll(InputAction.CallbackContext context);
     }
 }

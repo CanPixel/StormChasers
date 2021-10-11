@@ -1,7 +1,7 @@
 
 - 2 SHADERS AT A TIME BLENDING - Continu 
 
-- coyote time jumping before 0.25f groundpercent
+- Coyote time jumping before 0.25f groundpercent
 - Cap / delay op jumpen (soms doe je multiple geluid)
 
 ========= Snelheid
@@ -11,8 +11,10 @@
 
 
 
+
 ======== Best Possible Photo Production
-- 180 flipped photo bonus (transform.up)        [STUNT]
+- 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
+- Rotation bonus (Dutch & Ondersteboven)
 - smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
 - EXPLOSIVES should be ++++ bonus
 - exhaust on picture should be ------ farting CO2 bonus reduction
@@ -64,13 +66,6 @@ TESTEN:
 
 
 ================== PICTURE SCORING SYSTEM
-- OnScreen (bool / float for composite objects)              (for body parts / weak points / multiple photo points)
-- Center frame (float)
-- Focus (float)
-- Physical Distance (float)
-
-- Occlusion w/ raycasting per object on screen
-
 - Bonus-objects ? (collection || bool OnScreen)
 - Anti-objects (bool OnScreen)
 - Object orientation (bool / axis & angle)
@@ -86,18 +81,8 @@ TESTEN:
 - wobble on land visual + haptic?
 - vehicle damage ontrigger
 - Screen diagonal split for cutscene / different visuals
-- Stunting moves? Picture score feedback
+
 - Arrow dingetjes voor snap to orientation?
-- Responsive reticle / Color change? 
-- 1st person camera Recenter Lerp
-- Portfolio interaction
 
 
 ========= DONE:
-- Te veel dingen om te herinneren tbh
-- Camera recentert alleen nadat je een foto hebt gemaakt, dus wordt niet elke keer gereset als je AIM mode uit gaat
-- Camera draait mee met model
-- Skip button voor polaroid sequence
-- Drift sound is minder luid
-- Betere 3rd -> 1st person transitie mbt mascotte camera
-- CAM ROTATE BETER MEE. ROTATIES WORDEN ONTHOUDEN TUSSEN 1st PERSON POV EN CAMERA MASCOTTE IN 3rd PERSON OKE DIT WAS MOEILIJK

@@ -28,12 +28,6 @@ public class CameraControl : MonoBehaviour {
 
     public Vector3 mascotteRotationOffset = new Vector3(-90, 90, 0);
 
-/*     [System.Serializable]
-    public class ScoringObject {
-        public GameObject obj;
-        public float scoreReduction = 1;
-    } */
-
     [System.Serializable]
     public class PictureScore {
         public Screenshot screenshot;
@@ -101,6 +95,8 @@ public class CameraControl : MonoBehaviour {
     public Camera cam;
     public Cinemachine.PostFX.CinemachinePostProcessing postProcessing;
     public Cinemachine.CinemachineVirtualCamera firstPersonLook;
+    public Cinemachine.CinemachineVirtualCamera stuntLook;
+    [HideInInspector] public Cinemachine.CinemachineTransposer stuntTransposer;
     public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
     private Cinemachine.CinemachinePOV pov;
     private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
@@ -123,6 +119,7 @@ public class CameraControl : MonoBehaviour {
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
+        stuntTransposer = stuntLook.GetCinemachineComponent<Cinemachine.CinemachineTransposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
@@ -165,6 +162,15 @@ public class CameraControl : MonoBehaviour {
         return camSystem.aim >= 0.5f;
     }
 
+/*     public void RollDamp(float roll) {
+        orbitalTransposer.m_RollDamping = roll;
+        orbitalTransposer.m_AngularDamping = roll;
+    } */
+
+    public void SetCameraPriority(CinemachineVirtualCamera cam, int i) {
+        cam.Priority = i;
+    }
+
     public void CycleFilters(float add) {
         camSystem.filterIndex += (int)add;
         if(camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
@@ -179,7 +185,7 @@ public class CameraControl : MonoBehaviour {
     protected void FirstPersonLook() {
         if(cinemachineBrain.IsLive(firstPersonLook) && !cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
 
-        firstPersonLook.Priority = 12;
+        firstPersonLook.Priority = 15;
         thirdPersonLook.Priority = 10;
 
         if(cameraState != CameraState.CAMVIEW) {
@@ -235,7 +241,7 @@ public class CameraControl : MonoBehaviour {
     protected void TakePicture() {
         if(!ratingSystem.ready) return;
 
-        carMovement.HapticFeedback(0f, 0.5f, 0.4f);
+        carMovement.HapticFeedback(0f, 0.75f, 0.2f);
 
         var cam = cinemachineBrain.OutputCamera;
         RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);

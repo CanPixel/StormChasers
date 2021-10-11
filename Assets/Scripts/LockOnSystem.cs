@@ -147,7 +147,9 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     public float GetCrosshairCenter(PhotoItem pi) {
+        if(pi == null) return -1;
         if(!onScreenTargets.ContainsKey(pi)) return -1;
+        if(onScreenTargets[pi].target == null) return -1;
         var screenPos = new Vector3(0.5f, 0.5f, 0) - FormatVector(cam.WorldToViewportPoint(onScreenTargets[pi].target.transform.position));
         var uF = 100 - (((screenPos.magnitude - 0.01f) * 100f) * 2);
         var screen = (int)Mathf.Clamp(uF, 0, 100);
