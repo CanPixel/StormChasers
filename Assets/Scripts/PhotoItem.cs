@@ -8,7 +8,7 @@ public class PhotoItem : MonoBehaviour {
     public bool isComposite = false;
 
     private PhotoKeyPoint[] keyPoints;
-
+//
     void Start() {
         if(isComposite) keyPoints = GetComponentsInChildren<PhotoKeyPoint>();
     }
