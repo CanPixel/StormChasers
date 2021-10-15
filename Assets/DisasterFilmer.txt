@@ -1,0 +1,36 @@
+You are the "Not-So-Cautious Catastrophe Cinematographer"
+
+Film-a-holic
+
+Shutterbug? Madcap?
+
+
+Calamity Camera Lad
+
+Mishap Movie Maker
+
+
+Cataclysm Camera Chaser
+
+Incautious (Fiasco) Paparazzi
+
+
+
+https://selfsame.itch.io/unitywfc - unity wave collapse function
+
+Inspiration: https://www.youtube.com/watch?v=VsxFw1Ulp2A
+
+
+
+Resources:
+https://www.youtube.com/watch?v=QXoqRzMBiUc
+https://80.lv/articles/creating-a-tornado-in-unity/
+https://sharpcoderblog.com/blog/unity-3d-tornado-physics
+
+TODO:
+- Tornado Shader
+- Tornado implement
+- Retro3d pIPELine installeren.
+- Camera recording mechanics.
+
+

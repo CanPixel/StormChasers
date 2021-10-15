@@ -39,7 +39,7 @@ public class CameraCanvas : MonoBehaviour {
     public Outline focusMeterImg;
 
     void Start() {
-        dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
+        ReloadDepthOfField();
     }
 
     void Update() {
@@ -49,6 +49,10 @@ public class CameraCanvas : MonoBehaviour {
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
         var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
         dof.aperture.value = ding;
+    }
+
+    public void ReloadDepthOfField() {
+        dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
     }
 
     public PhotoItem RaycastFromReticle(Transform trans) {

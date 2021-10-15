@@ -177,6 +177,7 @@ public class CameraControl : MonoBehaviour {
         if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
         postProcessing.m_Profile = camSystem.shaderFilters[camSystem.filterIndex].profile;
         shaderReel.current = camSystem.filterIndex;
+        cameraCanvas.ReloadDepthOfField();
 
         SoundManager.PlayUnscaledSound("ShaderSwitch");
         reticleBob.Bob();

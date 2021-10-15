@@ -150,6 +150,7 @@ public class CarMovement : MonoBehaviour {
     }
 
     protected void BarrelRoll() {
+        return;
         if(barrelRollDelay > 0 || isBarrelRolling || steering == 0) return;
 
         RaycastHit hit;
