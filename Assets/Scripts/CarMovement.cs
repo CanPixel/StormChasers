@@ -53,15 +53,15 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
-        if(barrelRollDelay > 0) barrelRollDelay -= Time.unscaledDeltaTime;
+        //if(barrelRollDelay > 0) barrelRollDelay -= Time.unscaledDeltaTime;
 
-        if(barrelRoll > 0) {
+/*         if(barrelRoll > 0) {
             carMesh.transform.rotation = Quaternion.Euler(carMesh.transform.eulerAngles.x, carMesh.transform.eulerAngles.y, barrelRollDirection * barrelRoll * 360f);
             barrelRoll -= Time.unscaledDeltaTime * ((camControl.camSystem.aim >= 0.5f) ? slowMotionBarrelRollSpeed : barrelRollSpeed);
         } else if(isBarrelRolling) {        //Reset barrel roll
             camControl.SetCameraPriority(camControl.stuntLook, 11);
             isBarrelRolling = false;
-        }
+        } */
 
         if(steering == 0 && drift >= 0.5f) {
             kart.ActivateDriftVFX(true);
@@ -159,19 +159,19 @@ public class CarMovement : MonoBehaviour {
             if(dist < minDistanceForBarrelRoll) return;
         }
 
-        barrelRollDelay = 0.6f;
+/*         barrelRollDelay = 0.6f;
         barrelRollDirection = steering * 1f;
         barrelRoll = barrelRollDuration;
         isBarrelRolling = true;
         if(camControl.camSystem.aim >= 0.5f) return;
         camControl.SetCameraPriority(camControl.stuntLook, 12);
         camControl.stuntTransposer.m_RollDamping = 400;
-        camControl.stuntLook.transform.rotation = Quaternion.Euler(0, rb.transform.eulerAngles.y, 0);
+        camControl.stuntLook.transform.rotation = Quaternion.Euler(0, rb.transform.eulerAngles.y, 0); */
     }
 
     protected void Jump() {
         kart.SuspensionHeight = baseSuspension * jumpHeight;
-        SoundManager.PlaySound("Jump", 0.6f);
+        SoundManager.PlaySound("Jump", 0.15f);
         HapticFeedback(0.4f, 0.3f, 0.2f);
     }
     protected void Boost() {

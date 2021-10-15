@@ -43,6 +43,14 @@ public class SoundManager : MonoBehaviour {
         }
     }
 
+    public static void StopSound(string key) {
+        if(instance == null) {
+            Debug.LogError("[!] SoundManager is not loaded at the time PlaySound() gets called!");
+            return;
+        }
+        if(instance.soundBits.ContainsKey(key.ToLower().Trim())) instance.source.Stop();
+    }
+
     public static void PlaySound(string key, float vol = 1f) {
         if(instance == null) {
             Debug.LogError("[!] SoundManager is not loaded at the time PlaySound() gets called!");

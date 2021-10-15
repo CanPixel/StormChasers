@@ -36,10 +36,12 @@ public class Boost : MonoBehaviour {
     public CarMovement carMovement;
     public GameObject speedLinesFX;
     public Image boostOverlay;
+    private float boostAlpha;
 
     void Start() {
         currentBoostFuel = maxBoostFuel; 
         fovTarget = virtualCamera.m_Lens.FieldOfView;
+        boostAlpha = boostOverlay.color.a;
 
         SetHingesStatic(true);
     }
@@ -86,8 +88,8 @@ public class Boost : MonoBehaviour {
             carRb.AddForce(carRb.transform.forward * impulseBoostForce, ForceMode.VelocityChange);
             carMovement.HapticFeedback(0.8f, 0.2f, 0.3f);
             
-            SoundManager.PlaySound("Boost");
-            boostOverlay.color = new Color(1, 1, 1, 0.35f);
+            SoundManager.PlaySound("Boost", 0.7f);
+            boostOverlay.color = new Color(1, 1, 1, boostAlpha);
             
             boostPressedInterval = boostSpamCap;
         }
@@ -98,6 +100,7 @@ public class Boost : MonoBehaviour {
         speedLinesFX.SetActive(false);
         SetHingesStatic(true);
         boostRegenTimer = 0.1f;    
+        SoundManager.StopSound("Boost");
     }
 
     private void ExpandFuel() {

@@ -28,7 +28,11 @@ public class LockOnSystem : MonoBehaviour {
     void Start() {
         allTargets = GameObject.FindObjectsOfType<PhotoItem>();
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-        foreach(var i in allTargets) i.render.allowOcclusionWhenDynamic = true;
+        foreach(var i in allTargets) {
+            i.render.allowOcclusionWhenDynamic = true;
+            
+            if(i.isComposite) ;
+        }
     }
 
     void Update() {

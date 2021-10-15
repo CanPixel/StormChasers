@@ -93,10 +93,8 @@ public class CameraControl : MonoBehaviour {
     public LayerMask thirdPersonCull;
     public LayerMask firstPersonCull;
     public Camera cam;
-    public Cinemachine.PostFX.CinemachinePostProcessing postProcessing;
     public Cinemachine.CinemachineVirtualCamera firstPersonLook;
     public Cinemachine.CinemachineVirtualCamera stuntLook;
-    [HideInInspector] public Cinemachine.CinemachineTransposer stuntTransposer;
     public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
     private Cinemachine.CinemachinePOV pov;
     private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
@@ -111,28 +109,32 @@ public class CameraControl : MonoBehaviour {
     public SplashSystem splashSystem;
     public RatingSystem ratingSystem;
     public ShaderReel shaderReel;
-    private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
 
     private Vector3 baseFollowOffset;
-    private float motion, baseZDamping;
+    private float baseZDamping;
+
+    private float blend = 0;
 
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
-        stuntTransposer = stuntLook.GetCinemachineComponent<Cinemachine.CinemachineTransposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
         baseZDamping = orbitalTransposer.m_ZDamping;
-
-        motionBlur = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
     }
 
     void Update() {
-        MotionBlurReticle();
-        
+        /* Blending Shaders */
+        float blendTarget;
+        if(cinemachineBrain.IsLive(firstPersonLook) || cinemachineBrain.IsBlending) blendTarget = 1;
+        else blendTarget = 0;
+        blend = Mathf.Lerp(blend, blendTarget, Time.unscaledDeltaTime * 8f);
+        cameraCanvas.postProcessVolume.weight = blend;
+
         photoBookUI.SetActive(photoBook);
 
+        /* SlowMo */
         Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming()) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
         SoundManager.SlowMo();
 
@@ -148,14 +150,6 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.transform.rotation = transform.rotation;
         cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
-    }
-
-    protected void MotionBlurReticle() {
-        var motionDist = Vector3.Distance(cameraCanvas.movementReticle.transform.position, cameraCanvas.baseReticle.transform.position) * 1.5f;
-        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
-        if(motionDist < 100) motionBlur.enabled.value = false;
-        else motionBlur.enabled.value = true; 
-        motion = motionDist;
     }
 
     protected bool IsAiming() {
@@ -175,9 +169,10 @@ public class CameraControl : MonoBehaviour {
         camSystem.filterIndex += (int)add;
         if(camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
         if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
-        postProcessing.m_Profile = camSystem.shaderFilters[camSystem.filterIndex].profile;
+        
+        cameraCanvas.postProcessVolume.sharedProfile = camSystem.shaderFilters[camSystem.filterIndex].profile;
         shaderReel.current = camSystem.filterIndex;
-        cameraCanvas.ReloadDepthOfField();
+        cameraCanvas.ReloadFX();
 
         SoundManager.PlayUnscaledSound("ShaderSwitch");
         reticleBob.Bob();
@@ -285,13 +280,13 @@ public class CameraControl : MonoBehaviour {
         }
 
         if(isOnScreen) {
-            photoName = photoWithoutScore = (i != null) ? i.name : "Random Picture";
+            photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
             score.item = i;
             score.name = photoName;
             score.screenshot = scren;
             score.physicalDistance = cameraCanvas.GetPhysicalDistance(i);
             score.onScreen = isOnScreen;
-            score.motion = 100 - (int)Mathf.Clamp(motion, 0, 100);
+            score.motion = 100 - (int)Mathf.Clamp(cameraCanvas.GetMotion(), 0, 100);
             score.centerFrame = lockOnSystem.GetCrosshairCenter(i);
             score.focus = cameraCanvas.GetFocusValue();
             score.objectSharpness = lockOnSystem.GetObjectSharpness(i);
@@ -311,7 +306,7 @@ public class CameraControl : MonoBehaviour {
             sub.screenshot = scren;
             sub.physicalDistance = cameraCanvas.GetPhysicalDistance(rest);
             sub.onScreen = isOnScreen;
-            sub.motion = 100 - (int)Mathf.Clamp(motion, 0, 100);
+            sub.motion = 100 - (int)Mathf.Clamp(cameraCanvas.GetMotion(), 0, 100);
             sub.centerFrame = lockOnSystem.GetCrosshairCenter(rest);
             sub.focus = cameraCanvas.GetFocusValue();
             sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);

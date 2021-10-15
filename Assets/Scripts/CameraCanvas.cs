@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine.PostFX;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
 
 public class CameraCanvas : MonoBehaviour {
@@ -11,6 +12,7 @@ public class CameraCanvas : MonoBehaviour {
     public float maxDistance = 300;
 
     private UnityEngine.Rendering.PostProcessing.DepthOfField dof;
+    private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
     private float focusInput;
 
     [Header("Motion Blur Reticle")]
@@ -31,18 +33,26 @@ public class CameraCanvas : MonoBehaviour {
     public Camera cam;
     public CameraControl cameraControl;
     public CarMovement player;
-    public CinemachinePostProcessing postProcessing;
+    public PostProcessVolume postProcessVolume;
     public Slider focusMeter;
     public Text highlightedObjectText;
     public Image baseReticle, movementReticle;
     public Outline focusMeterOutline;
     public Outline focusMeterImg;
+    public Text shaderControlText;
+    public InputActionReference switchShaderBinding;
+
+    private float motion;
 
     void Start() {
-        ReloadDepthOfField();
+        ReloadFX();
     }
 
     void Update() {
+        shaderControlText.text = ("Switch (<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)").ToUpper();
+
+        MotionBlurReticle();
+
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
@@ -51,8 +61,9 @@ public class CameraCanvas : MonoBehaviour {
         dof.aperture.value = ding;
     }
 
-    public void ReloadDepthOfField() {
-        dof = postProcessing.m_Profile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
+    public void ReloadFX() {
+        dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
+        motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
     }
 
     public PhotoItem RaycastFromReticle(Transform trans) {
@@ -65,11 +76,32 @@ public class CameraCanvas : MonoBehaviour {
         return photoItem;
     }
 
+    public string RaycastName(Transform trans) {
+        RaycastHit hit;
+        if(Physics.SphereCast(cam.ScreenPointToRay(trans.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
+            return hit.transform.gameObject.name;
+        }
+        return "";
+    }
+
     public void SynchLook() {
         if(!cameraControl.cinemachineBrain.IsLive(cameraControl.firstPersonLook) || cameraControl.cinemachineBrain.IsBlending) return;
         var look = player.GetLooking();
         if(look == Vector2.zero || look.magnitude < movementSensitivityThreshold) return;
         movementReticle.transform.localPosition = new Vector3(look.x, look.y, 0) * -movementRange;
+    }
+
+    protected void MotionBlurReticle() {
+        if(motionBlur == null) return;
+        var motionDist = Vector3.Distance(movementReticle.transform.position, baseReticle.transform.position) * 1.5f;
+        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
+        if(motionDist < 100) motionBlur.enabled.value = false;
+        else motionBlur.enabled.value = true; 
+        motion = motionDist;
+    }
+
+    public float GetMotion() {
+        return motion;
     }
 
     public void ChangeFocus(float i) {
