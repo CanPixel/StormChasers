@@ -11,6 +11,9 @@
 
 
 
+- Press [SwitchShader] button to switch text
+
+
 
 ======== Best Possible Photo Production
 - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
