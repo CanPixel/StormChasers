@@ -1,28 +1,24 @@
 
-- 2 SHADERS AT A TIME BLENDING - Continu 
+???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
-- Coyote time jumping before 0.25f groundpercent
-- Cap / delay op jumpen (soms doe je multiple geluid)
-
-========= Snelheid
+========= Physics
 - Snelheid drift brake als variabel
 - BOOST CAP
 - Boost cancel force
+- Coyote time jumping before 0.25f groundpercent
 
 
-
-- Press [SwitchShader] button to switch text
-
-
-
-======== Best Possible Photo Production
-- 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
-- Rotation bonus (Dutch & Ondersteboven)
-- smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
-- EXPLOSIVES should be ++++ bonus
-- exhaust on picture should be ------ farting CO2 bonus reduction
-
-
+=========== TODO:
+        - COMPOSITES 
+        - BONUS OBJECTS
+        - STUNT BONUSES
+                - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
+                - Rotation bonus (Dutch & Ondersteboven)
+                - smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
+                - EXPLOSIVES should be ++++ bonus
+                - exhaust on picture should be ------ farting CO2 bonus reduction
+        - DYNAMIC DISTANCE / SCALING
+        - DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC / AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
 
 
 
@@ -32,24 +28,10 @@
 
 
 
-
-=========================== NEXT SPRINT         \\\             BOSS FIGHT
-- Tornado
-- Weak points \\ composite objects 
-- Indirect attacking (nukes)
-- Destruction
-- Dynamic AI
-- Fun Physics
-- Fun interactions
-
-
-
-
-
 AUDIO:
-- Landing
-- Beep beep achteruit?
-- Better Boost effect   (Dolly Shot / Dolly Zoom)
+- Landing sounds / crashing sounds
+- Beep beep voor achteruit?
+- Better Boost sound effect  
 
 
 
@@ -68,21 +50,23 @@ TESTEN:
 
 
 
-================== PICTURE SCORING SYSTEM
-- Bonus-objects ? (collection || bool OnScreen)
-- Anti-objects (bool OnScreen)
-- Object orientation (bool / axis & angle)
-- STUNTING BONUS MULTIPLIER   
-
-
-
 
 == [Optional]
-- wobble on land visual + haptic?
-- vehicle damage ontrigger
+- wobble on land visual + better haptics
+- vehicle damage fixen + ontrigger?
 - Screen diagonal split for cutscene / different visuals
 
-- Arrow dingetjes voor snap to orientation?
 
 
 ========= DONE:
+- Fixes
+- UI Layering fixes
+- Camera shader change iets smoother (nogsteeds wel lag spike op het begin, omdat alles nog moet laden enzo)
+- 3rd person to 1st perspective is WAY smoother. The Postprocess FX blend in during the transition.
+- Project cleanups
+- Level area system (it shows the name of map area on enter)
+- Mission system progress
+- RAYCAST 3D RETICLE 
+- Object scan text, different formatting (No "!" for keypoints) for keypoints
+- Object orientations!
+- Composite objects now work & tweakable with PhotoKeyPoint script on object + Nice editing visuals in scene view

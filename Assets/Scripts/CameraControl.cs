@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Cinemachine.PostFX;
 
 public class CameraControl : MonoBehaviour {
     public GameObject[] enableOnFirstPerson, disableOnFirstPerson;
+    public Graphic[] fadeOnFirstPerson;
+    private Color[] baseAlphaFirstPersonFade;
+
     public CameraSystem camSystem;
 
     public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
@@ -32,7 +36,7 @@ public class CameraControl : MonoBehaviour {
     public class PictureScore {
         public Screenshot screenshot;
 
-        public PhotoItem item;
+        public PhotoBase item;
         public List<PictureScore> subScore = new List<PictureScore>();
         
         public string name;
@@ -65,7 +69,7 @@ public class CameraControl : MonoBehaviour {
 
     [System.Serializable]
     public class CameraSystem {
-        public float aim, shoot;
+        [ReadOnly] public float aim, shoot;
 
         [System.Serializable]
         public class ShaderFilter {
@@ -94,7 +98,6 @@ public class CameraControl : MonoBehaviour {
     public LayerMask firstPersonCull;
     public Camera cam;
     public Cinemachine.CinemachineVirtualCamera firstPersonLook;
-    public Cinemachine.CinemachineVirtualCamera stuntLook;
     public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
     private Cinemachine.CinemachinePOV pov;
     private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
@@ -103,15 +106,20 @@ public class CameraControl : MonoBehaviour {
     public GameObject cameraMascotte;
     public Transform photoBookScrollPanel;
     public UIBob reticleBob;
+    public Image worldAimReticle;
+    public Text worldAimControlText;
+    public GameObject minimapCamera;
     public CarMovement carMovement;
     public CameraCanvas cameraCanvas;
     public LockOnSystem lockOnSystem;
     public SplashSystem splashSystem;
     public RatingSystem ratingSystem;
+    [SerializeField] private InputActionReference cameraAimButton;
     public ShaderReel shaderReel;
 
     private Vector3 baseFollowOffset;
     private float baseZDamping;
+    private float minimapCamBaseAngle;
 
     private float blend = 0;
 
@@ -122,15 +130,37 @@ public class CameraControl : MonoBehaviour {
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
         baseZDamping = orbitalTransposer.m_ZDamping;
+
+        minimapCamBaseAngle = minimapCamera.transform.eulerAngles.x;
+
+        baseAlphaFirstPersonFade = new Color[fadeOnFirstPerson.Length];
+        for(int i = 0; i < fadeOnFirstPerson.Length; i++) baseAlphaFirstPersonFade[i] = fadeOnFirstPerson[i].color;
     }
 
+    private Vector3 worldReticleTarget;
+    private float distTarget = 1f;
+
     void Update() {
+        minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamera.transform.position.y, transform.position.z);
+        minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
+
         /* Blending Shaders */
         float blendTarget;
         if(cinemachineBrain.IsLive(firstPersonLook) || cinemachineBrain.IsBlending) blendTarget = 1;
         else blendTarget = 0;
         blend = Mathf.Lerp(blend, blendTarget, Time.unscaledDeltaTime * 8f);
         cameraCanvas.postProcessVolume.weight = blend;
+
+        /* 3D World Aim Reticle */
+        worldAimControlText.text = "Aim (<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>)";
+        RaycastHit hit;
+        if(Physics.Raycast(cameraMascotte.transform.position + Vector3.up, -cameraMascotte.transform.up, out hit)) {
+            worldReticleTarget = cam.WorldToScreenPoint(hit.transform.position);
+            distTarget = Mathf.Clamp(1f - ((hit.transform.position - transform.position).magnitude) / 100f, 0.2f, 1);
+        }
+        worldAimReticle.transform.position = Vector3.Lerp(worldAimReticle.transform.position, worldReticleTarget, Time.unscaledDeltaTime * 4f);
+        worldAimReticle.transform.localScale = Vector3.Lerp(worldAimReticle.transform.localScale, Vector3.one * distTarget, Time.unscaledDeltaTime * 4f);
+
 
         photoBookUI.SetActive(photoBook);
 
@@ -144,8 +174,10 @@ public class CameraControl : MonoBehaviour {
         }
         if(carMovement.GetLooking().magnitude >= 0.65f && recenterTime > 0) recenterTime = 0;
 
-        if(camSystem.aim > 0.4) FirstPersonLook();
+        if(IsAiming()) FirstPersonLook();
         else ThirdPersonLook();
+
+        for(int i = 0; i < fadeOnFirstPerson.Length; i++) fadeOnFirstPerson[i].color = Color.Lerp(fadeOnFirstPerson[i].color, new Color(fadeOnFirstPerson[i].color.r, fadeOnFirstPerson[i].color.g, fadeOnFirstPerson[i].color.b, (IsAiming() ? 0 : baseAlphaFirstPersonFade[i].a)), Time.unscaledDeltaTime * 8f);
 
         cameraMascotte.transform.rotation = transform.rotation;
         cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
@@ -261,14 +293,16 @@ public class CameraControl : MonoBehaviour {
         var sf = pol.GetComponent<ShaderFilter>();
         sf.icon.sprite = temp;
 
+
+
         //=============== [Photo Naming - Object Prioritization - Scoring section]
         string photoName = "", photoWithoutScore = "";
         PictureScore score = new PictureScore();
 
         var allObjects = lockOnSystem.GetOnScreenObjects();
-        List<PhotoItem> restItems = new List<PhotoItem>();
+        List<PhotoBase> restItems = new List<PhotoBase>();
 
-        PhotoItem i = null;
+        PhotoBase i = null;
         Vector3 targetPos = Vector3.zero;
         bool isOnScreen = true;
         if(allObjects.Count > 0) {
@@ -279,6 +313,7 @@ public class CameraControl : MonoBehaviour {
             }
         }
 
+        //Main Object score
         if(isOnScreen) {
             photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
             score.item = i;

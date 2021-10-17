@@ -29,7 +29,6 @@ public class CameraCanvas : MonoBehaviour {
     public float physicalDistanceFactor = 0.5f;
 
     [Space(10)]
-    public LockOnSystem lockOnSystem;
     public Camera cam;
     public CameraControl cameraControl;
     public CarMovement player;
@@ -53,6 +52,8 @@ public class CameraCanvas : MonoBehaviour {
 
         MotionBlurReticle();
 
+        Debug.Log(focusInput);
+
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
@@ -62,12 +63,20 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void ReloadFX() {
+        if(dof == null) dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
+
+        var focusDist = dof.focusDistance.value;
+        var focusAperture = dof.aperture.value;
+
         dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
         motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
+        
+        dof.focusDistance.value = focusMeter.value = focusDist;
+        dof.aperture.value = focusAperture;
     }
 
-    public PhotoItem RaycastFromReticle(Transform trans) {
-        PhotoItem photoItem = null;
+    public PhotoBase RaycastFromReticle(Transform trans) {
+        PhotoBase photoItem = null;
         RaycastHit hit;
         if(Physics.SphereCast(cam.ScreenPointToRay(trans.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
             var ph = hit.transform.gameObject.GetComponent<PhotoItem>();
@@ -112,7 +121,7 @@ public class CameraCanvas : MonoBehaviour {
         return (int)((dof.focusDistance.value / maxFocusRange) * 100f);
     }
 
-    public float GetPhysicalDistance(PhotoItem i) {
+    public float GetPhysicalDistance(PhotoBase i) {
         var dist = Mathf.Clamp(Mathf.Abs(Vector3.Distance(player.transform.position, (i != null) ? i.transform.position : player.transform.position)), 1, maxDistance);
         return (int)Mathf.Clamp(dist * physicalDistanceFactor, 0, 100);
     }

@@ -165,7 +165,7 @@ public class RatingSystem : MonoBehaviour {
         totalScoreBase.transform.localScale = totalScoreValue.transform.localScale = Vector3.zero;
     }
 
-    protected void SpawnCrosshair(PhotoItem item) {
+    protected void SpawnCrosshair(PhotoBase item) {
         if(camControl.lockOnSystem.GetScreenCrosshair(item) == null) return;
         var spl = Instantiate(crosshairOmcirkel);
         spl.transform.SetParent(polaroidScreenshot.transform);

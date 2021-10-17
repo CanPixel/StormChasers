@@ -19,6 +19,7 @@ MonoBehaviour:
   - {fileID: 114906379670220478}
   - {fileID: 114041551080438352}
   - {fileID: 38981833078928559}
+  - {fileID: 3911980872108838419}
 --- !u!114 &38981833078928559
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -37,10 +38,10 @@ MonoBehaviour:
     value: 1
   focusDistance:
     overrideState: 1
-    value: 48.34999
+    value: 75.19994
   aperture:
     overrideState: 1
-    value: 1.4000874
+    value: 1.929
   focalLength:
     overrideState: 1
     value: 300
@@ -1526,3 +1527,25 @@ MonoBehaviour:
   dirtIntensity:
     overrideState: 0
     value: 0
+--- !u!114 &3911980872108838419
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94fcd11afffcb142908bfcb1e261fba, type: 3}
+  m_Name: MotionBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 0
+  shutterAngle:
+    overrideState: 1
+    value: 180
+  sampleCount:
+    overrideState: 0
+    value: 4

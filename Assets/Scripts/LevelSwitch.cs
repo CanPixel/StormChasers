@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class LevelSwitch : MonoBehaviour {
     public Text levelTitle;
-    public Font font;
 
     private static float alpha = 0;
 
     private float fadeDelay = 0;
-    private const float untilFade = 5f;
-    public const float fadeSpeed = 1.2f;
+    
+    public float untilFade = 4f;
+    public float fadeSpeed = 1.2f;
+
     private Vector3 baseScale;
 
     private static LevelSwitch processor;
@@ -23,7 +24,7 @@ public class LevelSwitch : MonoBehaviour {
     }
 
     void Update() {
-        if(processor == null || processor != this) return;
+        if(processor == null) return;
 
         if(fadeDelay > 0) {
             fadeDelay -= Time.deltaTime;
@@ -37,15 +38,11 @@ public class LevelSwitch : MonoBehaviour {
         levelTitle.transform.localScale = Vector3.Lerp(levelTitle.transform.localScale, baseScale, Time.deltaTime * fadeSpeed * 2f);
     }
 
-    void OnTriggerEnter(Collider col) {
-        if(col.gameObject.tag == "Player" && gameObject.tag == "AREA") SwitchLevel(transform.name);
-    }
-
-    public void SwitchLevel(string txt) {
-        levelTitle.text = txt;
-        levelTitle.font = font;
-        alpha = 1f;
-        levelTitle.transform.localScale = baseScale * 1.1f;
-        fadeDelay = untilFade;
+    public static void SwitchLevel(Region region) {
+        processor.levelTitle.text = region.name;
+        processor.levelTitle.font = region.font;
+        alpha = 4f;
+        processor.levelTitle.transform.localScale = processor.baseScale * 1.1f;
+        processor.fadeDelay = processor.untilFade;
     }
 }

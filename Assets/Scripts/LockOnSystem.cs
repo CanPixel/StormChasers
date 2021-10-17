@@ -10,56 +10,46 @@ public struct LockedObjects {
 }
 
 public class LockOnSystem : MonoBehaviour {
-    [Space(10)]
+    public Transform player;
     public CameraCanvas cameraCanvas;
     public Animator animator;
     public GameObject crossHair;
     public GameObject canvas;
     public Camera cam;
 
-    public Dictionary<PhotoItem, LockedObjects> onScreenTargets = new Dictionary<PhotoItem, LockedObjects>();
-    [HideInInspector] public List<PhotoItem> sortedScreenObjects = new List<PhotoItem>();
+    [Space(10)]
+    public Dictionary<PhotoBase, LockedObjects> onScreenTargets = new Dictionary<PhotoBase, LockedObjects>();
+    [HideInInspector] public List<PhotoBase> sortedScreenObjects = new List<PhotoBase>();
 
-    public PhotoItem[] allTargets {
-        get; private set;
-    }
+    [SerializeField] private List<PhotoItem> allTargets = new List<PhotoItem>();
     private Transform target;
 
+    void OnValidate() {
+        allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
+    }
+
     void Start() {
-        allTargets = GameObject.FindObjectsOfType<PhotoItem>();
+        allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-        foreach(var i in allTargets) {
-            i.render.allowOcclusionWhenDynamic = true;
-            
-            if(i.isComposite) ;
-        }
+        
+        foreach(var i in allTargets) i.render.allowOcclusionWhenDynamic = true;
     }
 
     void Update() {
-        for (int i = 0; i < allTargets.Length; i++) {
-            Vector3 targetPos = cam.WorldToViewportPoint(allTargets[i].transform.position);
-            bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
-            bool inDistance = Vector3.Distance(allTargets[i].transform.position, cam.transform.position) < cameraCanvas.maxDistance;
-            bool isOccluded = !CanSee(cam.gameObject, allTargets[i]);
+        for (int i = 0; i < allTargets.Count; i++) {
+            if(!allTargets[i].active) continue;
+            bool isComposite = allTargets[i].isComposite;
 
-            if (!isOccluded && inDistance && isOnScreen && !onScreenTargets.ContainsKey(allTargets[i])) {
-                var createImage = Instantiate(crossHair) as GameObject;
-                createImage.transform.SetParent(canvas.transform, true);
-                createImage.SetActive(true);
-                var lockedObject = new LockedObjects();
-                lockedObject.crosshair = createImage.GetComponent<Crosshair>();
-                lockedObject.target = allTargets[i].gameObject;
-                onScreenTargets.Add(allTargets[i], lockedObject);
-            } 
-            else if (onScreenTargets.ContainsKey(allTargets[i]) && (!isOnScreen || !inDistance || isOccluded)) RemoveCrosshair(allTargets[i]);
+            if(isComposite) for(int j = 0; j < allTargets[i].GetKeyPoints().Length; j++) PhotoLogic(allTargets[i].GetKeyPoints()[j], allTargets[i]);
+            else PhotoLogic(allTargets[i]);
         }
 
-        foreach(KeyValuePair<PhotoItem, LockedObjects> k in onScreenTargets) {
+        foreach(KeyValuePair<PhotoBase, LockedObjects> k in onScreenTargets) {
             target = onScreenTargets[k.Key].target.transform;
             onScreenTargets[k.Key].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }
 
-        PhotoItem tar;
+        PhotoBase tar;
         tar = cameraCanvas.RaycastFromReticle(cameraCanvas.baseReticle.transform);
         sortedScreenObjects = onScreenTargets.Keys.ToList().OrderBy(x => Vector3.Distance(cam.WorldToViewportPoint(FormatVector(x.transform.position)), new Vector3(0.5f, 0.5f, 0))).ToList();
 
@@ -67,7 +57,8 @@ public class LockOnSystem : MonoBehaviour {
         if(sortedScreenObjects.Count > 0) {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
-                objects += k.name + "! \n";
+                if(!k.isKeyPoint) objects += k.name + "! \n";
+                else objects += "<color='#ff00ff'>" + k.name + "</color> \n";
                 FadeCrosshair(k);
             }
             cameraCanvas.highlightedObjectText.text = objects;
@@ -91,11 +82,22 @@ public class LockOnSystem : MonoBehaviour {
         }
     }
 
-    public List<PhotoItem> GetOnScreenObjects() {
+    protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
+        Vector3 targetPos = cam.WorldToViewportPoint(target.transform.position);
+        bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
+        bool inDistance = Vector3.Distance(target.transform.position, cam.transform.position) < cameraCanvas.maxDistance;
+        bool isOccluded = !CanSee(target, host);
+        bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
+
+        if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target)) AddCrosshair(target);
+        else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation)) RemoveCrosshair(target);
+    }
+
+    public List<PhotoBase> GetOnScreenObjects() {
         return sortedScreenObjects;
     }
 
-    public float GetObjectSharpness(PhotoItem priority) {
+    public float GetObjectSharpness(PhotoBase priority) {
         var focusVal = cameraCanvas.GetFocusValue();
         var dist = cameraCanvas.GetPhysicalDistance(priority);
 
@@ -111,36 +113,47 @@ public class LockOnSystem : MonoBehaviour {
         return vec;
     }
 
-    public Crosshair GetScreenCrosshair(PhotoItem pi) {
+    public Crosshair GetScreenCrosshair(PhotoBase pi) {
         if(onScreenTargets.ContainsKey(pi)) return onScreenTargets[pi].crosshair;
         return null;
     }
 
-    private bool CanSee(GameObject origin, PhotoItem toCheck) {
-        Vector3 pointOnScreen = cam.WorldToScreenPoint(toCheck.render.bounds.center);
+    public List<PhotoItem> GetAllTargets() {
+        return allTargets;
+    }
+
+    private bool CanSee(PhotoBase toCheck, PhotoItem host = null) {
+        var point = toCheck.transform.position;
+
+        Vector3 pointOnScreen = cam.WorldToScreenPoint(point);
  
         //Is in front
         if (pointOnScreen.z < 0) return false;
         //Is in FOV
         if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;
- 
-        RaycastHit hit;
-        Vector3 heading = toCheck.transform.position - origin.transform.position;
-        Vector3 direction = heading.normalized;// / heading.magnitude;
         
-        if (Physics.Linecast(cam.transform.position, toCheck.render.bounds.center, out hit)) {
-            if (hit.transform.name != toCheck.transform.name) return false;
+        RaycastHit hit;
+        if (Physics.Linecast(cam.transform.position, point, out hit)) {
+            if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform))) return false;
         }
         return true;
     }
 
-    public void RemoveCrosshair(PhotoItem pi) {
+    protected void AddCrosshair(PhotoBase pi) {
+        var createImage = Instantiate(crossHair) as GameObject;
+        createImage.transform.SetParent(canvas.transform, true);
+        createImage.SetActive(true);
+        var lockedObject = new LockedObjects();
+        lockedObject.crosshair = createImage.GetComponent<Crosshair>();
+        lockedObject.target = pi.gameObject;
+        onScreenTargets.Add(pi, lockedObject);
+    }
+    protected void RemoveCrosshair(PhotoBase pi) {
         if(!onScreenTargets.ContainsKey(pi)) return;
         Destroy(onScreenTargets[pi].crosshair.gameObject);
         onScreenTargets.Remove(pi);
     }
-
-    public void FadeCrosshair(PhotoItem pi) {
+    protected void FadeCrosshair(PhotoBase pi) {
         if(!onScreenTargets.ContainsKey(pi)) return;
 
         var screenPos = new Vector3(0.5f, 0.5f, 0) - FormatVector(cam.WorldToViewportPoint(onScreenTargets[pi].target.transform.position));
@@ -150,7 +163,7 @@ public class LockOnSystem : MonoBehaviour {
         onScreenTargets[pi].crosshair.SetAlpha(screen * 0.01f);
     }
 
-    public float GetCrosshairCenter(PhotoItem pi) {
+    public float GetCrosshairCenter(PhotoBase pi) {
         if(pi == null) return -1;
         if(!onScreenTargets.ContainsKey(pi)) return -1;
         if(onScreenTargets[pi].target == null) return -1;
