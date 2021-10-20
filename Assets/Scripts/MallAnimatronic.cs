@@ -4,67 +4,57 @@ using UnityEngine;
 
 public class MallAnimatronic : MonoBehaviour
 {
-    public bool canSeeObject;
+    private bool canSeeObject = false;
 
-    public Transform target; 
-    public float viewRange = 20f;
+    public Transform target;
+    Vector3 lookDirection; 
+    private float viewRange = 200f;
     public float viewAngle; 
     public float rotateSpeed = 10f; 
 
     void Update(){
 
-       // CheckForObject(); 
+        LookAtobject(); 
     }
 
     void OnTriggerStay(Collider other)
     {
         if(other.gameObject.CompareTag("Player")){   
             target = other.gameObject.transform;
-            LookAtobject(gameObject.tag); 
+            canSeeObject = true; 
+          //  LookAtobject(gameObject.tag); 
         }
+
     }
 
+    /*
     void OnTriggerExit(Collider other){
+        if (target == null) return; 
         if(target.tag == other.tag)
         {
             target = null; 
         }
     }
-
+    */
     
-    void LookAtobject(string ObjType)
+    void LookAtobject()
     {
-        if(ObjType == ("Player"))
+        if (canSeeObject)
         {
-            Debug.Log(" Rotating??"); 
-            Vector3 targetDirection = target.position - transform.position;
-            float singleStep = rotateSpeed * Time.deltaTime;
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f);
-            transform.rotation = Quaternion.LookRotation(newDirection);
+            
+
+          
+            Vector3 targetDirection = (target.transform.position - transform.position);
+            float singleStep = rotateSpeed * Time.deltaTime; //step distance per call
+            lookDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f); //determin new rotation direciton 
+            transform.rotation = Quaternion.LookRotation(lookDirection); //Set rotation 
+            transform.eulerAngles = new Vector3(-90, transform.eulerAngles.y, transform.eulerAngles.z); 
 
         }
-    }
-    
 
-/*
-   void CheckForObject()
-    {
-        RaycastHit hit;
-        //Debug.Log(" Looking for player");
 
-        if(Physics.SphereCast(transform.position, viewRange, Vector3.zero, out hit, viewRange))
-        {
-            if(hit.transform)
-            {
-                Debug.Log("PlayerInView"); 
-                objToFollow = hit.transform; 
-                LookAtobject("Player"); 
-            }
-        }
-
-        //else objToFollow = null; 
         
     }
-    */
+    
 
 }
