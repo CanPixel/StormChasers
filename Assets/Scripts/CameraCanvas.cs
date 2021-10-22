@@ -52,12 +52,11 @@ public class CameraCanvas : MonoBehaviour {
 
         MotionBlurReticle();
 
-        Debug.Log(focusInput);
-
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
+        
         var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
         dof.aperture.value = ding;
     }

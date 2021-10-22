@@ -12,10 +12,14 @@ public class CameraControl : MonoBehaviour {
     public Graphic[] fadeOnFirstPerson;
     private Color[] baseAlphaFirstPersonFade;
 
+    public Color markedPictureColor;
+
     public CameraSystem camSystem;
 
     public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
     public float BoostFollowDamping = 2f;
+
+    public float DiscardForce = 10f;
 
     [HideInInspector] public bool photoBook = false;
 
@@ -55,6 +59,8 @@ public class CameraControl : MonoBehaviour {
     public class Screenshot {
         public string name;
         public Texture2D image;
+        public GameObject portfolioObj;
+        public bool forMission = false;
 
         [Range(0, 100)]
         public int score = 0;
@@ -90,8 +96,10 @@ public class CameraControl : MonoBehaviour {
     private float recenterTime = 0;
     public float recenterDuration = 1f;
 
+    public float physPicScale = 0.5f;
+    private Vector3 basePicScale;
+
     public List<Screenshot> screenshots = new List<Screenshot>();
-    private List<GameObject> photoBookShots = new List<GameObject>();
 
     [Space(10)]
     public LayerMask thirdPersonCull;
@@ -104,7 +112,14 @@ public class CameraControl : MonoBehaviour {
     public Cinemachine.CinemachineBrain cinemachineBrain;
     public GameObject photoBookUI, polaroidPrefab;
     public GameObject cameraMascotte;
+    public SpriteRenderer missionPicture;
     public Transform photoBookScrollPanel;
+    public RawImage photoBookSelection;
+    public GameObject physicalPhotoPrefab;
+    public Text photoBookCapacity;
+    public Text discardPicText, markPicText;
+    [SerializeField] private InputActionReference discardPicture;
+    [SerializeField] private InputActionReference markPicture;
     public UIBob reticleBob;
     public Image worldAimReticle;
     public Text worldAimControlText;
@@ -114,14 +129,16 @@ public class CameraControl : MonoBehaviour {
     public LockOnSystem lockOnSystem;
     public SplashSystem splashSystem;
     public RatingSystem ratingSystem;
+    public MissionManager missionManager;
     [SerializeField] private InputActionReference cameraAimButton;
     public ShaderReel shaderReel;
 
     private Vector3 baseFollowOffset;
     private float baseZDamping;
-    private float minimapCamBaseAngle;
+    private float minimapCamBaseAngle, minimapCamBaseY;
 
     private float blend = 0;
+    private int currentSelectedPortfolioPhoto = 0;
 
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
@@ -132,16 +149,22 @@ public class CameraControl : MonoBehaviour {
         baseZDamping = orbitalTransposer.m_ZDamping;
 
         minimapCamBaseAngle = minimapCamera.transform.eulerAngles.x;
+        minimapCamBaseY = minimapCamera.transform.position.y;
 
         baseAlphaFirstPersonFade = new Color[fadeOnFirstPerson.Length];
         for(int i = 0; i < fadeOnFirstPerson.Length; i++) baseAlphaFirstPersonFade[i] = fadeOnFirstPerson[i].color;
+
+        ratingSystem.gameObject.SetActive(true);
+
+        basePicScale = missionPicture.transform.localScale;
+        missionPicture.gameObject.SetActive(false);
     }
 
     private Vector3 worldReticleTarget;
     private float distTarget = 1f;
 
     void Update() {
-        minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamera.transform.position.y, transform.position.z);
+        minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
 
         /* Blending Shaders */
@@ -165,7 +188,7 @@ public class CameraControl : MonoBehaviour {
         photoBookUI.SetActive(photoBook);
 
         /* SlowMo */
-        Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming()) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
+        Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming() || (ratingSystem.HasTakenPicture() && !ratingSystem.IsFading())) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
         SoundManager.SlowMo();
 
         if(recenterTime > 0 && Mathf.Abs(orbitalTransposer.m_XAxis.Value) > 1) {
@@ -182,16 +205,39 @@ public class CameraControl : MonoBehaviour {
         cameraMascotte.transform.rotation = transform.rotation;
         cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
+    
+        /* PhotoBook / Portfolio */
+        photoBookCapacity.text = screenshots.Count + "/" + maxPhotosInPortfolio;
+        photoBookSelection.enabled = discardPicText.enabled = screenshots.Count > 0;
+        markPicText.enabled = screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto].forMission;
+        if(screenshots.Count > 0) photoBookSelection.transform.position = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform.position;
+        discardPicText.text = "Discard  (<color='#ff0000'>" + discardPicture.action.GetBindingDisplayString() + "</color>)";
+        markPicText.text = "Mark for mission  (<color='#ffff00'>" + markPicture.action.GetBindingDisplayString() + "</color>)";
+    }
+
+    public void MarkPicture() {
+        screenshots[currentSelectedPortfolioPhoto].portfolioObj.GetComponent<Image>().color = markedPictureColor;
+        missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+        missionPicture.transform.localScale = basePicScale * physPicScale;
+        missionPicture.gameObject.SetActive(true);
+        missionManager.MarkCurrentObjective();
+    }
+
+    public void DiscardPicture() {
+        var obj = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
+        obj.GetComponent<Rigidbody>().AddForce(Vector3.up * DiscardForce * 50f);
+        obj.transform.localScale = Vector3.one * 0.15f;
+        obj.GetComponent<SpriteRenderer>().sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+
+        DeletePicture(currentSelectedPortfolioPhoto, false);
+
+        PortfolioSelection(-1);
+        photoBook = false;
     }
 
     protected bool IsAiming() {
         return camSystem.aim >= 0.5f;
     }
-
-/*     public void RollDamp(float roll) {
-        orbitalTransposer.m_RollDamping = roll;
-        orbitalTransposer.m_AngularDamping = roll;
-    } */
 
     public void SetCameraPriority(CinemachineVirtualCamera cam, int i) {
         cam.Priority = i;
@@ -348,23 +394,42 @@ public class CameraControl : MonoBehaviour {
             score.subScore.Add(sub);
         }
 
+        //Visualize
         ratingSystem.VisualizeScore(score, scren);
         photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
+
+        //Mission check
+        scren.portfolioObj = pol;
+        missionManager.CheckCompletion(score, scren);
 
         ratingSystem.SetPolaroidTitle(photoWithoutScore);
         sf.text.text = score.name = photoName;
 
-        photoBookShots.Add(pol);
+        //Portfolio
+        if(screenshots.Count >= maxPhotosInPortfolio) DeletePicture(0);
+
+    //    photoBookShots.Add(pol);
         screenshots.Add(scren);
 
-        if(screenshots.Count >= maxPhotosInPortfolio) {
-            Destroy(screenshots[0].image);
-            screenshots.RemoveAt(0);
-            photoBookShots.RemoveAt(0);
-            Destroy(photoBookShots[0]);
-        }
+        //Physical Pictures        
+        //foreach(var pic in physPictures) {
+          //  pic.sprite = Sprite.Create(screenshots[Random.Range(0, screenshots.Count)].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+          //  pic.transform.localScale = basePicScale * physPicScale;
+        //}
 
         SoundManager.PlayUnscaledSound("PhotoShoot", 0.8f);
         ratingSystem.ResetScreenshot();
+    }
+
+    public void PortfolioSelection(float delta) {
+        if(delta >= 0.5f) currentSelectedPortfolioPhoto++;
+        else currentSelectedPortfolioPhoto--;
+        currentSelectedPortfolioPhoto = Mathf.Clamp(currentSelectedPortfolioPhoto, 0, screenshots.Count - 1);
+    }
+    
+    public void DeletePicture(int index, bool deleteTexture = true) {
+        Destroy(screenshots[0].portfolioObj);
+        if(deleteTexture) Destroy(screenshots[0].image);
+        screenshots.RemoveAt(0);
     }
 }

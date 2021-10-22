@@ -50,7 +50,7 @@ public class ArcadeKartPowerup : MonoBehaviour {
         var rb = other.attachedRigidbody;
         if (rb) {
             var kart = rb.GetComponent<ArcadeKart>();
-            if (kart)
+            if (kart && rb.velocity != Vector3.zero)
             { 
                 lastActivatedTimestamp = Time.time;
                 kart.AddPowerup(this.boostStats);

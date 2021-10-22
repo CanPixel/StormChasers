@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PhotoItem : PhotoBase {
     public MeshRenderer render;
-    [HideInInspector] public bool active = true;
     public bool isComposite = false;
 
     [System.Serializable]

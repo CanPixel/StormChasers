@@ -1,11 +1,140 @@
 
 ???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
+
+- Search & find markers in minimap
+
+
+[- Wat gebeurt er als portfolio op capaciteit limiet zit? Photo replacement?]
+
+
+- Scrolling/Selection with d pad in portfolio
+
+
+
+- Mission gets crossed after delivering picture
+- physical delivery
+- Picture Score for mission aanduiden naast de mission statement 
+
+
+After Photo taken:
+        - LB & RB for scroll picture selection in portfolio mode
+3 buttons
+        - (B) Discard Picture + skip
+        - (Y) Mark for mission (greyed out if not possible) [Active mission only or all accepted?] 
+        - (A) Skip + Portfolio
+
+
+
+
+- PictureScore + Splash = Mission accomplished! This could be used for mission -> Press A to stamp for mission
+- Mission completion 
+
+
+- Physical picture gets sucked to mission marker
+
+- Dynamic sizing crosshairs based on distance
+
+- FOCUS BEPAALT OOK MAIN SUBJECT. NIET ALLEEN HOE CENTERFRAME
+
+
+
+- Looking up / down
+
+SYSTEM RULES:
+        - ALL OBJECTIVES + OPTIONALS CAN ONLY BE CLEARED WITH 1 PICTURE. ALL OR NOTHING, YOU GOT 1 SHOT.
+        - Partial completion gets marked off temporarily, as an animation. 
+        - Subject Priority Calculation in photomode is based on how close to center reticle
+        - Picture Scoring System & Missions System are not connected, but they do communicate
+
+Types of bonus:
+        - Mission bonus (+) & penalty (-)
+        - Global bonus (+) & penalty (-)
+        - Subject-inherent bonus (+) & penalty (-)
+
+
+
 ========= Physics
 - Snelheid drift brake als variabel
 - BOOST CAP
 - Boost cancel force
 - Coyote time jumping before 0.25f groundpercent
+
+
+- destructible objecten triggers? dont cancel speed. (maybe freeze frame) haptic feedback + sound
+- No wallriding anymore / toggle
+
+
+======= PhotoItem
+- Category Tags
+- Relative Bonus?
+- Global bonus?
+
+======= PICTURE GRADING
+- 1 Qualifier stage per keer (don't mix too many qualifiers)
+- Sequence of cinematics / volgordesysteem
+- Slowmotion carries on during grading
+- Grade system based on school-system (A tm F)
+- FOCUS is the only grade that is consistently important.
+- MOTION INST & CENTERFRAME are togglable 
+- BORDERS OF PICTURE === COLOR === TOTAL SCORE    
+- PICTURE NAME contains data about keypoints/how much of the object is captured, some bonus categories like DIRTY become the adjective.
+        DIRTY TOWER (1/3)
+        [Buzz-word category / genre / bonus] [Main Subject] [Amount of keypoints in frame]
+
+
+- Flipperkast achtige feel. Visual Stamps. Real-time visual correspondence to score based on grading stage [Waardes blijven veranderen]
+
+
+
+
+- In de [[[[BONUS]]]] stage (na focus stage), wordt een minimumwaarde voor focus gebruikt om te bepalen of bonus items uberhaupt REGISTREREN
+en uberhaupt dus invloed hebben op grading 
+AKA
+Minimum focus per non-important object on screen decides whether grading happens.
+
+???? Bonus objects global or relative? (based on main subject)
+        SHARKS ARE ALWAYS COOL
+        or
+        SHARK(subject) LIKES PRULLENBAK, but PRULLENBAK(subject) DOES NOT LIKE SHARK
+
+
+
+===== ANIMATION SEQUENCE
+- [START]
+- MAIN SUBJECT STAGE
+- FOCUS STAGE 
+- [[[[[[[[[[[OPTIONALS / CONDITIONALS]]]]]]]]]]]
+- [[[[BONUS]]]]
+        Bonus Objects (Score reduction / increase)
+        Eventuele Mission bonus
+- [END ANIM]
+        Physical copy of photo, going in portfolio / exiting screen
+
+
+
+
+======== MISSION SYSTEM
+- MINIMUM GRADE
+- CHECKBOXES
+- Multiple objects/photoitems per mission??? (not possible with picture grading, since it's losgekoppeld)
+
+- BONUS OBJECTS:
+        - GLOBAL (Sharks are cool, advertisements are always bad)
+        - MISSION-SPECIFIC (Now advertisements are cool, endorse me!! Broom, Carwash)
+
+
+        [ ] MAKE SHARK PICTURE
+        ---------------------------------
+                  [ ] In-Focus (minimum of B-grade)
+optional [ ] Dirty prullenbak
+
+        [ ] DIRTY BUSINESS
+                [ ] Prullenbak (Focus A grade)
+                [ ] No clean objects!!! only dirty (anti-bonus)                 [Broom, Carwash]
+
+
+
 
 
 =========== TODO:
@@ -70,3 +199,5 @@ TESTEN:
 - Object scan text, different formatting (No "!" for keypoints) for keypoints
 - Object orientations!
 - Composite objects now work & tweakable with PhotoKeyPoint script on object + Nice editing visuals in scene view
+
+- 0/X picture capacity van portfolio staat er bij

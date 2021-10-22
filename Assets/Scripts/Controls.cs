@@ -131,12 +131,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""BarrelRoll"",
+                    ""name"": ""ScrollPortfolio"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""80d98f6b-91a1-4371-aebc-ca1667a519d1"",
+                    ""id"": ""1d6e52ef-fef5-458b-a002-e594840d137d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.3)""
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DiscardPicture"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ad710639-cddc-47c5-a278-153c2d4f8a87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MarkPictureForMission"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""2b56b145-a0bc-4f6f-9e95-08cbd759c7ff"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -647,13 +663,57 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""5626214f-1338-4f9c-8f18-e5825803b3b8"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""name"": ""Gamepad"",
+                    ""id"": ""f6e697ee-928b-4b3c-a795-656f814a9178"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ScrollPortfolio"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""3fd01e32-5863-4be3-a4e7-e474a351536b"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""BarrelRoll"",
+                    ""action"": ""ScrollPortfolio"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""e540cd5d-1028-4808-b6d2-a44446789188"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ScrollPortfolio"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6049189c-66be-4e81-9896-350c22efe1ea"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DiscardPicture"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d16da124-445b-41f7-9451-52ec5c53f029"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MarkPictureForMission"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -706,7 +766,9 @@ public class @Controls : IInputActionCollection, IDisposable
         m_GameControls_PhotoBook = m_GameControls.FindAction("PhotoBook", throwIfNotFound: true);
         m_GameControls_ChangeFocus = m_GameControls.FindAction("ChangeFocus", throwIfNotFound: true);
         m_GameControls_SkipPicture = m_GameControls.FindAction("SkipPicture", throwIfNotFound: true);
-        m_GameControls_BarrelRoll = m_GameControls.FindAction("BarrelRoll", throwIfNotFound: true);
+        m_GameControls_ScrollPortfolio = m_GameControls.FindAction("ScrollPortfolio", throwIfNotFound: true);
+        m_GameControls_DiscardPicture = m_GameControls.FindAction("DiscardPicture", throwIfNotFound: true);
+        m_GameControls_MarkPictureForMission = m_GameControls.FindAction("MarkPictureForMission", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -770,7 +832,9 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_GameControls_PhotoBook;
     private readonly InputAction m_GameControls_ChangeFocus;
     private readonly InputAction m_GameControls_SkipPicture;
-    private readonly InputAction m_GameControls_BarrelRoll;
+    private readonly InputAction m_GameControls_ScrollPortfolio;
+    private readonly InputAction m_GameControls_DiscardPicture;
+    private readonly InputAction m_GameControls_MarkPictureForMission;
     public struct GameControlsActions
     {
         private @Controls m_Wrapper;
@@ -789,7 +853,9 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @PhotoBook => m_Wrapper.m_GameControls_PhotoBook;
         public InputAction @ChangeFocus => m_Wrapper.m_GameControls_ChangeFocus;
         public InputAction @SkipPicture => m_Wrapper.m_GameControls_SkipPicture;
-        public InputAction @BarrelRoll => m_Wrapper.m_GameControls_BarrelRoll;
+        public InputAction @ScrollPortfolio => m_Wrapper.m_GameControls_ScrollPortfolio;
+        public InputAction @DiscardPicture => m_Wrapper.m_GameControls_DiscardPicture;
+        public InputAction @MarkPictureForMission => m_Wrapper.m_GameControls_MarkPictureForMission;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -841,9 +907,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SkipPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
-                @BarrelRoll.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
-                @BarrelRoll.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
-                @BarrelRoll.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnBarrelRoll;
+                @ScrollPortfolio.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnScrollPortfolio;
+                @ScrollPortfolio.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnScrollPortfolio;
+                @ScrollPortfolio.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnScrollPortfolio;
+                @DiscardPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
+                @DiscardPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
+                @DiscardPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
+                @MarkPictureForMission.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
+                @MarkPictureForMission.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
+                @MarkPictureForMission.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
             }
             m_Wrapper.m_GameControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -890,9 +962,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SkipPicture.started += instance.OnSkipPicture;
                 @SkipPicture.performed += instance.OnSkipPicture;
                 @SkipPicture.canceled += instance.OnSkipPicture;
-                @BarrelRoll.started += instance.OnBarrelRoll;
-                @BarrelRoll.performed += instance.OnBarrelRoll;
-                @BarrelRoll.canceled += instance.OnBarrelRoll;
+                @ScrollPortfolio.started += instance.OnScrollPortfolio;
+                @ScrollPortfolio.performed += instance.OnScrollPortfolio;
+                @ScrollPortfolio.canceled += instance.OnScrollPortfolio;
+                @DiscardPicture.started += instance.OnDiscardPicture;
+                @DiscardPicture.performed += instance.OnDiscardPicture;
+                @DiscardPicture.canceled += instance.OnDiscardPicture;
+                @MarkPictureForMission.started += instance.OnMarkPictureForMission;
+                @MarkPictureForMission.performed += instance.OnMarkPictureForMission;
+                @MarkPictureForMission.canceled += instance.OnMarkPictureForMission;
             }
         }
     }
@@ -931,6 +1009,8 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnPhotoBook(InputAction.CallbackContext context);
         void OnChangeFocus(InputAction.CallbackContext context);
         void OnSkipPicture(InputAction.CallbackContext context);
-        void OnBarrelRoll(InputAction.CallbackContext context);
+        void OnScrollPortfolio(InputAction.CallbackContext context);
+        void OnDiscardPicture(InputAction.CallbackContext context);
+        void OnMarkPictureForMission(InputAction.CallbackContext context);
     }
 }

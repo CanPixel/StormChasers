@@ -42,9 +42,10 @@ public class PhotoKeyPoint : PhotoBase {
 }
 
 public abstract class PhotoBase : MonoBehaviour {
+    [ReadOnly] public bool active = true;
     public bool specificOrientation = false; 
-
-    public bool isKeyPoint = false;
+    [HideInInspector] public bool isKeyPoint = false;
+    public string tags;
 
     [ConditionalHide("specificOrientation", true)] public Vector3 axisOffset = new Vector3(0, 0, 0);
     [ConditionalHide("specificOrientation", true)] public float orientationViewCone = 70f;

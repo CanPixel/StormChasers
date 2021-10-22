@@ -57,7 +57,7 @@ public class LockOnSystem : MonoBehaviour {
         if(sortedScreenObjects.Count > 0) {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
-                if(!k.isKeyPoint) objects += k.name + "! \n";
+                if(!k.isKeyPoint) objects += k.name.Trim() + "! \n";
                 else objects += "<color='#ff00ff'>" + k.name + "</color> \n";
                 FadeCrosshair(k);
             }
@@ -89,7 +89,7 @@ public class LockOnSystem : MonoBehaviour {
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
 
-        if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target)) AddCrosshair(target);
+        if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target) && target.active) AddCrosshair(target);
         else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation)) RemoveCrosshair(target);
     }
 

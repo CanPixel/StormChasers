@@ -30,8 +30,14 @@ public class RatingSystem : MonoBehaviour {
     public Gradient scoreGradient;
 
     [System.Serializable]
+    public enum LetterGrade {
+        A, B, C, D, E, F
+    }
+
+    [System.Serializable]
     public class Rating {
         public string name;
+        public LetterGrade letterGrade;
         [Range(0, 100)]
         public int range;
     }
@@ -51,8 +57,6 @@ public class RatingSystem : MonoBehaviour {
 
     [SerializeField] private Transform splashParent;
     [SerializeField] private GameObject splashPrefab, crosshair, crosshairAnti, crosshairOmcirkel;
-    [SerializeField] private Image fadeScreen;
-    private float baseFadeAlpha;
     [SerializeField] private Text polaroidTitle, polaroidSkip, totalScoreBase, totalScoreValue;
     [SerializeField] private Image polaroidUI, polaroidScreenshot;
     [SerializeField] private InputActionReference skipBinding;
@@ -61,6 +65,20 @@ public class RatingSystem : MonoBehaviour {
     private int totalScore;
     private bool crosshairRestObjects;
     private CameraControl.PictureScore mainScore;
+
+    private List<CrosshairObject> extraItems = new List<CrosshairObject>(); 
+    private List<GameObject> crosshairs = new List<GameObject>();
+
+    [System.Serializable]
+    public class CrosshairObject {
+        public Vector2 screenPos;
+        public PhotoBase item;
+
+        public CrosshairObject(PhotoBase item, Vector2 pos) {
+            this.item = item;
+            this.screenPos = pos;
+        }
+    }
 
     [System.Serializable]
     public class SplashElement {
@@ -74,8 +92,6 @@ public class RatingSystem : MonoBehaviour {
 
     void Start() {
         scoreUnits.Clear();
-        baseFadeAlpha = fadeScreen.color.a;
-        SetFade(0);
         baseSpacing = layoutGroup.spacing;
         
         polaroidTopPos = polaroidUI.transform.position.y;
@@ -90,22 +106,15 @@ public class RatingSystem : MonoBehaviour {
 
     void Update() {
         polaroidSkip.text = ("<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color> to Skip").ToUpper();
-        if(camControl.camSystem.shoot >= 0.7f && screenshotTimer > 1f) {
-            Skip();
-            screenshotTimer = polaroidInterval.x;
-        }
+        if(camControl.camSystem.shoot >= 0.7f && screenshotTimer > 1f) Skip();
 
-        if(polaroidScreenshot.fillAmount < 1) polaroidScreenshot.fillAmount += Time.unscaledDeltaTime * 2f;
-
-        SetFade(Mathf.Lerp(fadeScreen.color.a, (HasTakenPicture() && !IsFading() ? baseFadeAlpha : 0), Time.unscaledDeltaTime * 6.5f));
+        if(polaroidScreenshot.fillAmount < 1) polaroidScreenshot.fillAmount += Time.unscaledDeltaTime * 1.5f;
 
         if(HasTakenPicture()) {
             screenshotTimer += Time.unscaledDeltaTime * 2f;
 
             for(int i = 0; i < pictureQualifiers.Length; i++) {
-                if(screenshotTimer < polaroidInterval.x / 4f) {
-                    pictureQualifiers[i].criteriaTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].criteriaTxt.transform.localScale, Vector3.one, screenshotTimer / 10f);
-                }
+                if(screenshotTimer < polaroidInterval.x / 4f) pictureQualifiers[i].criteriaTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].criteriaTxt.transform.localScale, Vector3.one, screenshotTimer / 10f);
                 if(screenshotTimer > polaroidInterval.x / 4f + (i / 2f)) pictureQualifiers[i].scoreTxt.transform.localScale = Vector3.Lerp(pictureQualifiers[i].scoreTxt.transform.localScale, Vector3.one, screenshotTimer / 45f);
             } 
             if(screenshotTimer > polaroidInterval.x / 8f) layoutGroup.spacing = Mathf.Lerp(layoutGroup.spacing, baseSpacing, screenshotTimer / 18f);
@@ -115,30 +124,26 @@ public class RatingSystem : MonoBehaviour {
             if(screenshotTimer > polaroidInterval.x / 2f + 1) totalScoreValue.transform.localScale = Vector3.Lerp(totalScoreValue.transform.localScale, Vector3.one, screenshotTimer / 10f);
             ///////
             
-            if(screenshotTimer > polaroidInterval.x / 2f && !crosshairRestObjects) {
+            if(screenshotTimer > polaroidInterval.x / 4f && !crosshairRestObjects) {
                 crosshairRestObjects = true;
-                if(mainScore != null && mainScore.subScore != null) {
-                    foreach(var sub in mainScore.subScore) {
-                        if(sub == null || sub.item == null || mainScore.subScore == null) continue;
-                        SpawnCrosshair(sub.item);
-                        var s = Instantiate(splashPrefab);
-                        s.transform.SetParent(polaroidScreenshot.transform);
-                        s.transform.localPosition = new Vector3(0, 100, 0);
-                        s.transform.localScale = Vector3.one * 0.1f;
-                        s.GetComponent<Splash>().text.text = "Center Frame: " + sub.centerFrame;
+                if(extraItems.Count > 0) {
+                    foreach(var sub in extraItems) {
+                        SpawnCrosshair(sub, false);
+                        
+                        //var s = Instantiate(splashPrefab);
+                        //s.transform.SetParent(polaroidScreenshot.transform);
+                        //s.transform.localPosition = new Vector3(0, 100, 0);
+                        //s.transform.localScale = Vector3.one * 0.1f;
+                        //s.GetComponent<Splash>().text.text = "Center Frame: " + sub.centerFrame;
                     }
-                }
+                } 
             }
 
-            if(screenshotTimer > polaroidInterval.y) Reset();
+           // if(screenshotTimer > polaroidInterval.y) Reset();
 
             if(screenshotTimer > polaroidInterval.x) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
             else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
         }
-    }
-
-    protected void SetFade(float i) {
-        fadeScreen.color = new Color(fadeScreen.color.r, fadeScreen.color.g, fadeScreen.color.b, i);
     }
 
     public void ResetScreenshot() {
@@ -157,23 +162,40 @@ public class RatingSystem : MonoBehaviour {
         ready = true;
         mainScore = null;
         crosshairRestObjects = false;
+        extraItems.Clear();
         screenshotTimer = 0;
         totalScore = 0;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
         layoutGroup.spacing = -170;
         foreach(var i in pictureQualifiers) i.criteriaTxt.transform.localScale = i.scoreTxt.transform.localScale = Vector3.zero;
         totalScoreBase.transform.localScale = totalScoreValue.transform.localScale = Vector3.zero;
+        foreach(var i in crosshairs) Destroy(i);
+        crosshairs.Clear();
     }
 
-    protected void SpawnCrosshair(PhotoBase item) {
-        if(camControl.lockOnSystem.GetScreenCrosshair(item) == null) return;
+    protected void SpawnCrosshair(PhotoBase item, bool isMainSubject = true) {
+/*         if(camControl.lockOnSystem.GetScreenCrosshair(item) == null) return;
         var spl = Instantiate(crosshairOmcirkel);
+        if(!isMainSubject) spl.GetComponent<Image>().color = Random.ColorHSV();
         spl.transform.SetParent(polaroidScreenshot.transform);
         var screenPos = camControl.lockOnSystem.GetScreenCrosshair(item).transform.localPosition;
         screenPos.z = 0;
-        screenPos /= 3f;
         spl.transform.localPosition = screenPos;
-        spl.transform.localScale = Vector3.one * 0.5f;
+        spl.transform.localScale = Vector3.one * 0.5f; */
+        if(camControl.lockOnSystem.GetScreenCrosshair(item) == null) return;
+        SpawnCrosshair(new CrosshairObject(item, camControl.lockOnSystem.GetScreenCrosshair(item).transform.localPosition), isMainSubject);
+    }
+
+    protected void SpawnCrosshair(CrosshairObject obj, bool isMainSubject = true) {
+        var spl = Instantiate(crosshairOmcirkel);
+        spl.transform.SetParent(polaroidScreenshot.transform);
+        if(!isMainSubject) {
+            spl.GetComponent<Image>().color = Random.ColorHSV(0, 1, 0.4f, 1f, 0.4f, 1);
+            spl.transform.position = obj.screenPos;
+        }
+        else spl.transform.localPosition = obj.screenPos;
+        spl.transform.localScale = Vector3.one * 0.5f * (isMainSubject ? 1.45f : 1);
+        crosshairs.Add(spl);
     }
 
     public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
@@ -186,6 +208,16 @@ public class RatingSystem : MonoBehaviour {
 
         mainScore = pic;
         SpawnCrosshair(pic.item);
+         if(mainScore != null && mainScore.subScore != null) {
+            string lm = "[" + mainScore.item.name + "]";
+            foreach(var sub in mainScore.subScore) {
+                if(sub == null || sub.item == null) continue;
+                lm += ", " + sub.item.name;
+                extraItems.Add(new CrosshairObject(sub.item, camControl.lockOnSystem.GetScreenCrosshair(sub.item).transform.position));
+            }
+//            Debug.LogError(lm);
+         }
+        
         crosshairRestObjects = false;
 
         int index = 0;
@@ -207,7 +239,7 @@ public class RatingSystem : MonoBehaviour {
             totalScore += (int)scoreUnits[str];
             index++;
         }
-        totalScore /= index;
+        if(index > 0) totalScore /= index;
         screen.score = (int)totalScore;
         totalScoreValue.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)totalScore / 100f)) + "'>" + screen.score.ToString() + "</color>";
     }

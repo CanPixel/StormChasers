@@ -118,12 +118,28 @@
                     "interactions": ""
                 },
                 {
-                    "name": "BarrelRoll",
+                    "name": "ScrollPortfolio",
                     "type": "PassThrough",
-                    "id": "80d98f6b-91a1-4371-aebc-ca1667a519d1",
+                    "id": "1d6e52ef-fef5-458b-a002-e594840d137d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "MultiTap(tapTime=0.2,tapDelay=0.3)"
+                    "interactions": ""
+                },
+                {
+                    "name": "DiscardPicture",
+                    "type": "PassThrough",
+                    "id": "ad710639-cddc-47c5-a278-153c2d4f8a87",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MarkPictureForMission",
+                    "type": "PassThrough",
+                    "id": "2b56b145-a0bc-4f6f-9e95-08cbd759c7ff",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -634,13 +650,57 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "5626214f-1338-4f9c-8f18-e5825803b3b8",
-                    "path": "<Gamepad>/buttonSouth",
+                    "name": "Gamepad",
+                    "id": "f6e697ee-928b-4b3c-a795-656f814a9178",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScrollPortfolio",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "3fd01e32-5863-4be3-a4e7-e474a351536b",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "BarrelRoll",
+                    "action": "ScrollPortfolio",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "e540cd5d-1028-4808-b6d2-a44446789188",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ScrollPortfolio",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "6049189c-66be-4e81-9896-350c22efe1ea",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "DiscardPicture",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d16da124-445b-41f7-9451-52ec5c53f029",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "MarkPictureForMission",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

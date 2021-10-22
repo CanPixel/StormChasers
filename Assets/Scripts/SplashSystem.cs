@@ -6,6 +6,12 @@ public class SplashSystem : MonoBehaviour {
     public Transform splashParent;
     public GameObject splashPrefab;
 
+    public static SplashSystem self;
+
+    void Start() {
+        self = this;
+    }
+
     public Splash SpawnSplash(string text, Vector3 pos, float rot, float scale, float duration, TextAnchor align) {
         var obj = Instantiate(splashPrefab);
         var spl = obj.GetComponent<Splash>();
