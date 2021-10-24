@@ -9,54 +9,78 @@ public class SharkScript : MonoBehaviour
     [HideInInspector] public enum currentState { IDLE, CHASING, ATTACKING, SEARCHING, INVESTIGATE, DYING, RAGDOLLING, CHECKSTATUS, JUMPING, RETURNTOWATER }
     private int sharkState;
 
+    [Header("Checks")]
     public bool playerInFountain;
-    public bool playerJumpingOverFountain; 
-    private bool targetInSight;
-    public float currentFovAngle;
-    public float currentLookDistance = 20f;
+    public bool playerJumpingOverFountain;
+    public bool jumpingTowardsPlayer;
+    private bool checkCurrentPos = false; 
+    private bool playerHasBeenEaten;
+    public bool canJump; 
+
+    //Return to water
+    private float ReturnToIdleTimer;
+    private float IdleMoveSpeed = .65f;
+    private float idleHeight;
+    private Vector3 idlePosition;
+    private Vector3 currentPosition;
+    private Vector3 idleRotation;
+    private Vector3 currentRotation;
+    private float currentHeight; 
+   
 
 
-
-    Vector3 newDirection;
-    Vector3 targetPos;
-    Vector3 lastKnownPos;
-
-    public float idleMoveSpeed = 2f;
+    [Header ("Movement")]
+    public float idleRotationSpeed = 2f;
+    private float extraBiteSpeed = 1.3f; 
     public float chaseMoveSpeed = 10f;
     public float attackMoveSpeed = 20f;
     public float jumpSpeed = 20f; 
-
     public float rotateSpeed = 20f;
-   // public float waterRotateSpeed = 
+
     public float attackDistance = 4;
     private float targetDistance;
+    private float startingHeight;
+    private float startingDistance;
+
+    private Vector3 startingPosition;
+    private Vector3 startingDirection;
+    private Vector3 newDirection;
+    private Vector3 targetPos;
+    private Vector3 lastKnownPos;
 
     [Header("Components")]
     public Transform target;
+    public Transform player; 
+    public GameObject pickUpPointObj;
+    public PickUpPoint pickUpPoint; 
     public Transform respawnPoint; 
     public NavMeshAgent agent;
     private Rigidbody mainRb;
     public Animator anim;
     public GameObject mouth;
+    public Transform sharkRotationPoint; 
 
     private void Start()
     {
         sharkState = (int)currentState.IDLE;
         agent.stoppingDistance = attackDistance;
+        startingHeight = transform.position.y;
 
+        startingDistance = Vector3.Distance(transform.position, sharkRotationPoint.position);
+        startingDirection = (sharkRotationPoint.position - transform.position);
+        startingPosition = transform.position + startingDirection * 2;
+        Debug.Log(startingPosition); 
     }
 
     void Update()
     {
-        //Debug.Log(targetDistance);
         
-
         switch (sharkState)
         {
             case (int)currentState.IDLE:
                 CheckForTarget();
                 IdleSwimming();
-                //LookAtTarget(); 
+               
                 break;
 
             case (int)currentState.CHASING:
@@ -73,44 +97,103 @@ public class SharkScript : MonoBehaviour
 
             case (int)currentState.JUMPING:
                 LookAtTarget();
-                ChaseTarget(); 
-                //JumpTowardsPlayer(); 
+                ChaseTarget();
+                CheckForTarget(); 
                 break;
 
             case (int)currentState.RETURNTOWATER:
-                ReturnToWater(); 
-                //LookAtTarget();
-                //JumpTowardsPlayer();
+                ReturnToIdle(); 
                 break;
 
         }
     }
 
-   
+    void CheckForFood()
+    {
+
+    }
 
     void CheckForTarget()
     {
-
+       
+        if (pickUpPoint.hasPickUp && !playerInFountain)
+        {
+            canJump = true; 
+           // target = pickUpPoint.transform; 
+        }
+        else
+        {
+            canJump = false; 
+           // target = player;
+        }
+       
 
         if (playerInFountain)
         {
+            Debug.Log("PlayerInFountain");
             playerJumpingOverFountain = false;
-         
+            jumpingTowardsPlayer = false;
+            target = player; 
+
             sharkState = (int)currentState.CHASING;
         }
-        else if (playerJumpingOverFountain) sharkState = (int)currentState.JUMPING;
-        else sharkState = (int)currentState.IDLE;
-    }
-    void ReturnToWater()
-    {
+        else if (playerJumpingOverFountain && canJump)
+        {
+            Debug.Log("SharkJumpingToPlayer");
+            sharkState = (int)currentState.JUMPING;
+        }
+        else if (!playerJumpingOverFountain && jumpingTowardsPlayer && !playerInFountain || playerHasBeenEaten)
+        {
+            Debug.Log("ReturnToTank");
 
+            playerHasBeenEaten = false;
+            jumpingTowardsPlayer = false;
+            //currentHeight = transform.position.y; 
+
+            sharkState = (int)currentState.RETURNTOWATER;
+        }
+        else
+        {
+            Debug.Log("IdleState"); 
+            sharkState = (int)currentState.IDLE;
+        }
     }
+
+    void ReturnToIdle()
+    {
+        if (!checkCurrentPos)
+        {
+            //currentHeight = transform.position.y;
+            currentPosition = transform.position;
+            currentRotation = transform.eulerAngles;
+            anim.SetBool("Attack", false);
+            checkCurrentPos = true; 
+        }
+
+        //Return shark to idle pos
+        if (ReturnToIdleTimer < IdleMoveSpeed)
+        {     
+            idlePosition = Vector3.Lerp(currentPosition, new Vector3(startingPosition.x, startingHeight, startingPosition.z), ReturnToIdleTimer / IdleMoveSpeed);
+            idleRotation = Vector3.Lerp(currentRotation, new Vector3(0, 37, transform.eulerAngles.z), ReturnToIdleTimer / IdleMoveSpeed); 
+  
+            ReturnToIdleTimer += Time.deltaTime;
+            transform.eulerAngles = idleRotation; 
+            transform.position = idlePosition;
+        }
+        else
+        {
+            ReturnToIdleTimer = 0f;
+            checkCurrentPos = false;
+            sharkState = (int)currentState.IDLE;
+        }
+    }
+
 
     void IdleSwimming()
     {
-        agent.speed = 0f;
+        Vector3 speed = new Vector3(0, idleRotationSpeed, 0);
+        sharkRotationPoint.Rotate(speed * Time.deltaTime); 
     }
-
 
 
     void LookAtTarget()
@@ -123,7 +206,7 @@ public class SharkScript : MonoBehaviour
             float singleStep = 50f * Time.deltaTime; //step distance per call
             newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f); //determin new rotation direcition
             transform.rotation = Quaternion.LookRotation(newDirection); //Set rotation 
-            if(playerInFountain) transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);    
+          //  if(playerInFountain) transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);    
         }
     }
 
@@ -131,44 +214,53 @@ public class SharkScript : MonoBehaviour
     void ChaseTarget()
     {
         targetDistance = Vector3.Distance(target.transform.position, mouth.transform.position);
+        targetPos = target.transform.position;
 
         if (playerInFountain)
         {
-            //Set player pos to target pos and move towards target pos 
-            targetPos = target.transform.position;
-            agent.enabled = true; 
+            float step = (chaseMoveSpeed * extraBiteSpeed)* Time.deltaTime; 
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x, targetPos.y + 2, targetPos.z), step); 
 
-            //Shark is chasing the player
+            //Chase the player 
             if (targetDistance > attackDistance)
             {
-                agent.speed = chaseMoveSpeed;
+                // agent.speed = chaseMoveSpeed;
+                extraBiteSpeed = 1f; 
                 anim.SetBool("Attack", false);
                 anim.SetBool("Moving", true);
-                agent.SetDestination(targetPos);
             }
-            //Shark is close enough to attac
-            else
+            else  //attack the player 
             {
-                agent.speed = attackMoveSpeed;
+                extraBiteSpeed = 1.5f; 
                 anim.SetBool("Attack", true);
                 AttackPlayer();
             }
         }
         else if (playerJumpingOverFountain)
         {
-            agent.enabled = false;
-            float step = jumpSpeed * Time.deltaTime; // calculate distance to move  
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(target.position.x, target.position.y + 6, target.position.z + 5), step);
+            jumpingTowardsPlayer = true;
 
-            Debug.Log("JumpTowardsPlayer");
-
-            if (targetDistance < .5)
+            // calculate distance to move  
+            float step = jumpSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x - 10, targetPos.y + 6, targetPos.z), step);
+            //transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x , targetPos.y, targetPos.z), step);
+            if(targetDistance < attackDistance)
             {
-                Debug.Log("Reached Player"); 
                 anim.SetBool("Attack", true);
-                anim.SetBool("Attack", false); 
-                sharkState = (int)currentState.RETURNTOWATER;
             }
+
+            if (targetDistance < 3)
+            {      
+                pickUpPoint.DestroyPickUp();
+                sharkState = (int)currentState.RETURNTOWATER;
+
+                //sharkState = (int)currentState.RETURNTOWATER;
+            }
+          //  else if(targetDistance < attackDistance -2)
+         //   {
+           //     pickUpPoint.DestroyPickUp();
+           //     sharkState = (int)currentState.RETURNTOWATER;
+           // }
         }
     }
 
@@ -176,79 +268,34 @@ public class SharkScript : MonoBehaviour
     void AttackPlayer()
     {
         //Check if the player is within attack range 
-
         Collider[] playerInMouth = Physics.OverlapSphere(mouth.transform.position, 1.5f);
 
         foreach (Collider player in playerInMouth)
         {
             if (player.gameObject.name == "PLAYER")
             {
-                Debug.Log("Player eaten");
+                if (pickUpPoint.hasPickUp) pickUpPoint.DestroyPickUp();
                 target = player.transform;
-                StartCoroutine("RespawnPlayer"); 
-                //player.gameObject.SetActive(false);              
+                playerHasBeenEaten = true;
+                anim.SetBool("Attack", false);
+                sharkState = (int)currentState.RETURNTOWATER;
+                StartCoroutine("RespawnPlayer");            
             }
+         
         }
     }
 
     IEnumerator RespawnPlayer()
     {
-        target.gameObject.SetActive(false);
+        player.gameObject.SetActive(false);
+        playerInFountain = false; 
 
         yield return new WaitForSeconds(3f);
 
-        target.gameObject.SetActive(true);
-        target.transform.position = respawnPoint.transform.position;
+        player.gameObject.SetActive(true);
+        player.transform.position = respawnPoint.transform.position;
         playerInFountain = false;
     }
-
-
-    /*
-    if (targetDistance < attackDistance)
-    {
-        anim.SetBool("Attack", false);
-        sharkState = (int)currentState.CHASING;
-
-    }
-    /
-
-
-}
-
-
-
-/*
-else
-{
-    //Track the player a bit longer when line of sight is broken        
-    if (lineOfSightTimer < maxTimeOutOfSight)
-    {
-        lineOfSightTimer += Time.deltaTime;
-        targetPos = player.transform.position;
-        lastKnownPos = targetPos;
-        //if (on) Debug.Log("Line of sight broken");
-    }
-
-    //Move towards the last known location of the target, if reached start searching 
-    if (agent.destination != lastKnownPos)
-    {
-        //transform.position = Vector3.MoveTowards(transform.position, lastKnownPos, chaseSpeed * Time.deltaTime);
-        agent.SetDestination(lastKnownPos);
-        //if (on) Debug.Log("Move to lk pos");
-    }
-    else
-    {
-        enemyState = (int)currentState.SEARCHING;
-        agent.speed = 0f;
-        //if(on)Debug.Log("Searching"); 
-    }
-
-
-
-
-}
-*/
-
 }
 
 
