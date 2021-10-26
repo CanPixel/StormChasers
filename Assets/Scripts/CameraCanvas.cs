@@ -13,7 +13,8 @@ public class CameraCanvas : MonoBehaviour {
 
     private UnityEngine.Rendering.PostProcessing.DepthOfField dof;
     private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
-    private float focusInput;
+    private float focusInput, sensitivityInput;
+    private float sensitivityValue = 1;
 
     [Header("Motion Blur Reticle")]
     public float movementDamping = 2f;
@@ -23,6 +24,7 @@ public class CameraCanvas : MonoBehaviour {
     public float minFocusRange = 10;
     public float maxFocusRange = 300;
     public float focusSensitivity = 0.5f;
+    public float sensitivityChangeSensitivity = 2f;
     public AnimationCurve apertureSensitivity; 
     public AnimationCurve physicalDistanceFocusModifier;
     public float apertureFactor = 1f;
@@ -54,11 +56,15 @@ public class CameraCanvas : MonoBehaviour {
 
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
-        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity, minFocusRange, maxFocusRange);
+        dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity * sensitivityValue, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
         
         var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
         dof.aperture.value = ding;
+
+        sensitivityValue += sensitivityInput * Time.unscaledDeltaTime * sensitivityChangeSensitivity;
+        sensitivityValue = Mathf.Clamp(sensitivityValue, 0.2f, 2f);
+        focusMeterImg.effectDistance = Vector2.one * sensitivityValue;
     }
 
     public void ReloadFX() {
@@ -116,6 +122,10 @@ public class CameraCanvas : MonoBehaviour {
         focusInput = i;
     }
 
+    public void ChangeFocusSensitivity(float i) {
+        sensitivityInput = i;
+    }
+
     public int GetFocusValue() {
         return (int)((dof.focusDistance.value / maxFocusRange) * 100f);
     }
@@ -127,8 +137,8 @@ public class CameraCanvas : MonoBehaviour {
 
     public void SetFocusResponse(float focus) {
         cameraControl.carMovement.HapticFeedback(0f, focus, 0.05f);
-        focusMeterOutline.effectDistance = Vector2.one * ((1f - focus) * 2 - 1);
+        focusMeterOutline.effectDistance = Vector2.one * (((1f - focus) * 2 - 1));
         focusMeterOutline.transform.localScale = Vector3.one * ((focus + 1) / 2f + 0.25f);
-        focusMeterImg.effectDistance = Vector2.one * (1f - focus) * 3;
+        focusMeterImg.effectDistance = Vector2.one * (1f - focus) * 3 + (Vector2.one * sensitivityValue);
     }
 }

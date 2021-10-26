@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class MissionManager : MonoBehaviour {
     [ReadOnly] public ObjectiveCriteria[] activeMission;
+    [Space(10)]
+    public List<Mission> missions = new List<Mission>();
+    public bool freeRoam = false, startOnStart = false;
+    public int missionIndex = 0;
 
     private static MissionManager missionManager;
 
@@ -35,15 +39,9 @@ public class MissionManager : MonoBehaviour {
         }
     }
 
-    [Space(10)]
-    public AnimationCurve missionTextCurve;
-    public bool freeRoam = false, startOnStart = false;
     private bool startedMission = false;
+    public AnimationCurve missionTextCurve;
     public float sequenceSpeed = 2f, sequenceDuration = 2f;
-    public List<Mission> missions = new List<Mission>();
-
-    [Space(10)]
-    public int missionIndex = 0;
 
     [Space(10)]
     public Image glow;

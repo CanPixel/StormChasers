@@ -1,25 +1,27 @@
 
-???? - 2 SHADERS AT A TIME BLENDING - Continu 
-
-
 [- Wat gebeurt er als portfolio op capaciteit limiet zit? Photo replacement?]
+
+- taking picture white screen FX flash
+
+- Mission should also have screen overlay VFX
+
+- Only recenter when velocity > 0
 
 
 - Scrolling/Selection with d pad in portfolio
-
 
 - Physical building ghost mode placement of polaroids
 
 - 3D reticle max distance cap
 
+- You should be able to pickup discarded images
 
 - Mission gets crossed after delivering picture
+
 - physical delivery
+
 - Picture Score for mission aanduiden naast de mission statement 
 
-
-After Photo taken:
-        - LB & RB for scroll picture selection in portfolio mode
 3 buttons
         - (B) Discard Picture + skip
         - (Y) Mark for mission (greyed out if not possible) [Active mission only or all accepted?] 
@@ -27,10 +29,9 @@ After Photo taken:
 
 
 
-
 - PictureScore + Splash = Mission accomplished! This could be used for mission -> Press A to stamp for mission
-- Mission completion 
 
+- Mission completion 
 
 - Physical picture gets sucked to mission marker
 
@@ -38,15 +39,15 @@ After Photo taken:
 
 - FOCUS BEPAALT OOK MAIN SUBJECT. NIET ALLEEN HOE CENTERFRAME
 
-
-
 - Looking up / down
 
+
 SYSTEM RULES:
-        - ALL OBJECTIVES + OPTIONALS CAN ONLY BE CLEARED WITH 1 PICTURE. ALL OR NOTHING, YOU GOT 1 SHOT.
         - Partial completion gets marked off temporarily, as an animation. 
         - Subject Priority Calculation in photomode is based on how close to center reticle
         - Picture Scoring System & Missions System are not connected, but they do communicate
+
+
 
 Types of bonus:
         - Mission bonus (+) & penalty (-)
@@ -60,16 +61,14 @@ Types of bonus:
 - BOOST CAP
 - Boost cancel force
 - Coyote time jumping before 0.25f groundpercent
+- wheels re-orienting in tunnels
 
 
-- destructible objecten triggers? dont cancel speed. (maybe freeze frame) haptic feedback + sound
 - No wallriding anymore / toggle
 
 
-======= PhotoItem
-- Category Tags
-- Relative Bonus?
-- Global bonus?
+
+
 
 ======= PICTURE GRADING
 - 1 Qualifier stage per keer (don't mix too many qualifiers)
@@ -94,10 +93,6 @@ en uberhaupt dus invloed hebben op grading
 AKA
 Minimum focus per non-important object on screen decides whether grading happens.
 
-???? Bonus objects global or relative? (based on main subject)
-        SHARKS ARE ALWAYS COOL
-        or
-        SHARK(subject) LIKES PRULLENBAK, but PRULLENBAK(subject) DOES NOT LIKE SHARK
 
 
 
@@ -117,51 +112,20 @@ Minimum focus per non-important object on screen decides whether grading happens
 
 ======== MISSION SYSTEM
 - MINIMUM GRADE
-- CHECKBOXES
-- Multiple objects/photoitems per mission??? (not possible with picture grading, since it's losgekoppeld)
+- GRADE SYSTEM?
+- PHOTO SCORING?
 
 - BONUS OBJECTS:
         - GLOBAL (Sharks are cool, advertisements are always bad)
         - MISSION-SPECIFIC (Now advertisements are cool, endorse me!! Broom, Carwash)
 
 
-        [ ] MAKE SHARK PICTURE
-        ---------------------------------
-                  [ ] In-Focus (minimum of B-grade)
-optional [ ] Dirty prullenbak
-
-        [ ] DIRTY BUSINESS
-                [ ] Prullenbak (Focus A grade)
-                [ ] No clean objects!!! only dirty (anti-bonus)                 [Broom, Carwash]
 
 
-
-
-
-=========== TODO:
-        - COMPOSITES 
-        - BONUS OBJECTS
-        - STUNT BONUSES
-                - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
-                - Rotation bonus (Dutch & Ondersteboven)
-                - smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
-                - EXPLOSIVES should be ++++ bonus
-                - exhaust on picture should be ------ farting CO2 bonus reduction
-        - DYNAMIC DISTANCE / SCALING
+        - DYNAMIC DISTANCE / SCALING ---> Object still visible on picture?
         - DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC / AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
 
 
-
-- Photographic memory ||| level selection screen ||| Level defining picture ||| your pictures in main menu defining the levels |||| hall of fame
-- Export functie || exporter building printing your picture into local desktop drive file. Costs money too. External location 4th wall break.
-- Print screen is money down easter egg
-
-
-
-AUDIO:
-- Landing sounds / crashing sounds
-- Beep beep voor achteruit?
-- Better Boost sound effect  
 
 
 
@@ -170,6 +134,7 @@ AUDIO:
 [[[BUGS]]:
 - PRESS X IN MID AIR LMAO
 - Boost still triggering haptic feedback when meter is empty
+- Discarding a mission marked picture
 
 
 
@@ -185,7 +150,34 @@ TESTEN:
 - wobble on land visual + better haptics
 - vehicle damage fixen + ontrigger?
 - Screen diagonal split for cutscene / different visuals
+- destructible objects haptic feedback + sound
+
+  - STUNT BONUSES
+                - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
+                - Rotation bonus (Dutch & Ondersteboven)
+                - smoke grenades / priming the picture ---- pushing objects into composition should be +++++ BONUS          [STUNT / OBJECTS]
+                - EXPLOSIVES should be ++++ bonus
+                - exhaust on picture should be ------ farting CO2 bonus reduction
+
+- Photographic memory ||| level selection screen ||| Level defining picture ||| your pictures in main menu defining the levels |||| hall of fame
+- Export functie || exporter building printing your picture into local desktop drive file. Costs money too. External location 4th wall break.
+- Print screen is money down easter egg
+
+
+AUDIO:
+- Landing sounds / crashing sounds
+- Beep beep voor achteruit?
+- Better Boost sound effect  
+
+???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
 
 
-========= DONE:
+
+
+
+========== CHANGELOG:
+- Recentering makes it easier to drive while still being able to look around moderately freely.
+- Looking on the Y axis
+- Focus Sensitivity can now be tweaked with D-pad left & right
+- Fixed the most awful screen bug

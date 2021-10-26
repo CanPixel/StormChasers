@@ -11,30 +11,42 @@ public class CameraControl : MonoBehaviour {
     public GameObject[] enableOnFirstPerson, disableOnFirstPerson;
     public Graphic[] fadeOnFirstPerson;
     private Color[] baseAlphaFirstPersonFade;
-
-    public Color markedPictureColor;
-
     public CameraSystem camSystem;
 
+    [Header("Portfolio")]
+    public int maxPhotosInPortfolio = 5;
+    public Color markedPictureColor;
+
+    [Header("Boost Cam")]
     public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
     public float BoostFollowDamping = 2f;
 
+    private float recenterTime = 0;
+    [Space(5)]
+    public float recenterDuration = 1f;
+
+    [Header("Physical Discarded Picture")]
     public float DiscardForce = 10f;
+    public float physPicScale = 0.5f;
+    private Vector3 basePicScale;
 
     [HideInInspector] public bool photoBook = false;
 
-    public int maxPhotosInPortfolio = 5;
-
     public int resWidth = 1600, resHeight = 900;
 
-    public float slowMotionDamping = 3f, slowMotionTime = 0.1f;
+    [Header("SlowMo")]
+    public float slowMotionDamping = 3f;
+    public float slowMotionTime = 0.1f;
 
     public enum CameraState {
         CARVIEW = 0, CAMVIEW, DASHVIEW
     }
-    public CameraState cameraState = CameraState.CARVIEW;
+    [HideInInspector] public CameraState cameraState = CameraState.CARVIEW;
 
     public Vector3 mascotteRotationOffset = new Vector3(-90, 90, 0);
+    [Header("Y Axis Look")]
+    public Vector2 lookYLimits = new Vector2(0.6f, 1.4f);
+    public float yLookSensitivity = 10, lookUpCameraSensitivity = 15;
 
     [System.Serializable]
     public class PictureScore {
@@ -93,23 +105,19 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
-    private float recenterTime = 0;
-    public float recenterDuration = 1f;
-
-    public float physPicScale = 0.5f;
-    private Vector3 basePicScale;
-
-    public List<Screenshot> screenshots = new List<Screenshot>();
+    [HideInInspector] public List<Screenshot> screenshots = new List<Screenshot>();
 
     [Space(10)]
     public LayerMask thirdPersonCull;
     public LayerMask firstPersonCull;
     public Camera cam;
     public Cinemachine.CinemachineVirtualCamera firstPersonLook;
+    public Cinemachine.CinemachineVirtualCamera backLook;
     public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
     private Cinemachine.CinemachinePOV pov;
     private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
     private Cinemachine.CinemachineComposer composer;
+    private float baseScreenY;
     public Cinemachine.CinemachineBrain cinemachineBrain;
     public GameObject photoBookUI, polaroidPrefab;
     public GameObject cameraMascotte;
@@ -133,6 +141,7 @@ public class CameraControl : MonoBehaviour {
     public MissionManager missionManager;
     [SerializeField] private InputActionReference cameraAimButton;
     public ShaderReel shaderReel;
+    public bool raceCamera = false;
 
     private Vector3 baseFollowOffset;
     private float baseZDamping;
@@ -145,6 +154,7 @@ public class CameraControl : MonoBehaviour {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         composer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineComposer>();
+        baseScreenY = composer.m_ScreenY;
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
@@ -169,23 +179,25 @@ public class CameraControl : MonoBehaviour {
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
 
+        if(isLookingBack && raceCamera) RecenterY();
+
         /* Blending Shaders */
         float blendTarget;
         if(cinemachineBrain.IsLive(firstPersonLook) || cinemachineBrain.IsBlending) blendTarget = 1;
-        else blendTarget = 0;
+        else blendTarget = -0.1f;
         blend = Mathf.Lerp(blend, blendTarget, Time.unscaledDeltaTime * 8f);
         cameraCanvas.postProcessVolume.weight = blend;
 
         /* 3D World Aim Reticle */
         worldAimControlText.text = "Aim (<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>)";
         RaycastHit hit;
-        if(Physics.Raycast(cameraMascotte.transform.position + Vector3.up, -cameraMascotte.transform.up, out hit)) {
-            worldReticleTarget = cam.WorldToScreenPoint(hit.transform.position);
+        if(Physics.Raycast(cameraMascotte.transform.position + Vector3.up, -cameraMascotte.transform.up, out hit, 200)) {
+            worldReticleTarget = cam.WorldToScreenPoint(hit.point);
             distTarget = Mathf.Clamp(1f - ((hit.transform.position - transform.position).magnitude) / 100f, 0.2f, 1);
         }
+        if(distTarget <= 0.21f || isLookingBack) distTarget = 0;
         worldAimReticle.transform.position = Vector3.Lerp(worldAimReticle.transform.position, worldReticleTarget, Time.unscaledDeltaTime * 4f);
         worldAimReticle.transform.localScale = Vector3.Lerp(worldAimReticle.transform.localScale, Vector3.one * distTarget, Time.unscaledDeltaTime * 4f);
-
 
         photoBookUI.SetActive(photoBook);
 
@@ -196,16 +208,16 @@ public class CameraControl : MonoBehaviour {
         if(recenterTime > 0 && Mathf.Abs(orbitalTransposer.m_XAxis.Value) > 1) {
             recenterTime -= Time.deltaTime * 2f;
             orbitalTransposer.m_XAxis.Value = Mathf.Lerp(orbitalTransposer.m_XAxis.Value, 0, Time.deltaTime * 6f);
+            composer.m_ScreenY = Mathf.Lerp(composer.m_ScreenY, baseScreenY, Time.deltaTime * 6f);
         }
         if(carMovement.GetLooking().magnitude >= 0.65f && recenterTime > 0) recenterTime = 0;
 
         if(IsAiming()) FirstPersonLook();
         else ThirdPersonLook();
-
         for(int i = 0; i < fadeOnFirstPerson.Length; i++) fadeOnFirstPerson[i].color = Color.Lerp(fadeOnFirstPerson[i].color, new Color(fadeOnFirstPerson[i].color.r, fadeOnFirstPerson[i].color.g, fadeOnFirstPerson[i].color.b, (IsAiming() ? 0 : baseAlphaFirstPersonFade[i].a)), Time.unscaledDeltaTime * 8f);
 
         cameraMascotte.transform.rotation = transform.rotation;
-        cameraMascotte.transform.Rotate(mascotteRotationOffset.x, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
+        cameraMascotte.transform.Rotate(mascotteRotationOffset.x + (baseScreenY - composer.m_ScreenY) * lookUpCameraSensitivity, orbitalTransposer.m_XAxis.Value, mascotteRotationOffset.z);
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
     
         /* PhotoBook / Portfolio */
@@ -224,7 +236,6 @@ public class CameraControl : MonoBehaviour {
         missionPicture.gameObject.SetActive(true);
         missionManager.MarkCurrentObjective();
     }
-
     public void DiscardPicture() {
         var obj = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
         obj.GetComponent<Rigidbody>().AddForce(Vector3.up * DiscardForce * 50f);
@@ -236,13 +247,16 @@ public class CameraControl : MonoBehaviour {
         PortfolioSelection(-1);
         photoBook = false;
     }
+    
+    private bool isLookingBack = false;
+    public void BackLook(bool lookBack) {
+        if(!raceCamera) return;
+        backLook.m_Priority = (lookBack) ? 15 : 2;
+        isLookingBack = lookBack;
+    }
 
     protected bool IsAiming() {
         return camSystem.aim >= 0.5f;
-    }
-
-    public void SetCameraPriority(CinemachineVirtualCamera cam, int i) {
-        cam.Priority = i;
     }
 
     public void CycleFilters(float add) {
@@ -285,6 +299,9 @@ public class CameraControl : MonoBehaviour {
             cameraState = CameraState.CARVIEW;
         } 
 
+        var yOffs = carMovement.GetLooking().y;
+        composer.m_ScreenY = Mathf.Clamp(composer.m_ScreenY + yOffs * yLookSensitivity * Time.unscaledDeltaTime, lookYLimits.x, lookYLimits.y);
+
         pov.m_HorizontalAxis.Value = cameraMascotte.transform.localEulerAngles.z + transform.eulerAngles.y; 
 
         orbitalTransposer.m_FollowOffset = Vector3.Lerp(orbitalTransposer.m_FollowOffset, (carMovement.boostScript.isBoosting) ? BoostFollowOffset : baseFollowOffset, Time.deltaTime * BoostFollowDamping);
@@ -308,6 +325,7 @@ public class CameraControl : MonoBehaviour {
     }
     public void RecenterY() {
         pov.m_VerticalAxis.Value = 0;     
+        composer.m_ScreenY = baseScreenY;
     }
 
     public bool HasTakenPicture() {

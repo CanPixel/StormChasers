@@ -78,7 +78,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Recenter",
+                    "name": "Backlook",
                     "type": "PassThrough",
                     "id": "3df37bbb-3751-46e6-bd5c-d50a969eb685",
                     "expectedControlType": "Button",
@@ -105,6 +105,14 @@
                     "name": "ChangeFocus",
                     "type": "PassThrough",
                     "id": "bfaeeb31-67e4-41ea-aa3a-18dafd92c436",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ChangeFocusSensitivity",
+                    "type": "PassThrough",
+                    "id": "20fe050d-8e97-4841-aeb4-ba925ac18d50",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -513,7 +521,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Recenter",
+                    "action": "Backlook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -524,7 +532,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Recenter",
+                    "action": "Backlook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -703,6 +711,39 @@
                     "action": "MarkPictureForMission",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "9647aab3-96e8-4893-8130-16dc5fbc3d1f",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeFocusSensitivity",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "ec1c4254-dbdb-4483-b3fe-d608c4999a42",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeFocusSensitivity",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "7cb0419f-42f7-4e4e-86f4-0d372e28e3d9",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeFocusSensitivity",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

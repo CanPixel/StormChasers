@@ -48,16 +48,6 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
-        //if(barrelRollDelay > 0) barrelRollDelay -= Time.unscaledDeltaTime;
-
-/*         if(barrelRoll > 0) {
-            carMesh.transform.rotation = Quaternion.Euler(carMesh.transform.eulerAngles.x, carMesh.transform.eulerAngles.y, barrelRollDirection * barrelRoll * 360f);
-            barrelRoll -= Time.unscaledDeltaTime * ((camControl.camSystem.aim >= 0.5f) ? slowMotionBarrelRollSpeed : barrelRollSpeed);
-        } else if(isBarrelRolling) {        //Reset barrel roll
-            camControl.SetCameraPriority(camControl.stuntLook, 11);
-            isBarrelRolling = false;
-        } */
-
         if(steering == 0 && drift >= 0.5f) {
             kart.ActivateDriftVFX(true);
             kart.IsDrifting = true;
@@ -104,8 +94,13 @@ public class CarMovement : MonoBehaviour {
         Boost();
     }
 
-    public void OnRecenter(InputValue val) {
-        if(val.Get<float>() >= 0.4f) camControl.Recenter();
+    public void OnBacklook(InputValue val) {
+        //camControl.Recenter();
+        bool pressed = val.Get<float>() >= 0.4f;
+        if(camControl.raceCamera) {
+            if(pressed) camControl.BackLook(true);
+            else camControl.BackLook(false);
+        } else if(pressed) camControl.Recenter();
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
@@ -113,6 +108,9 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnChangeFocus(InputValue val) {
         if(camCanvas != null) camCanvas.ChangeFocus(val.Get<float>());
+    }
+    public void OnChangeFocusSensitivity(InputValue val) {
+        if(camCanvas != null) camCanvas.ChangeFocusSensitivity(val.Get<float>());
     }
 
     public void OnLooking(InputValue val) {
