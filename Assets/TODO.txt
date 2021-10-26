@@ -2,14 +2,15 @@
 ???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
 
-- Search & find markers in minimap
-
-
 [- Wat gebeurt er als portfolio op capaciteit limiet zit? Photo replacement?]
 
 
 - Scrolling/Selection with d pad in portfolio
 
+
+- Physical building ghost mode placement of polaroids
+
+- 3D reticle max distance cap
 
 
 - Mission gets crossed after delivering picture
@@ -188,16 +189,3 @@ TESTEN:
 
 
 ========= DONE:
-- Fixes
-- UI Layering fixes
-- Camera shader change iets smoother (nogsteeds wel lag spike op het begin, omdat alles nog moet laden enzo)
-- 3rd person to 1st perspective is WAY smoother. The Postprocess FX blend in during the transition.
-- Project cleanups
-- Level area system (it shows the name of map area on enter)
-- Mission system progress
-- RAYCAST 3D RETICLE 
-- Object scan text, different formatting (No "!" for keypoints) for keypoints
-- Object orientations!
-- Composite objects now work & tweakable with PhotoKeyPoint script on object + Nice editing visuals in scene view
-
-- 0/X picture capacity van portfolio staat er bij

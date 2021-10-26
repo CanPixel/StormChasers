@@ -109,6 +109,7 @@ public class CameraControl : MonoBehaviour {
     public Cinemachine.CinemachineVirtualCamera thirdPersonLook;
     private Cinemachine.CinemachinePOV pov;
     private Cinemachine.CinemachineOrbitalTransposer orbitalTransposer;
+    private Cinemachine.CinemachineComposer composer;
     public Cinemachine.CinemachineBrain cinemachineBrain;
     public GameObject photoBookUI, polaroidPrefab;
     public GameObject cameraMascotte;
@@ -143,6 +144,7 @@ public class CameraControl : MonoBehaviour {
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
+        composer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineComposer>();
         foreach(var i in enableOnFirstPerson) i.SetActive(false); 
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;

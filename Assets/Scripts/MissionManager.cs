@@ -130,6 +130,10 @@ public class MissionManager : MonoBehaviour {
         }
     }
 
+    public void ScanMissionCompletion() {
+        
+    }
+
     public void CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
         if(activeMission == null || activeMission.Length < 1 || pic.item == null) return;
 
@@ -186,7 +190,6 @@ public class MissionManager : MonoBehaviour {
                     criteriaSplashes[m].Clear();
                 }
                 screen.forMission = true;
-                SplashSystem.self.SpawnSplash("Picture eligible for " + currentObjective.name + "!", Vector3.zero, 2, 1, 2.5f, TextAnchor.MiddleCenter);
                 currentObjective.cleared = true;
             }
         }
