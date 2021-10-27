@@ -28,23 +28,23 @@ public class PickUp : MonoBehaviour
         if (other.CompareTag("Player") && !hasBeenPickedUp)
         {
             if (!pickUpPointScript.hasPickUp)
-            {     
+            {
                 PlacePickUp();
             }
-            else ReplacePickUp();                     
+            else ReplacePickUp();
         }
     }
 
     private void Update()
     {
-        if(!hasBeenPickedUp) FloatingObject(); 
+        if (!hasBeenPickedUp) FloatingObject();
     }
 
     void ReplacePickUp()
     {
         pickUpPointScript.ReleasePickUp();
         pickUpPointScript.currentPickUp.parent = null;
-        pickUpPointScript.currentPickUp.gameObject.layer = 0; 
+        pickUpPointScript.currentPickUp.gameObject.layer = 0;
         PlacePickUp();
     }
 
@@ -54,13 +54,13 @@ public class PickUp : MonoBehaviour
         transform.parent = pickUpPoint;
         hasBeenPickedUp = true;
         pickUpPointScript.hasPickUp = true;
-        transform.gameObject.layer = 15; 
+        transform.gameObject.layer = LayerMask.NameToLayer("PickUp");
 
-       
-        pickUpPointScript.currentPickUp = transform; 
+
+        pickUpPointScript.currentPickUp = transform;
     }
 
-    
+
     void FloatingObject()
     {
         //transform.position += new Vector3(0,1,0) * animationSpeed * Time.deltaTime; 
