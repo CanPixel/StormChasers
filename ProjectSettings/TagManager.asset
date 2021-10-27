@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - BoostPad
+<<<<<<< HEAD
+=======
+  - Target
+  - AREA
+  - PickUp
+>>>>>>> SharkBranch
   layers:
   - Default
   - TransparentFX
