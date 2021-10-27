@@ -1,0 +1,42 @@
+Content updated by Daniel Cornelius (Kerfuffles) 
+Wood, soil, and grass diffuse textures provided by Textures.com (formerly CGTextures.com)
+
+[12.22.2018]
+* Moved textures and materials out of zip
+* Converted all textures to .png using SuperPNG http://www.fnordware.com/superpng/
+	this should fix file size issues.
+* Converted images to grayscale that needed to be grayscale.
+
+[12.02.2018]
++ Added green utility texture
+* Moved additional textures and materials into an archive to reduce import time
+* Changed compression settings on all textures off of crunch, to help with import time
+
+[06.09.2018]
++ added materials and their content:
+ scsg_soilsand_0
+ scsg_grass_0
+ scsg_glass_0
+ scsg_glass_1
+ scsg_concbare_0
+ scsg_mebare_0
+ scsg_metreadplate_0
+ scsg_osb_0
+
+* modified scsg_bricks_0 to have better looking grout
+- removed scsg_bricks_0_n2.tga
+
+[03.28.2018]
+* fixed wrong project version - was using the wrong version of unity and had .meta issues with older versions.
+* added credit for wood textures to the top of update.txt
+
+[03.27.2018]
+* updated all materials
+* updated all textures
+* updated default materials to use mobile diffuse shaders
+* updated naming of materials and textures to help when searching for other content in a project
+* updated default material textures to correspond to their names more accurately
+* converted all textures to targa and adjusted their alpha channels where appropriate
++ added black material
+- removed old materials
+- removed old textures
