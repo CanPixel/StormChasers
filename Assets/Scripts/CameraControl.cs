@@ -47,6 +47,7 @@ public class CameraControl : MonoBehaviour {
     [Header("Y Axis Look")]
     public Vector2 lookYLimits = new Vector2(0.6f, 1.4f);
     public float yLookSensitivity = 10, lookUpCameraSensitivity = 15;
+    public AnimationCurve yPosOffs, zPosOffs;
 
     [System.Serializable]
     public class PictureScore {
@@ -304,7 +305,7 @@ public class CameraControl : MonoBehaviour {
 
         pov.m_HorizontalAxis.Value = cameraMascotte.transform.localEulerAngles.z + transform.eulerAngles.y; 
 
-        orbitalTransposer.m_FollowOffset = Vector3.Lerp(orbitalTransposer.m_FollowOffset, (carMovement.boostScript.isBoosting) ? BoostFollowOffset : baseFollowOffset, Time.deltaTime * BoostFollowDamping);
+        orbitalTransposer.m_FollowOffset = Vector3.Lerp(orbitalTransposer.m_FollowOffset, (carMovement.boostScript.isBoosting) ? BoostFollowOffset + new Vector3(0, yPosOffs.Evaluate(composer.m_ScreenY), zPosOffs.Evaluate(composer.m_ScreenY)) : baseFollowOffset + new Vector3(0, yPosOffs.Evaluate(composer.m_ScreenY), zPosOffs.Evaluate(composer.m_ScreenY)), Time.deltaTime * BoostFollowDamping);
         orbitalTransposer.m_ZDamping = Mathf.Lerp(orbitalTransposer.m_ZDamping, (carMovement.boostScript.isBoosting) ? 0.05f : baseZDamping, Time.deltaTime * BoostFollowDamping / 2f);
     }
 

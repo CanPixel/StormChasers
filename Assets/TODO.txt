@@ -5,7 +5,9 @@
 
 - Mission should also have screen overlay VFX
 
-- Only recenter when velocity > 0
+- Only recenter when velocity > 0 / freelook when stationary
+- on boost faster recenter?
+- Y Look Recenter automatically after a while?
 
 
 - Scrolling/Selection with d pad in portfolio
