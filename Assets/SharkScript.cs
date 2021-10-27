@@ -194,6 +194,10 @@ public class SharkScript : MonoBehaviour
     {
         Vector3 speed = new Vector3(0, idleRotationSpeed, 0);
         sharkRotationPoint.Rotate(speed * Time.deltaTime);
+
+        anim.SetBool("Moving", true);
+        anim.SetBool("MouthOpen", false);
+        anim.SetBool("MouthClosed", false);
     }
 
 
@@ -220,21 +224,21 @@ public class SharkScript : MonoBehaviour
         if (playerInFountain)
         {
             float step = (chaseMoveSpeed * extraBiteSpeed) * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x, targetPos.y + 2, targetPos.z), step);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x, targetPos.y + 4, targetPos.z), step);
 
             //Chase the player 
-            if (targetDistance > attackDistance)
+            if (targetDistance < mouthOpenDistance - 5)
             {
-                // agent.speed = chaseMoveSpeed;
-                extraBiteSpeed = 1f;
-                anim.SetBool("Attack", false);
-                anim.SetBool("Moving", true);
-            }
-            else  //attack the player 
-            {
-                extraBiteSpeed = 1.5f;
-                anim.SetBool("Attack", true);
-                AttackPlayer();
+                if (targetDistance > attackDistance)
+                    anim.SetBool("MouthOpen", true);
+                else
+                {
+
+                    anim.SetBool("MouthOpen", false);
+                    anim.SetBool("MouthClosed", true);
+                    AttackPlayer();
+                }
+
             }
         }
         else if (playerJumpingOverFountain)
@@ -245,30 +249,19 @@ public class SharkScript : MonoBehaviour
             float step = jumpSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x - 10, targetPos.y + 6, targetPos.z), step);
             //transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x , targetPos.y, targetPos.z), step);
+
             if (targetDistance < mouthOpenDistance)
             {
-                // anim.SetBool("Attack", true);
-                anim.SetBool("MouthOpen", true);
+                if (targetDistance > attackDistance)
+                    anim.SetBool("MouthOpen", true);
+                else
+                {
+                    anim.SetBool("OpenMouth", false);
+                    anim.SetBool("MouthClosed", true);
+                    pickUpPoint.DestroyPickUp();
+                    sharkState = (int)currentState.RETURNTOWATER;
+                }
             }
-            else
-            {
-                //anim.SetBool("MouthOpen", false);
-
-            }
-
-            if (targetDistance < attackDistance)
-            {
-                anim.SetBool("MouthClosed", true);
-                pickUpPoint.DestroyPickUp();
-                sharkState = (int)currentState.RETURNTOWATER;
-
-                //sharkState = (int)currentState.RETURNTOWATER;
-            }
-            //  else if(targetDistance < attackDistance -2)
-            //   {
-            //     pickUpPoint.DestroyPickUp();
-            //     sharkState = (int)currentState.RETURNTOWATER;
-            // }
         }
     }
 
@@ -285,7 +278,6 @@ public class SharkScript : MonoBehaviour
                 if (pickUpPoint.hasPickUp) pickUpPoint.DestroyPickUp();
                 target = player.transform;
                 playerHasBeenEaten = true;
-                anim.SetBool("Attack", false);
                 sharkState = (int)currentState.RETURNTOWATER;
                 StartCoroutine("RespawnPlayer");
             }
