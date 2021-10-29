@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MissionManager : MonoBehaviour {
-    [ReadOnly] public ObjectiveCriteria[] activeMission;
+    [ReadOnly] public Mission activeMission; 
+    private ObjectiveCriteria[] activeCriteria;
     [Space(10)]
     public List<Mission> missions = new List<Mission>();
-    public bool freeRoam = false, startOnStart = false;
+    public bool startOnStart = false;
     public int missionIndex = 0;
 
-    private static MissionManager missionManager;
+    public static MissionManager missionManager;
 
     [System.Serializable]
     public class MissionCriteria {
@@ -37,6 +38,11 @@ public class MissionManager : MonoBehaviour {
             checkmark.enabled = true;
             finished = true;
         }
+
+        public void Reset() {
+            checkmark.enabled = false;
+            finished = false;
+        }
     }
 
     private bool startedMission = false;
@@ -51,10 +57,13 @@ public class MissionManager : MonoBehaviour {
     public Image missionIcon, missionCross;
     public RatingSystem ratingSystem;
     public LockOnSystem lockOnSystem;
+    public CameraControl camControl;
     public MissionCriteria[] criteriaSplashes;
 
     private Mission currentObjective;
     private static float startSequence = 0;
+
+    private float postDeliveredTime = 0;
 
     [System.Serializable]
     public class BonusObject {
@@ -95,8 +104,7 @@ public class MissionManager : MonoBehaviour {
 
         public ObjectiveCriteria[] objectives;
         [HideInInspector] public bool active = false;
-        [ReadOnly] public bool cleared = false;
-        [ReadOnly] public bool marked = false;
+        [ReadOnly] public bool cleared = false, hasMarkedPicture = false, delivered = false;
 
         [Header("Criteria")]
         public bool centerFrameImportant = true;
@@ -106,7 +114,6 @@ public class MissionManager : MonoBehaviour {
         public int minKeyPointsRequired = 1;
         public BonusObject[] bonuses;
         public BonusObject[] penalties;
-        //public float maxDist, minDist;
 
         public void Enable(bool a) {
             foreach(var obj in objectives) {
@@ -122,79 +129,96 @@ public class MissionManager : MonoBehaviour {
                     }
                 }
             }
-            foreach(var i in bonuses) {
-                i.item.active = true;
-            }
+            foreach(var i in bonuses) i.item.active = true;
         }
     }
 
-    public void ScanMissionCompletion() {
-        
+    public void Deliver() {
+        if(currentObjective == null) return;
+        currentObjective.delivered = true;
+    }
+
+    public void MarkForCurrentMission(bool mark = true) {
+        if(currentObjective == null) return;
+        currentObjective.hasMarkedPicture = mark;
+    }
+
+    public void ScanMissionCompletion(Vector3 suckToPos) {
+        if(currentObjective == null || !currentObjective.cleared || !currentObjective.hasMarkedPicture || camControl.missionPicture == null) return;
+        camControl.DeliverPicture(suckToPos);
     }
 
     public void CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
-        if(activeMission == null || activeMission.Length < 1 || pic.item == null) return;
+        if(activeCriteria == null || activeCriteria.Length < 1) return;
+
+        for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
+
+        if(pic.item == null) return;
 
         string str = "[" + pic.item.tags + "]";
         foreach(var i in pic.subScore) str += ", " + i.item.tags;
+        //Debug.Log(str);
 
-        bool[] missionCleared = new bool[activeMission.Length];
-        for(int i = 0; i < activeMission.Length; i++) {
-            bool isPenalty = activeMission[i].penalty;
-            bool isOptional = activeMission[i].optional;
-            string key = activeMission[i].photoItemNameKey.ToLower().Trim();
+        bool[] missionCleared = new bool[activeCriteria.Length];
+        for(int i = 0; i < activeCriteria.Length; i++) {
+            bool isPenalty = activeCriteria[i].penalty;
+            bool isOptional = activeCriteria[i].optional;
+            string key = activeCriteria[i].photoItemNameKey.ToLower().Trim();
 
-            if(activeMission[i].mainSubject && ComparePhotoItem(pic.item, key)) {
+            if(activeCriteria[i].mainSubject && ComparePhotoItem(pic.item, key)) {
                 missionCleared[i] = true;
                 continue;
             }
 
-            if(!activeMission[i].mainSubject) {
+           // if(!activeMission[i].mainSubject) {
                 if(isOptional) missionCleared[i] = true;
                 else {
-                    if(!isPenalty) {
+                     if(isPenalty) {
+                        missionCleared[i] = true;
+                        foreach(var m in pic.subScore) {
+                            if(ComparePhotoItem(m.item, key) || ComparePhotoItem(pic.item, key)) {
+                                missionCleared[i] = false;
+                                break;
+                            }
+                        }
+                    } else {
                         foreach(var m in pic.subScore) {
                             if(ComparePhotoItem(m.item, key)) {
                                 missionCleared[i] = true;
                                 break;
                             }
                         }
-                    } else {
-                        missionCleared[i] = true;
-                        foreach(var m in pic.subScore) {
-                            if(ComparePhotoItem(m.item, key)) {
-                                missionCleared[i] = false;
-                                break;
-                            }
-                        }
                     }
                 }
-            }
+        //    }
 
             var end = "Result: ";
-            bool finished = true;
+            bool completed = true;
             foreach(var m in missionCleared) {
                 end += m + " ";
-                if(!m) {
-                    finished = false;
-                    break;
-                }
+                if(!m) completed = false;
+            }
+            //Debug.Log(end);
+
+            //Mission Checkmarks
+            for(int m = 0; m < activeCriteria.Length; m++) {
+                if(!missionCleared[m]) continue;
+          /*       activeMission[m].finished = true;
+                criteriaSplashes[m].Clear(); */
+                MarkCurrentObjective(m, true);
             }
 
-          //  Debug.Log(end);
-            if(finished) {
-                for(int m = 0; m < activeMission.Length; m++) {
-                    activeMission[m].finished = true;
-                    criteriaSplashes[m].Clear();
-                }
+            if(completed) {
                 screen.forMission = true;
                 currentObjective.cleared = true;
-            }
+            } //else for(int m = 0; m < activeMission.Length; m++) MarkCurrentObjective(m, false);
         }
     }
 
-    public void MarkCurrentObjective() {
-        currentObjective.marked = true;
+    public void MarkCurrentObjective(int m, bool finished) {
+        activeCriteria[m].finished = finished;
+        if(finished) criteriaSplashes[m].Clear();
+        else criteriaSplashes[m].Reset();
     }
 
     protected bool ComparePhotoItem(PhotoBase item1, string key) {
@@ -218,18 +242,13 @@ public class MissionManager : MonoBehaviour {
     }
 
     private void SetCurrentMission(Mission miss) {
-/*         if(freeRoam) {
-            currentObjective = null;
-            startSequence = sequenceDuration + 1;
-            return;
-        } */
-
         foreach(var i in lockOnSystem.GetAllTargets()) i.active = false;
         foreach(var i in missions) i.Enable(false);
 
         currentObjective = miss;
         startSequence = 0;
         currentObjective.active = true;
+        activeMission = miss;
 
         missionIcon.enabled = true;
         missionTitle.text = miss.name;
@@ -246,7 +265,7 @@ public class MissionManager : MonoBehaviour {
             criteriaSplashes[i].Load(miss.objectives[i]);
         }
 
-        activeMission = miss.objectives;
+        activeCriteria = miss.objectives;
         
         miss.Enable(true);
         startedMission = true;
@@ -262,14 +281,18 @@ public class MissionManager : MonoBehaviour {
             }
         }
     }
+    public void StartMission(Mission i) {
+        if(i.cleared) return;
+        SetCurrentMission(i);
+        SoundManager.PlayUnscaledSound("PhotoShoot");
+        SoundManager.PlayUnscaledSound("CamMode");
+    }
 
     void OnValidate() {
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
 
         foreach(var i in missions) {
-            //if(i..GetKeyPoints() != null && i.minKeyPointsRequired > i.focusedObject.GetKeyPoints().Length) i.minKeyPointsRequired = i.focusedObject.GetKeyPoints().Length;
             if(i.minKeyPointsRequired < 1) i.minKeyPointsRequired = 1;
-
             i.minCenterFrame = Mathf.Clamp(i.minCenterFrame, 0, 100);
         }
     }
@@ -279,36 +302,42 @@ public class MissionManager : MonoBehaviour {
         missionParent.transform.localScale = Vector3.zero;
         currentObjective = null;
 
-        if(!freeRoam) {
-            if(startOnStart) {
-                SetCurrentMission(missions[missionIndex]);
-                startedMission = true;
-            } else ActivateAll(false);
-        }
-        else ActivateAll(true);
+        if(startOnStart) {
+            SetCurrentMission(missions[missionIndex]);
+            startedMission = true;
+        } else ActivateAll(false);
     }
 
     void Update() {
         if(startedMission) {
             startSequence += Time.unscaledDeltaTime * sequenceSpeed;
 
-            if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one, Time.unscaledDeltaTime * 5f);
-        }
+            if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one * ((currentObjective != null && currentObjective.cleared) ? 1.2f : 1), Time.unscaledDeltaTime * 5f);
+        } else missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.zero, Time.unscaledDeltaTime * 5f);
 
-
-        if(startSequence > sequenceDuration) {
-            missionName.text = "";
-        } else {
-            if(currentObjective != null) missionName.text = currentObjective.name;
-        }
+        if(startSequence > sequenceDuration) missionName.text = "";
+        else if(currentObjective != null) missionName.text = currentObjective.name;
 
         missionName.transform.localScale = missionTextCurve.Evaluate(startSequence) / 2f * Vector3.one;
         missionName.color = new Color(missionName.color.r, missionName.color.g, missionName.color.b, Mathf.Lerp(missionName.color.a, startSequence * 2f, Time.deltaTime * 8f * sequenceSpeed));
         glow.color = new Color(glow.color.r, glow.color.g, glow.color.b, missionTextCurve.Evaluate(startSequence));
     
         //Mission Cleared anim
-        if(currentObjective != null && currentObjective.cleared) {
-            missionCross.fillAmount = Mathf.Lerp(missionCross.fillAmount, (currentObjective.marked) ? 1 : 0, Time.unscaledDeltaTime * 4f);
-        }
+         if(currentObjective != null && currentObjective.cleared) {
+            missionCross.fillAmount = Mathf.Lerp(missionCross.fillAmount, (currentObjective.delivered) ? 1.1f : 0, Time.unscaledDeltaTime * 4f);
+
+            if(currentObjective.delivered) {
+                postDeliveredTime += Time.unscaledDeltaTime;
+                if(postDeliveredTime > 3) HideMission();
+            }
+         }
+    }
+
+    protected void HideMission() {
+        currentObjective.active = false;
+        currentObjective = null;
+        startSequence = 0;
+        activeMission = null;
+        startedMission = false;
     }
 }

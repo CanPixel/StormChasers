@@ -45,7 +45,7 @@ public class ArcadeKartPowerup : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (isCoolingDown) return;
+        if (isCoolingDown || other.tag != "Player") return;
 
         var rb = other.attachedRigidbody;
         if (rb) {

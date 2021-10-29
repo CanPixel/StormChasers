@@ -1,72 +1,32 @@
 
 [- Wat gebeurt er als portfolio op capaciteit limiet zit? Photo replacement?]
 
-- taking picture white screen FX flash
+- Decoupling the objectives [Invidually rated]
+- Tagless Manual Obj still work?
+- DYNAMIC DISTANCE / SCALING ---> Object still visible on picture? Long Distance + small obj
+                - DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC / AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
+- FOCUS BEPAALT OOK MAIN SUBJECT. NIET ALLEEN HOE CENTERFRAME
 
-- Mission should also have screen overlay VFX
-
-- Only recenter when velocity > 0 / freelook when stationary
-- on boost faster recenter?
-- Y Look Recenter automatically after a while?
 
 
 - Scrolling/Selection with d pad in portfolio
 
-- Physical building ghost mode placement of polaroids
-
-- 3D reticle max distance cap
-
 - You should be able to pickup discarded images
 
 - Mission gets crossed after delivering picture
-
-- physical delivery
-
-- Picture Score for mission aanduiden naast de mission statement 
-
-3 buttons
-        - (B) Discard Picture + skip
-        - (Y) Mark for mission (greyed out if not possible) [Active mission only or all accepted?] 
-        - (A) Skip + Portfolio
-
-
-
-- PictureScore + Splash = Mission accomplished! This could be used for mission -> Press A to stamp for mission
-
-- Mission completion 
-
 - Physical picture gets sucked to mission marker
 
-- Dynamic sizing crosshairs based on distance
-
-- FOCUS BEPAALT OOK MAIN SUBJECT. NIET ALLEEN HOE CENTERFRAME
-
-- Looking up / down
-
-
-SYSTEM RULES:
-        - Partial completion gets marked off temporarily, as an animation. 
-        - Subject Priority Calculation in photomode is based on how close to center reticle
-        - Picture Scoring System & Missions System are not connected, but they do communicate
 
 
 
-Types of bonus:
-        - Mission bonus (+) & penalty (-)
-        - Global bonus (+) & penalty (-)
-        - Subject-inherent bonus (+) & penalty (-)
 
 
 
-========= Physics
-- Snelheid drift brake als variabel
-- BOOST CAP
-- Boost cancel force
-- Coyote time jumping before 0.25f groundpercent
-- wheels re-orienting in tunnels
 
+- Mission bonus (+) & penalty (-)
+- Global bonus (+) & penalty (-)
+- Combination of tags could give combos 
 
-- No wallriding anymore / toggle
 
 
 
@@ -83,10 +43,6 @@ Types of bonus:
 - PICTURE NAME contains data about keypoints/how much of the object is captured, some bonus categories like DIRTY become the adjective.
         DIRTY TOWER (1/3)
         [Buzz-word category / genre / bonus] [Main Subject] [Amount of keypoints in frame]
-
-
-- Flipperkast achtige feel. Visual Stamps. Real-time visual correspondence to score based on grading stage [Waardes blijven veranderen]
-
 
 
 
@@ -111,48 +67,13 @@ Minimum focus per non-important object on screen decides whether grading happens
 
 
 
-
-======== MISSION SYSTEM
-- MINIMUM GRADE
-- GRADE SYSTEM?
-- PHOTO SCORING?
-
-- BONUS OBJECTS:
-        - GLOBAL (Sharks are cool, advertisements are always bad)
-        - MISSION-SPECIFIC (Now advertisements are cool, endorse me!! Broom, Carwash)
-
-
-
-
-        - DYNAMIC DISTANCE / SCALING ---> Object still visible on picture?
-        - DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC / AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
-
-
-
-
-
-
-
-[[[BUGS]]:
-- PRESS X IN MID AIR LMAO
-- Boost still triggering haptic feedback when meter is empty
-- Discarding a mission marked picture
-
-
-
-TESTEN:
-- Picture quality == boost feedback
-- Reward with boost amount in fuel (boost bar)                  of              direct boost reward in force
-- AutoFocus (based on reticle)
-
-
-
-
 == [Optional]
+- Physical building ghost mode placement of polaroids
 - wobble on land visual + better haptics
 - vehicle damage fixen + ontrigger?
 - Screen diagonal split for cutscene / different visuals
 - destructible objects haptic feedback + sound
+- Dynamic sizing crosshairs based on distance                   [MARKERS FOR MISSIONS?]
 
   - STUNT BONUSES
                 - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
@@ -171,15 +92,8 @@ AUDIO:
 - Beep beep voor achteruit?
 - Better Boost sound effect  
 
+
+
 ???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
 
-
-
-
-
-========== CHANGELOG:
-- Recentering makes it easier to drive while still being able to look around moderately freely.
-- Looking on the Y axis
-- Focus Sensitivity can now be tweaked with D-pad left & right
-- Fixed the most awful screen bug

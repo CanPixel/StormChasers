@@ -89,7 +89,7 @@ public class Boost : MonoBehaviour {
             carMovement.HapticFeedback(0.8f, 0.2f, 0.3f);
             
             SoundManager.PlaySound("Boost", 0.7f);
-            boostOverlay.color = new Color(1, 1, 1, boostAlpha);
+            BoostOverlay();
             
             boostPressedInterval = boostSpamCap;
         }
@@ -112,6 +112,10 @@ public class Boost : MonoBehaviour {
             canBoost = false; 
             EndBoostState();
         }
+    }
+
+    public void BoostOverlay() {
+        boostOverlay.color = new Color(1, 1, 1, boostAlpha);
     }
 
     public void ApplyBoost() {    

@@ -10,7 +10,7 @@ public class RatingSystem : MonoBehaviour {
 
     [SerializeField] private Vector2 polaroidInterval = new Vector2(12, 14);
     [SerializeField] private float polaroidBottomPos = 0;
-    private float polaroidTopPos;
+    private float polaroidTopPos, postPictureDelay = 0;
 
     [System.Serializable]
     public class PictureQualifier {
@@ -105,6 +105,8 @@ public class RatingSystem : MonoBehaviour {
     }
 
     void Update() {
+        postPictureDelay += Time.unscaledDeltaTime;
+
         polaroidSkip.text = ("<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color> to Skip").ToUpper();
         if(camControl.camSystem.shoot >= 0.7f && screenshotTimer > 1f) Skip();
 
@@ -141,7 +143,10 @@ public class RatingSystem : MonoBehaviour {
 
            // if(screenshotTimer > polaroidInterval.y) Reset();
 
-            if(screenshotTimer > polaroidInterval.x) polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
+            if(screenshotTimer > polaroidInterval.x) {
+                polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
+                polaroidUI.transform.localScale = Vector3.Lerp(polaroidUI.transform.localScale, Vector3.zero, Time.unscaledDeltaTime * 4f);
+            }
             else polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidTopPos, Time.unscaledDeltaTime * 7f), polaroidUI.transform.position.z);
         }
     }
@@ -149,6 +154,7 @@ public class RatingSystem : MonoBehaviour {
     public void ResetScreenshot() {
         screenshotTimer = 0.1f;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
+        polaroidUI.transform.localScale = Vector3.one;
     }
 
     public void SetPolaroidTitle(string txt) {
@@ -171,6 +177,7 @@ public class RatingSystem : MonoBehaviour {
         totalScoreBase.transform.localScale = totalScoreValue.transform.localScale = Vector3.zero;
         foreach(var i in crosshairs) Destroy(i);
         crosshairs.Clear();
+        postPictureDelay = 0;
     }
 
     protected void SpawnCrosshair(PhotoBase item, bool isMainSubject = true) {
@@ -199,10 +206,9 @@ public class RatingSystem : MonoBehaviour {
     }
 
     public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+        polaroidScreenshot.fillAmount = 0;
         if(!ready || pic.item == null) return;
         Reset();
-
-        polaroidScreenshot.fillAmount = 0;
 
         ready = false;
 
@@ -255,5 +261,9 @@ public class RatingSystem : MonoBehaviour {
 
     public bool IsFading() {
         return screenshotTimer > polaroidInterval.x;
+    }
+
+    public bool AfterDelay(float time) {
+        return postPictureDelay > time;
     }
 }

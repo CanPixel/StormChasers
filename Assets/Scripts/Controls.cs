@@ -123,14 +123,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""ChangeFocusSensitivity"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""20fe050d-8e97-4841-aeb4-ba925ac18d50"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""SkipPicture"",
                     ""type"": ""Button"",
                     ""id"": ""3b2e73f5-75b3-4c46-abe3-a44adb12fd19"",
@@ -724,39 +716,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""MarkPictureForMission"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""9647aab3-96e8-4893-8130-16dc5fbc3d1f"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeFocusSensitivity"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""ec1c4254-dbdb-4483-b3fe-d608c4999a42"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ChangeFocusSensitivity"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""7cb0419f-42f7-4e4e-86f4-0d372e28e3d9"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ChangeFocusSensitivity"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -806,7 +765,6 @@ public class @Controls : IInputActionCollection, IDisposable
         m_GameControls_CycleFilter = m_GameControls.FindAction("CycleFilter", throwIfNotFound: true);
         m_GameControls_PhotoBook = m_GameControls.FindAction("PhotoBook", throwIfNotFound: true);
         m_GameControls_ChangeFocus = m_GameControls.FindAction("ChangeFocus", throwIfNotFound: true);
-        m_GameControls_ChangeFocusSensitivity = m_GameControls.FindAction("ChangeFocusSensitivity", throwIfNotFound: true);
         m_GameControls_SkipPicture = m_GameControls.FindAction("SkipPicture", throwIfNotFound: true);
         m_GameControls_ScrollPortfolio = m_GameControls.FindAction("ScrollPortfolio", throwIfNotFound: true);
         m_GameControls_DiscardPicture = m_GameControls.FindAction("DiscardPicture", throwIfNotFound: true);
@@ -873,7 +831,6 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_GameControls_CycleFilter;
     private readonly InputAction m_GameControls_PhotoBook;
     private readonly InputAction m_GameControls_ChangeFocus;
-    private readonly InputAction m_GameControls_ChangeFocusSensitivity;
     private readonly InputAction m_GameControls_SkipPicture;
     private readonly InputAction m_GameControls_ScrollPortfolio;
     private readonly InputAction m_GameControls_DiscardPicture;
@@ -895,7 +852,6 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @CycleFilter => m_Wrapper.m_GameControls_CycleFilter;
         public InputAction @PhotoBook => m_Wrapper.m_GameControls_PhotoBook;
         public InputAction @ChangeFocus => m_Wrapper.m_GameControls_ChangeFocus;
-        public InputAction @ChangeFocusSensitivity => m_Wrapper.m_GameControls_ChangeFocusSensitivity;
         public InputAction @SkipPicture => m_Wrapper.m_GameControls_SkipPicture;
         public InputAction @ScrollPortfolio => m_Wrapper.m_GameControls_ScrollPortfolio;
         public InputAction @DiscardPicture => m_Wrapper.m_GameControls_DiscardPicture;
@@ -948,9 +904,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 @ChangeFocus.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
                 @ChangeFocus.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
                 @ChangeFocus.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocus;
-                @ChangeFocusSensitivity.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocusSensitivity;
-                @ChangeFocusSensitivity.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocusSensitivity;
-                @ChangeFocusSensitivity.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnChangeFocusSensitivity;
                 @SkipPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
                 @SkipPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnSkipPicture;
@@ -1006,9 +959,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 @ChangeFocus.started += instance.OnChangeFocus;
                 @ChangeFocus.performed += instance.OnChangeFocus;
                 @ChangeFocus.canceled += instance.OnChangeFocus;
-                @ChangeFocusSensitivity.started += instance.OnChangeFocusSensitivity;
-                @ChangeFocusSensitivity.performed += instance.OnChangeFocusSensitivity;
-                @ChangeFocusSensitivity.canceled += instance.OnChangeFocusSensitivity;
                 @SkipPicture.started += instance.OnSkipPicture;
                 @SkipPicture.performed += instance.OnSkipPicture;
                 @SkipPicture.canceled += instance.OnSkipPicture;
@@ -1058,7 +1008,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnCycleFilter(InputAction.CallbackContext context);
         void OnPhotoBook(InputAction.CallbackContext context);
         void OnChangeFocus(InputAction.CallbackContext context);
-        void OnChangeFocusSensitivity(InputAction.CallbackContext context);
         void OnSkipPicture(InputAction.CallbackContext context);
         void OnScrollPortfolio(InputAction.CallbackContext context);
         void OnDiscardPicture(InputAction.CallbackContext context);

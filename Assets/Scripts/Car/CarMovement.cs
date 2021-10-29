@@ -27,7 +27,7 @@ public class CarMovement : MonoBehaviour {
     public Rigidbody rb;
 
     private bool move = false;
-    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0, boost = 0;
+    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
 
     private Vector2 rotationInput;
 
@@ -90,27 +90,22 @@ public class CarMovement : MonoBehaviour {
         if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
     }
     public void OnBoost(InputValue val) {
-        boost = val.Get<float>();
-        Boost();
+        Boost(val.Get<float>());
     }
 
     public void OnBacklook(InputValue val) {
-        //camControl.Recenter();
         bool pressed = val.Get<float>() >= 0.4f;
-        if(camControl.raceCamera) {
-            if(pressed) camControl.BackLook(true);
-            else camControl.BackLook(false);
-        } else if(pressed) camControl.Recenter();
+        //if(camControl.raceCamera) {
+        if(pressed) camControl.BackLook(true);
+        else camControl.BackLook(false);
+        //else if(pressed) camControl.Recenter();
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if(camControl != null && camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
+        if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
     }
     public void OnChangeFocus(InputValue val) {
-        if(camCanvas != null) camCanvas.ChangeFocus(val.Get<float>());
-    }
-    public void OnChangeFocusSensitivity(InputValue val) {
-        if(camCanvas != null) camCanvas.ChangeFocusSensitivity(val.Get<float>());
+        camCanvas.ChangeFocus(val.Get<float>());
     }
 
     public void OnLooking(InputValue val) {
@@ -161,7 +156,13 @@ public class CarMovement : MonoBehaviour {
         SoundManager.PlaySound("Jump", 0.15f);
         HapticFeedback(0.4f, 0.3f, 0.2f);
     }
-    protected void Boost() {
+    protected void Boost(float boost) {
+        if(camControl.camSystem.aim >= 0.5f) {
+            boostScript.EndBoostState();
+            if(boost > 0.35f) camCanvas.ChangeSpeedToggle();
+            return;
+        }
+
         if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) boostScript.StartBoostState();
         else if(boost < 0.3f) boostScript.EndBoostState();
     }
