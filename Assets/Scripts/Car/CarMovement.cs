@@ -11,6 +11,7 @@ public class CarMovement : MonoBehaviour {
     public Material brakeMaterial;
 
     public Transform carMesh;
+    public DialogSystem dialogSystem;
     public CameraControl camControl;
     public CameraCanvas camCanvas;
     public Boost boostScript;
@@ -96,13 +97,13 @@ public class CarMovement : MonoBehaviour {
     public void OnBacklook(InputValue val) {
         bool pressed = val.Get<float>() >= 0.4f;
         //if(camControl.raceCamera) {
-        if(pressed) camControl.BackLook(true);
+        if(pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
         else camControl.BackLook(false);
         //else if(pressed) camControl.Recenter();
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if(camControl.camSystem.aim >= 0.5f && fl != 0) camControl.CycleFilters(fl);
+        if(fl != 0) camControl.CycleFilters(fl);
     }
     public void OnChangeFocus(InputValue val) {
         camCanvas.ChangeFocus(val.Get<float>());
@@ -130,6 +131,8 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraShoot(InputValue val) {
         if(camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
+
+        if(camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
     }
 
     /* PhotoBook / Portfoio */

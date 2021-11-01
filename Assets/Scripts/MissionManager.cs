@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class MissionManager : MonoBehaviour {
     [ReadOnly] public Mission activeMission; 
@@ -53,14 +56,17 @@ public class MissionManager : MonoBehaviour {
     public Image glow;
     public Text missionName;
     public GameObject missionParent;
-    public Text missionTitle;
+    public float missionParentScale = 1.2f;
+    public Text missionTitle, readyForMark;
     public Image missionIcon, missionCross;
     public RatingSystem ratingSystem;
+    [SerializeField] private InputActionReference portfolioButton;
     public LockOnSystem lockOnSystem;
     public CameraControl camControl;
     public MissionCriteria[] criteriaSplashes;
 
     private Mission currentObjective;
+    private bool currentFinished = false;
     private static float startSequence = 0;
 
     private float postDeliveredTime = 0;
@@ -115,6 +121,8 @@ public class MissionManager : MonoBehaviour {
         public BonusObject[] bonuses;
         public BonusObject[] penalties;
 
+        public UnityEvent OnMissionFinished;
+
         public void Enable(bool a) {
             foreach(var obj in objectives) {
                 if(obj.editPhotoItemsManually) foreach(var i in obj.missionObjects.missionObjects) i.objective.active = active = a;
@@ -136,28 +144,36 @@ public class MissionManager : MonoBehaviour {
     public void Deliver() {
         if(currentObjective == null) return;
         currentObjective.delivered = true;
+        currentObjective.OnMissionFinished.Invoke();
     }
 
     public void MarkForCurrentMission(bool mark = true) {
         if(currentObjective == null) return;
         currentObjective.hasMarkedPicture = mark;
+        readyForMark.gameObject.SetActive(!mark);
     }
 
     public void ScanMissionCompletion(Vector3 suckToPos) {
         if(currentObjective == null || !currentObjective.cleared || !currentObjective.hasMarkedPicture || camControl.missionPicture == null) return;
         camControl.DeliverPicture(suckToPos);
+        readyForMark.gameObject.SetActive(false);
     }
 
-    public void CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
-        if(activeCriteria == null || activeCriteria.Length < 1) return;
+    public bool CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+        if(activeCriteria == null || activeCriteria.Length < 1) return false;
 
-        for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
+        //Reset
+        if(!currentFinished) for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
 
-        if(pic.item == null) return;
+        if(pic.item == null) return false;
 
-        string str = "[" + pic.item.tags + "]";
-        foreach(var i in pic.subScore) str += ", " + i.item.tags;
-        //Debug.Log(str);
+        bool fullCompletion = false;
+
+        //List<PhotoBase> items = new List<PhotoBase>();
+        //items.Add(pic.item);
+        //string str = "[" + pic.item.tags + "]";
+        //foreach(var i in pic.subScore) items.Add(i.item);
+        //Debug.Log(items.Count);
 
         bool[] missionCleared = new bool[activeCriteria.Length];
         for(int i = 0; i < activeCriteria.Length; i++) {
@@ -165,7 +181,7 @@ public class MissionManager : MonoBehaviour {
             bool isOptional = activeCriteria[i].optional;
             string key = activeCriteria[i].photoItemNameKey.ToLower().Trim();
 
-            if(activeCriteria[i].mainSubject && ComparePhotoItem(pic.item, key)) {
+            if(/* activeCriteria[i].mainSubject &&*/ ComparePhotoItem(pic.item, key)) {
                 missionCleared[i] = true;
                 continue;
             }
@@ -192,10 +208,10 @@ public class MissionManager : MonoBehaviour {
                 }
         //    }
 
-            var end = "Result: ";
+            //var end = "Result: ";
             bool completed = true;
             foreach(var m in missionCleared) {
-                end += m + " ";
+              //  end += m + " ";
                 if(!m) completed = false;
             }
             //Debug.Log(end);
@@ -209,10 +225,14 @@ public class MissionManager : MonoBehaviour {
             }
 
             if(completed) {
+                fullCompletion = true;
+                currentFinished = true;
                 screen.forMission = true;
+                readyForMark.gameObject.SetActive(true);
                 currentObjective.cleared = true;
             } //else for(int m = 0; m < activeMission.Length; m++) MarkCurrentObjective(m, false);
         }
+        return fullCompletion;
     }
 
     public void MarkCurrentObjective(int m, bool finished) {
@@ -247,6 +267,7 @@ public class MissionManager : MonoBehaviour {
 
         currentObjective = miss;
         startSequence = 0;
+        currentFinished = false;
         currentObjective.active = true;
         activeMission = miss;
 
@@ -282,7 +303,7 @@ public class MissionManager : MonoBehaviour {
         }
     }
     public void StartMission(Mission i) {
-        if(i.cleared) return;
+        if(i.cleared || currentObjective == i) return;
         SetCurrentMission(i);
         SoundManager.PlayUnscaledSound("PhotoShoot");
         SoundManager.PlayUnscaledSound("CamMode");
@@ -301,6 +322,7 @@ public class MissionManager : MonoBehaviour {
         missionManager = this;
         missionParent.transform.localScale = Vector3.zero;
         currentObjective = null;
+        readyForMark.gameObject.SetActive(false);
 
         if(startOnStart) {
             SetCurrentMission(missions[missionIndex]);
@@ -309,10 +331,12 @@ public class MissionManager : MonoBehaviour {
     }
 
     void Update() {
+        readyForMark.text = "<size='121'>Ya got the picture!</size>\nMark it in your portfolio (<color='#ff0000'>" + portfolioButton.action.GetBindingDisplayString() + "</color>)";
+
         if(startedMission) {
             startSequence += Time.unscaledDeltaTime * sequenceSpeed;
 
-            if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one * ((currentObjective != null && currentObjective.cleared) ? 1.2f : 1), Time.unscaledDeltaTime * 5f);
+            if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one * ((currentObjective != null && currentObjective.cleared) ? (missionParentScale + 0.2f) : missionParentScale), Time.unscaledDeltaTime * 5f);
         } else missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.zero, Time.unscaledDeltaTime * 5f);
 
         if(startSequence > sequenceDuration) missionName.text = "";

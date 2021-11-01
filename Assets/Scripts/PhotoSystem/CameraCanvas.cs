@@ -43,8 +43,6 @@ public class CameraCanvas : MonoBehaviour {
     public Sprite lowSpeedIcon, highSpeedIcon;
     public Outline focusMeterOutline;
     public Outline focusMeterImg;
-    public Text shaderControlText;
-    public InputActionReference switchShaderBinding;
 
     private float motion;
 
@@ -70,8 +68,6 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     void Update() {
-        shaderControlText.text = ("Switch (<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)").ToUpper();
-
         MotionBlurReticle();
 
         if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);

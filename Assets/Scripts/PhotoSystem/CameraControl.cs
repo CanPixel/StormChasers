@@ -21,6 +21,7 @@ public class CameraControl : MonoBehaviour {
     [Header("Portfolio")]
     public int maxPhotosInPortfolio = 5;
     public Color markedPictureColor;
+    public Color eligibleForMissionPictureColor;
 
     [Header("Boost Cam")]
     public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
@@ -78,6 +79,8 @@ public class CameraControl : MonoBehaviour {
         public string name;
         public Texture2D image;
         public GameObject portfolioObj;
+        [HideInInspector] public Image polaroidFrame;
+        [HideInInspector] public Color baseColor = new Color(0.9f, 0.9f, 0.9f, 1);
         public bool forMission = false;
 
         [Range(0, 100)]
@@ -112,6 +115,7 @@ public class CameraControl : MonoBehaviour {
     }
 
     [HideInInspector] public List<Screenshot> screenshots = new List<Screenshot>();
+    private Screenshot markedScreenshot;
 
     [Space(10)]
     public LayerMask thirdPersonCull;
@@ -147,7 +151,13 @@ public class CameraControl : MonoBehaviour {
     public RatingSystem ratingSystem;
     public MissionManager missionManager;
     [SerializeField] private InputActionReference cameraAimButton;
+    [SerializeField] private InputActionReference switchShaderBinding;
+    [SerializeField] private InputActionReference boostBinding;
+    [SerializeField] private InputActionReference driftBinding;
+    [SerializeField] private InputActionReference cameraShootBinding;
+    [SerializeField] private InputActionReference jumpBinding;
     public ShaderReel shaderReel;
+    public Text shaderControlText, camModeText, camShootText, boostText, driftText, jumpText;
 
     private Vector3 baseFollowOffset;
     private float baseZDamping;
@@ -185,6 +195,13 @@ public class CameraControl : MonoBehaviour {
     private float distTarget = 1f;
 
     void Update() {
+        shaderControlText.text = ("Switch (<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)").ToUpper();
+        camModeText.text = ("(<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>) Camera Mode");
+        camShootText.text = ("(<color='#ff0000'>" + cameraShootBinding.action.GetBindingDisplayString() + "</color>) Take Picture");
+        boostText.text = ("(<color='#ff0000'>" + boostBinding.action.GetBindingDisplayString() + "</color>) Boost");
+        driftText.text = ("(<color='#ff0000'>" + driftBinding.action.GetBindingDisplayString() + "</color>) Drift");
+        jumpText.text = ("(<color='#ff0000'>" + jumpBinding.action.GetBindingDisplayString() + "</color>) Jump");
+
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
 
@@ -246,27 +263,38 @@ public class CameraControl : MonoBehaviour {
         /* PhotoBook / Portfolio */
         photoBookCapacity.text = screenshots.Count + "/" + maxPhotosInPortfolio;
         photoBookSelection.enabled = discardPicText.enabled = screenshots.Count > 0;
-        markPicText.enabled = screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto].forMission;
-        if(screenshots.Count > 0) photoBookSelection.transform.position = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform.position;
+        markPicText.enabled = screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count && screenshots[currentSelectedPortfolioPhoto].forMission;
+        if(screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count) photoBookSelection.transform.position = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform.position;
         discardPicText.text = "Discard  (<color='#ff0000'>" + discardPicture.action.GetBindingDisplayString() + "</color>)";
-        markPicText.text = "Mark for mission  (<color='#ffff00'>" + markPicture.action.GetBindingDisplayString() + "</color>)";
+        markPicText.text = (AlreadyMarked() ? "Unm" : "M") + "ark for mission  (<color='#ffff00'>" + markPicture.action.GetBindingDisplayString() + "</color>)";
     }
 
     public void MarkPicture() {
-        if(screenshots[currentSelectedPortfolioPhoto] == null) return;
-        screenshots[currentSelectedPortfolioPhoto].portfolioObj.GetComponent<Image>().color = markedPictureColor;
+        if(screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission) return;
+
+        //Already marked
+        if(AlreadyMarked()) {
+            UnmarkPicture();
+            return;
+        }
+
+        screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = markedPictureColor;
         missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         missionPicture.transform.localScale = basePicScale * physPicScale;
         missionPicture.gameObject.SetActive(true);
         missionManager.MarkForCurrentMission();
+        markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
+        photoBook = false;
     }
     public void UnmarkPicture() {
         missionPicture.sprite = null;
         missionPicture.gameObject.SetActive(false);
         missionManager.MarkForCurrentMission(false);
         Destroy(missionPicture.sprite);
-        if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null) return;
-        screenshots[currentSelectedPortfolioPhoto].portfolioObj.GetComponent<Image>().color = Color.white;
+        if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || currentSelectedPortfolioPhoto >= screenshots.Count) return;
+        screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
+        markedScreenshot = null;
+        photoBook = false;
     }
     public void DiscardPicture() {
         if(screenshots[currentSelectedPortfolioPhoto] == null) return;
@@ -276,12 +304,15 @@ public class CameraControl : MonoBehaviour {
         obj.GetComponent<SpriteRenderer>().sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
 
         DeletePicture(currentSelectedPortfolioPhoto, false);
+        PortfolioSelection(0);
         UnmarkPicture();
-
-        PortfolioSelection(-1);
         photoBook = false;
     }
     
+    protected bool AlreadyMarked() {
+        return markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
+    }
+
     private GameObject deliverPicture;
     private Vector3 deliverTo;
     private float deliverTime = 0;
@@ -476,15 +507,17 @@ public class CameraControl : MonoBehaviour {
 
         //Mission check
         scren.portfolioObj = pol;
-        missionManager.CheckCompletion(score, scren);
+        scren.polaroidFrame = pol.GetComponent<Image>();
+        var completed = missionManager.CheckCompletion(score, scren);
+
+        //Border Colors
+        if(completed) scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;;
 
         ratingSystem.SetPolaroidTitle(photoWithoutScore);
         sf.text.text = score.name = photoName;
 
         //Portfolio
         if(screenshots.Count >= maxPhotosInPortfolio) DeletePicture(0);
-
-    //    photoBookShots.Add(pol);
         screenshots.Add(scren);
 
         //Physical Pictures        
