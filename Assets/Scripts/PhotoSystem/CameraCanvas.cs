@@ -19,6 +19,8 @@ public class CameraCanvas : MonoBehaviour {
     [Header("Motion Blur Reticle")]
     public float movementDamping = 2f;
     public float movementRange = 400f, movementSensitivityThreshold = 0.2f;
+    public Vector2 motionBlurRange = new Vector2(180, 360);
+    public float motionReticleSensitivity = 1.5f;
 
     [Header("Focus")]
     public float minFocusRange = 10;
@@ -68,9 +70,8 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     void Update() {
-        MotionBlurReticle();
-
-        if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
+        //MotionBlurReticle();
+//        if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
 
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity * sensitivityValue, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
@@ -83,13 +84,10 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void ReloadFX() {
-        if(dof == null) dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
-
+        dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
         var focusDist = dof.focusDistance.value;
         var focusAperture = dof.aperture.value;
-
-        dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
-        motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
+        //motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
         
         dof.focusDistance.value = focusMeter.value = focusDist;
         dof.aperture.value = focusAperture;
@@ -114,6 +112,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void SynchLook() {
+        return;
         if(!cameraControl.cinemachineBrain.IsLive(cameraControl.firstPersonLook) || cameraControl.cinemachineBrain.IsBlending) return;
         var look = player.GetLooking();
         if(look == Vector2.zero || look.magnitude < movementSensitivityThreshold) return;
@@ -121,9 +120,10 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     protected void MotionBlurReticle() {
-        if(motionBlur == null) return;
-        var motionDist = Vector3.Distance(movementReticle.transform.position, baseReticle.transform.position) * 1.5f;
-        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, 180, 360);
+        return;
+        if(motionBlur == null) motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
+        var motionDist = Vector3.Distance(movementReticle.transform.position, baseReticle.transform.position) * motionReticleSensitivity;
+        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, motionBlurRange.x, motionBlurRange.y);
         if(motionDist < 100) motionBlur.enabled.value = false;
         else motionBlur.enabled.value = true; 
         motion = motionDist;

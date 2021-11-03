@@ -10,6 +10,7 @@ public class DialogSystem : MonoBehaviour {
 
     public float AutoSkipAfter = 3f;
     public float typewriterSpeed = 2f;
+    public float narrationVolume = 1f;
 
     private string targetText = "";
 
@@ -56,6 +57,7 @@ public class DialogSystem : MonoBehaviour {
     public GameObject avatarObj, dialogObj;
     public InputActionReference skipBinding;
     public Camera dialogCam;
+    public AudioSource src;
     public Cinemachine.CinemachineVirtualCamera virtualCamera;
 
     private float displayTime = 0, charIncreaseTime = 0, timeUntilNextDialog = 0;
@@ -100,6 +102,7 @@ public class DialogSystem : MonoBehaviour {
     }
 
     public void CompleteTypewriterSentence() {
+        src.Stop();
         if(characterIndex >= targetText.Length) {
             contentIndex++;
             DisplayCurrentDialogIndex();
@@ -129,7 +132,7 @@ public class DialogSystem : MonoBehaviour {
         if(contentIndex >= currentDialog.content.Length) EndDialog();
         else {
             DisplayDialog(currentDialog.content[contentIndex].text, currentDialog.host);
-            //AUDIO PLAY
+            if(currentDialog.content[contentIndex].audio != null) src.PlayOneShot(currentDialog.content[contentIndex].audio, narrationVolume);
         }
     }
 

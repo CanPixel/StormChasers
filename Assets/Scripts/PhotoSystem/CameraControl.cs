@@ -310,7 +310,7 @@ public class CameraControl : MonoBehaviour {
     }
     
     protected bool AlreadyMarked() {
-        return markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
+        return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
     }
 
     private GameObject deliverPicture;

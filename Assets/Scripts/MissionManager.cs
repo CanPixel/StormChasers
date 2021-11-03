@@ -11,7 +11,7 @@ public class MissionManager : MonoBehaviour {
     private ObjectiveCriteria[] activeCriteria;
     [Space(10)]
     public List<Mission> missions = new List<Mission>();
-    public bool startOnStart = false;
+    public bool startOnStart = false, activateAllPhotoItems = false;
     public int missionIndex = 0;
 
     public static MissionManager missionManager;
@@ -229,7 +229,7 @@ public class MissionManager : MonoBehaviour {
                 currentFinished = true;
                 screen.forMission = true;
                 readyForMark.gameObject.SetActive(true);
-                currentObjective.cleared = true;
+                if(currentObjective != null) currentObjective.cleared = true;
             } //else for(int m = 0; m < activeMission.Length; m++) MarkCurrentObjective(m, false);
         }
         return fullCompletion;
@@ -327,7 +327,10 @@ public class MissionManager : MonoBehaviour {
         if(startOnStart) {
             SetCurrentMission(missions[missionIndex]);
             startedMission = true;
-        } else ActivateAll(false);
+        } else {
+            if(activateAllPhotoItems) ActivateAll(true);
+            else ActivateAll(false);
+        }
     }
 
     void Update() {
