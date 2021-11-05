@@ -51,6 +51,7 @@ public class MissionManager : MonoBehaviour {
     private bool startedMission = false;
     public AnimationCurve missionTextCurve;
     public float sequenceSpeed = 2f, sequenceDuration = 2f;
+    public Color missionMarkerColor, deliverMarkerColor;
 
     [Space(10)]
     public Image glow;
@@ -112,6 +113,9 @@ public class MissionManager : MonoBehaviour {
         [HideInInspector] public bool active = false;
         [ReadOnly] public bool cleared = false, hasMarkedPicture = false, delivered = false;
 
+        [Space(5)]
+        public CarInteraction[] triggerLocations;
+
         [Header("Criteria")]
         public bool centerFrameImportant = true;
         [ConditionalHide("centerFrameImportant", true)] [Range(0, 100)] public int minCenterFrame = 50;
@@ -121,6 +125,7 @@ public class MissionManager : MonoBehaviour {
         public BonusObject[] bonuses;
         public BonusObject[] penalties;
 
+        [Space(5)]
         public UnityEvent OnMissionFinished;
 
         public void Enable(bool a) {
@@ -147,15 +152,29 @@ public class MissionManager : MonoBehaviour {
         currentObjective.OnMissionFinished.Invoke();
     }
 
-    public void MarkForCurrentMission(bool mark = true) {
+    public void ShowReadyForMark(bool i) {
+        readyForMark.gameObject.SetActive(i);
+    }
+
+    public void MarkForCurrentMission(bool mark) {
         if(currentObjective == null) return;
         currentObjective.hasMarkedPicture = mark;
-        readyForMark.gameObject.SetActive(!mark);
+        foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(mark);
+    }
+
+    public void DiscardMissionPicture() {
+        if(currentObjective == null) return;
+        for(int m = 0; m < currentObjective.objectives.Length; m++) MarkCurrentObjective(m, false);
+        currentObjective.hasMarkedPicture = false;
+        readyForMark.gameObject.SetActive(false);
+        foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(false);
+        currentObjective.cleared = false;
     }
 
     public void ScanMissionCompletion(Vector3 suckToPos) {
         if(currentObjective == null || !currentObjective.cleared || !currentObjective.hasMarkedPicture || camControl.missionPicture == null) return;
         camControl.DeliverPicture(suckToPos);
+        foreach(var i in currentObjective.triggerLocations) i.CompleteMission();
         readyForMark.gameObject.SetActive(false);
     }
 

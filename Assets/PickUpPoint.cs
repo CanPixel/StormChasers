@@ -2,26 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpPoint : MonoBehaviour
-{
-    public bool hasPickUp;
-    public Transform currentPickUp; 
+public class PickUpPoint : MonoBehaviour {
+    [ReadOnly] public bool hasPickUp;
+    public PickUp currentPickUp; 
 
-    private void Update()
-    {
+    /* private void Update() {
         
-    }
+    } */
 
-    public void ReleasePickUp()
-    {
+    public void ReleasePickUp() {
         currentPickUp.transform.position = new Vector3(transform.position.x, transform.position.y - 2, transform.position.z - 1.2f);
-        currentPickUp.GetComponent<PickUp>().hasBeenPickedUp = false; 
+        currentPickUp.hasBeenPickedUp = false; 
     }
 
-    public void DestroyPickUp()
-    {
+    public void DestroyPickUp() {
         Debug.Log("Destroyouyousefllllfff"); 
-        Destroy(currentPickUp.gameObject);
+        if(currentPickUp.gameObject != null) Destroy(currentPickUp.gameObject);
         hasPickUp = false; 
     }
 }

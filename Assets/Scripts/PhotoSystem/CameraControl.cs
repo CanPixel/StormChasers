@@ -120,6 +120,7 @@ public class CameraControl : MonoBehaviour {
     [Space(10)]
     public LayerMask thirdPersonCull;
     public LayerMask firstPersonCull;
+    public LayerMask midPersonCull;
     public Camera cam;
     public Cinemachine.CinemachineVirtualCamera firstPersonLook;
     public Cinemachine.CinemachineVirtualCamera backLook;
@@ -154,6 +155,7 @@ public class CameraControl : MonoBehaviour {
     [SerializeField] private InputActionReference switchShaderBinding;
     [SerializeField] private InputActionReference boostBinding;
     [SerializeField] private InputActionReference driftBinding;
+    [SerializeField] private InputActionReference navigatePortfolioBinding;
     [SerializeField] private InputActionReference cameraShootBinding;
     [SerializeField] private InputActionReference jumpBinding;
     public ShaderReel shaderReel;
@@ -195,12 +197,35 @@ public class CameraControl : MonoBehaviour {
     private float distTarget = 1f;
 
     void Update() {
-        shaderControlText.text = ("Switch (<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)").ToUpper();
-        camModeText.text = ("(<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>) Camera Mode");
-        camShootText.text = ("(<color='#ff0000'>" + cameraShootBinding.action.GetBindingDisplayString() + "</color>) Take Picture");
-        boostText.text = ("(<color='#ff0000'>" + boostBinding.action.GetBindingDisplayString() + "</color>) Boost");
-        driftText.text = ("(<color='#ff0000'>" + driftBinding.action.GetBindingDisplayString() + "</color>) Drift");
-        jumpText.text = ("(<color='#ff0000'>" + jumpBinding.action.GetBindingDisplayString() + "</color>) Jump");
+        if(camSystem.aim >= 0.4f) {
+            driftText.gameObject.SetActive(true);
+            camShootText.gameObject.SetActive(true);
+            shaderControlText.text = ("(<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)");
+            camModeText.text = ("(<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>) Camera Mode");
+            camShootText.text = ("(<color='#ff0000'>" + cameraShootBinding.action.GetBindingDisplayString() + "</color>) Take Picture");
+            boostText.text = ("(<color='#ff0000'>" + boostBinding.action.GetBindingDisplayString() + "</color>) Boost");
+            driftText.text = ("(<color='#ff0000'>" + driftBinding.action.GetBindingDisplayString() + "</color>) Drift");
+            jumpText.text = ("(<color='#ff0000'>" + jumpBinding.action.GetBindingDisplayString() + "</color>) Jump");
+        } else {
+            camShootText.enabled = true;
+            if(photoBook) {
+                driftText.gameObject.SetActive(false);
+                camShootText.gameObject.SetActive(false);
+                shaderControlText.text = ("(<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)");
+                camModeText.text = ("(<color='#ff0000'>" + navigatePortfolioBinding.action.GetBindingDisplayString() + "</color>) Navigate Portfolio");
+                boostText.text = ("(<color='#ff0000'>" + boostBinding.action.GetBindingDisplayString() + "</color>) Boost");
+                jumpText.text = ("(<color='#ff0000'>" + jumpBinding.action.GetBindingDisplayString() + "</color>) Jump");
+            } else {
+                driftText.gameObject.SetActive(true);
+                camShootText.gameObject.SetActive(false);
+                shaderControlText.text = ("(<color='#ff0000'>" + switchShaderBinding.action.GetBindingDisplayString() + "</color>)");
+                camModeText.text = ("(<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>) Camera Mode");
+                camShootText.text = ("(<color='#ff0000'>" + cameraShootBinding.action.GetBindingDisplayString() + "</color>) Take Picture");
+                boostText.text = ("(<color='#ff0000'>" + boostBinding.action.GetBindingDisplayString() + "</color>) Boost");
+                driftText.text = ("(<color='#ff0000'>" + driftBinding.action.GetBindingDisplayString() + "</color>) Drift");
+                jumpText.text = ("(<color='#ff0000'>" + jumpBinding.action.GetBindingDisplayString() + "</color>) Jump");
+            }
+        }
 
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
@@ -270,7 +295,7 @@ public class CameraControl : MonoBehaviour {
     }
 
     public void MarkPicture() {
-        if(screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission) return;
+        if(currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
 
         //Already marked
         if(AlreadyMarked()) {
@@ -282,7 +307,8 @@ public class CameraControl : MonoBehaviour {
         missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         missionPicture.transform.localScale = basePicScale * physPicScale;
         missionPicture.gameObject.SetActive(true);
-        missionManager.MarkForCurrentMission();
+        missionManager.MarkForCurrentMission(true);
+        missionManager.ShowReadyForMark(false);
         markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
         photoBook = false;
     }
@@ -290,6 +316,7 @@ public class CameraControl : MonoBehaviour {
         missionPicture.sprite = null;
         missionPicture.gameObject.SetActive(false);
         missionManager.MarkForCurrentMission(false);
+        missionManager.ShowReadyForMark(true);
         Destroy(missionPicture.sprite);
         if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || currentSelectedPortfolioPhoto >= screenshots.Count) return;
         screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
@@ -297,15 +324,18 @@ public class CameraControl : MonoBehaviour {
         photoBook = false;
     }
     public void DiscardPicture() {
-        if(screenshots[currentSelectedPortfolioPhoto] == null) return;
+        if(currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || screenshots.Count <= 0) return;
         var obj = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
         obj.GetComponent<Rigidbody>().AddForce(Vector3.up * DiscardForce * 50f);
         obj.transform.localScale = Vector3.one * 0.15f;
         obj.GetComponent<SpriteRenderer>().sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
 
+        if(screenshots[currentSelectedPortfolioPhoto].forMission) missionManager.DiscardMissionPicture();
+
         DeletePicture(currentSelectedPortfolioPhoto, false);
         PortfolioSelection(0);
         UnmarkPicture();
+        missionManager.ShowReadyForMark(false);
         photoBook = false;
     }
     
@@ -317,7 +347,7 @@ public class CameraControl : MonoBehaviour {
     private Vector3 deliverTo;
     private float deliverTime = 0;
     public void DeliverPicture(Vector3 pos) {
-        if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
+        if(screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
         deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
         var rb = deliverPicture.GetComponent<Rigidbody>();
@@ -359,7 +389,10 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void FirstPersonLook() {
-        if(cinemachineBrain.IsLive(firstPersonLook) && !cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
+        if(cinemachineBrain.IsLive(firstPersonLook)) {
+            if(!cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
+            else cam.cullingMask = midPersonCull;
+        }
 
         firstPersonLook.Priority = 15;
         thirdPersonLook.Priority = 10;

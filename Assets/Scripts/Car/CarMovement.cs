@@ -64,7 +64,6 @@ public class CarMovement : MonoBehaviour {
 
     public void OnBrake(InputValue val) {
         brake = val.Get<float>();
-
         SetBrakeLights(brake > 0);
         MoveCalc();
     }
@@ -77,12 +76,14 @@ public class CarMovement : MonoBehaviour {
         MoveCalc();
     }
     public void OnDrift(InputValue val) {
+        if(camControl.photoBook) {
+            drift = 0;
+            return;
+        }
         drift = val.Get<float>();
         MoveCalc();
         if(drift >= 0.5f) {
-            if(steering != 0) {
-                kart.LockDriftDirection(steering);
-            }
+            if(steering != 0) kart.LockDriftDirection(steering);
             else MoveCalc();
         } 
     }
@@ -96,14 +97,12 @@ public class CarMovement : MonoBehaviour {
 
     public void OnBacklook(InputValue val) {
         bool pressed = val.Get<float>() >= 0.4f;
-        //if(camControl.raceCamera) {
         if(pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
         else camControl.BackLook(false);
-        //else if(pressed) camControl.Recenter();
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if(fl != 0) camControl.CycleFilters(fl);
+        if(fl != 0 && !camControl.photoBook) camControl.CycleFilters(fl);
     }
     public void OnChangeFocus(InputValue val) {
         camCanvas.ChangeFocus(val.Get<float>());
@@ -112,13 +111,16 @@ public class CarMovement : MonoBehaviour {
     public void OnLooking(InputValue val) {
         if(camControl.ratingSystem.HasTakenPicture() && !camControl.ratingSystem.IsFading()) return;
         rotationInput = val.Get<Vector2>();
-        camCanvas.SynchLook();
+        //camCanvas.SynchLook();
     }
 
     public void OnCameraAim(InputValue val) {
-        if(camControl.photoBook) return;
-        camControl.camSystem.aim = val.Get<float>();
+        var ding = val.Get<float>();
+
+        if(camControl.photoBook && ding >= 0.5f) camControl.photoBook = false;
+        camControl.camSystem.aim = ding;
         if(camControl.camSystem.aim >= 0.5f) {
+            camControl.photoBook = false;
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
             InputSystem.ResetHaptics();
@@ -137,7 +139,10 @@ public class CarMovement : MonoBehaviour {
 
     /* PhotoBook / Portfoio */
     public void OnPhotoBook(InputValue val) {
-        if(camControl == null) return;
+        if(camControl == null || camControl.camSystem.aim >= 0.4f) {
+            camControl.photoBook = false;
+            return;
+        }
         if(val.Get<float>() >= 0.5f) camControl.photoBook = !camControl.photoBook;
     }
     public void OnScrollPortfolio(InputValue val) {

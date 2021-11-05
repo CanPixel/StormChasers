@@ -50,7 +50,7 @@ public class LockOnSystem : MonoBehaviour {
         }
 
         PhotoBase tar;
-        tar = cameraCanvas.RaycastFromReticle(cameraCanvas.baseReticle.transform);
+        tar = cameraCanvas.RaycastFromReticle();
         sortedScreenObjects = onScreenTargets.Keys.ToList().OrderBy(x => Vector3.Distance(cam.WorldToViewportPoint(FormatVector(x.transform.position)), new Vector3(0.5f, 0.5f, 0))).ToList();
 
         cameraCanvas.highlightedObjectText.text = "";
@@ -88,9 +88,11 @@ public class LockOnSystem : MonoBehaviour {
         bool inDistance = Vector3.Distance(target.transform.position, cam.transform.position) < cameraCanvas.maxDistance;
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
+        var inFocus = GetObjectSharpness(target);
+        bool isInFocus = inFocus >= cameraCanvas.objectInFocusThreshold;
 
-        if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target) && target.active) AddCrosshair(target);
-        else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation)) RemoveCrosshair(target);
+        if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target) && target.active && isInFocus) AddCrosshair(target);
+        else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation || !isInFocus)) RemoveCrosshair(target);
     }
 
     public List<PhotoBase> GetOnScreenObjects() {

@@ -6,12 +6,16 @@ using UnityEngine.Events;
 public class CarInteraction : MonoBehaviour {
     public bool engageMission = false;
     [ConditionalHide("engageMission", true)] public int missionIndex = 0;
+    [ConditionalHide("engageMission", true)] public MeshRenderer missionMarker;
+    [ConditionalHide("engageMission", true)] public GameObject[] destroyOnMissionComplete;
     [ReadOnly] public MissionManager.Mission mission;
 
     private MissionManager missionManager;
 
     void Start() {
         if(missionManager == null) missionManager = MissionManager.missionManager;
+
+        SetMissionMarkerColor(missionManager.missionMarkerColor);
     }
 
     void OnValidate() {
@@ -31,5 +35,23 @@ public class CarInteraction : MonoBehaviour {
                 missionManager.StartMission(mission);
             }
         }
+    }
+
+    protected void SetMissionMarkerColor(Color col) {
+        if(mission != null && missionMarker != null) {
+            missionMarker.material.SetColor("_Color", col);
+            missionMarker.material.SetColor("_EmissionColor", col);
+        }
+    }
+
+    public void SetDeliveryStage(bool i) {
+        if(missionMarker.gameObject == null) return;
+        if(i) SetMissionMarkerColor(missionManager.deliverMarkerColor);   
+        else SetMissionMarkerColor(missionManager.missionMarkerColor);   
+    }
+
+    public void CompleteMission() {
+        foreach(var i in destroyOnMissionComplete) Destroy(i.gameObject);
+        if(missionMarker != null && missionMarker.gameObject != null) Destroy(missionMarker.gameObject);
     }
 }

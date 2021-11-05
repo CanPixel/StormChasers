@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class SharkScript : MonoBehaviour
 {
-
     [HideInInspector] public enum currentState { IDLE, CHASING, ATTACKING, SEARCHING, INVESTIGATE, DYING, RAGDOLLING, CHECKSTATUS, JUMPING, RETURNTOWATER }
     private int sharkState;
 
@@ -26,8 +25,6 @@ public class SharkScript : MonoBehaviour
     private Vector3 idleRotation;
     private Vector3 currentRotation;
     private float currentHeight;
-
-
 
     [Header("Movement")]
     public float idleRotationSpeed = 2f;
@@ -52,7 +49,6 @@ public class SharkScript : MonoBehaviour
     [Header("Components")]
     public Transform target;
     public Transform player;
-    public GameObject pickUpPointObj;
     public PickUpPoint pickUpPoint;
     public Transform respawnPoint;
     public NavMeshAgent agent;
@@ -61,8 +57,7 @@ public class SharkScript : MonoBehaviour
     public GameObject mouth;
     public Transform sharkRotationPoint;
 
-    private void Start()
-    {
+    private void Start() {
         sharkState = (int)currentState.IDLE;
         agent.stoppingDistance = attackDistance;
         startingHeight = transform.position.y;
@@ -73,78 +68,57 @@ public class SharkScript : MonoBehaviour
         Debug.Log(startingPosition);
     }
 
-    void Update()
-    {
-
-        switch (sharkState)
-        {
+    void Update() {
+        switch (sharkState) {
             case (int)currentState.IDLE:
                 CheckForTarget();
                 IdleSwimming();
-
                 break;
-
             case (int)currentState.CHASING:
                 CheckForTarget();
                 ChaseTarget();
                 LookAtTarget();
                 break;
-
             case (int)currentState.ATTACKING:
                 CheckForTarget();
                 LookAtTarget();
                 AttackPlayer();
                 break;
-
             case (int)currentState.JUMPING:
                 LookAtTarget();
                 ChaseTarget();
                 CheckForTarget();
                 break;
-
             case (int)currentState.RETURNTOWATER:
                 ReturnToIdle();
                 break;
-
         }
     }
 
-    void CheckForFood()
+/*     void CheckForFood()
     {
 
-    }
+    } */
 
-    void CheckForTarget()
-    {
-
-        if (pickUpPoint.hasPickUp && !playerInFountain)
-        {
+    void CheckForTarget() {
+        if (pickUpPoint.hasPickUp && !playerInFountain) {
             canJump = true;
             target = pickUpPoint.transform;
-        }
-        else
-        {
+        } else {
             canJump = false;
             target = player;
         }
 
-
-        if (playerInFountain)
-        {
+        if (playerInFountain){
             Debug.Log("PlayerInFountain");
             playerJumpingOverFountain = false;
             jumpingTowardsPlayer = false;
             target = player;
-
             sharkState = (int)currentState.CHASING;
-        }
-        else if (playerJumpingOverFountain && canJump)
-        {
+        } else if (playerJumpingOverFountain && canJump) {
             Debug.Log("SharkJumpingToPlayer");
             sharkState = (int)currentState.JUMPING;
-        }
-        else if (!playerJumpingOverFountain && jumpingTowardsPlayer && !playerInFountain || playerHasBeenEaten)
-        {
+        } else if (!playerJumpingOverFountain && jumpingTowardsPlayer && !playerInFountain || playerHasBeenEaten) {
             Debug.Log("ReturnToTank");
 
             playerHasBeenEaten = false;
@@ -152,18 +126,14 @@ public class SharkScript : MonoBehaviour
             //currentHeight = transform.position.y; 
 
             sharkState = (int)currentState.RETURNTOWATER;
-        }
-        else
-        {
-            Debug.Log("IdleState");
+        } else {
+//            Debug.Log("IdleState");
             sharkState = (int)currentState.IDLE;
         }
     }
 
-    void ReturnToIdle()
-    {
-        if (!checkCurrentPos)
-        {
+    void ReturnToIdle() {
+        if (!checkCurrentPos) {
             //currentHeight = transform.position.y;
             currentPosition = transform.position;
             currentRotation = transform.eulerAngles;
@@ -172,26 +142,21 @@ public class SharkScript : MonoBehaviour
         }
 
         //Return shark to idle pos
-        if (ReturnToIdleTimer < IdleMoveSpeed)
-        {
+        if (ReturnToIdleTimer < IdleMoveSpeed) {
             idlePosition = Vector3.Lerp(currentPosition, new Vector3(startingPosition.x, startingHeight, startingPosition.z), ReturnToIdleTimer / IdleMoveSpeed);
             idleRotation = Vector3.Lerp(currentRotation, new Vector3(0, 37, transform.eulerAngles.z), ReturnToIdleTimer / IdleMoveSpeed);
 
             ReturnToIdleTimer += Time.deltaTime;
             transform.eulerAngles = idleRotation;
             transform.position = idlePosition;
-        }
-        else
-        {
+        } else {
             ReturnToIdleTimer = 0f;
             checkCurrentPos = false;
             sharkState = (int)currentState.IDLE;
         }
     }
 
-
-    void IdleSwimming()
-    {
+    void IdleSwimming() {
         Vector3 speed = new Vector3(0, idleRotationSpeed, 0);
         sharkRotationPoint.Rotate(speed * Time.deltaTime);
 
@@ -200,12 +165,8 @@ public class SharkScript : MonoBehaviour
         anim.SetBool("MouthClosed", false);
     }
 
-
-    void LookAtTarget()
-    {
-        if (playerInFountain || playerJumpingOverFountain)
-        {
-
+    void LookAtTarget() {
+        if (playerInFountain || playerJumpingOverFountain) {
             Vector3 targetDirection = (target.transform.position - transform.position).normalized;
 
             float singleStep = 50f * Time.deltaTime; //step distance per call
@@ -215,34 +176,24 @@ public class SharkScript : MonoBehaviour
         }
     }
 
-
-    void ChaseTarget()
-    {
+    void ChaseTarget() {
         targetDistance = Vector3.Distance(target.transform.position, mouth.transform.position);
         targetPos = target.transform.position;
 
-        if (playerInFountain)
-        {
+        if (playerInFountain) {
             float step = (chaseMoveSpeed * extraBiteSpeed) * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x, targetPos.y + 4, targetPos.z), step);
 
             //Chase the player 
-            if (targetDistance < mouthOpenDistance - 5)
-            {
-                if (targetDistance > attackDistance)
-                    anim.SetBool("MouthOpen", true);
-                else
-                {
-
+            if (targetDistance < mouthOpenDistance - 5) {
+                if (targetDistance > attackDistance) anim.SetBool("MouthOpen", true);
+                else {
                     anim.SetBool("MouthOpen", false);
                     anim.SetBool("MouthClosed", true);
                     AttackPlayer();
                 }
-
             }
-        }
-        else if (playerJumpingOverFountain)
-        {
+        } else if (playerJumpingOverFountain) {
             jumpingTowardsPlayer = true;
 
             // calculate distance to move  
@@ -250,12 +201,9 @@ public class SharkScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x - 10, targetPos.y + 6, targetPos.z), step);
             //transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x , targetPos.y, targetPos.z), step);
 
-            if (targetDistance < mouthOpenDistance)
-            {
-                if (targetDistance > attackDistance)
-                    anim.SetBool("MouthOpen", true);
-                else
-                {
+            if (targetDistance < mouthOpenDistance) {
+                if (targetDistance > attackDistance) anim.SetBool("MouthOpen", true);
+                else {
                     anim.SetBool("OpenMouth", false);
                     anim.SetBool("MouthClosed", true);
                     pickUpPoint.DestroyPickUp();
@@ -265,28 +213,22 @@ public class SharkScript : MonoBehaviour
         }
     }
 
-
-    void AttackPlayer()
-    {
+    void AttackPlayer() {
         //Check if the player is within attack range 
         Collider[] playerInMouth = Physics.OverlapSphere(mouth.transform.position, 1.5f);
 
-        foreach (Collider player in playerInMouth)
-        {
-            if (player.gameObject.name == "PLAYER")
-            {
+        foreach (Collider player in playerInMouth) {
+            if (player.gameObject.name == "PLAYER") {
                 if (pickUpPoint.hasPickUp) pickUpPoint.DestroyPickUp();
                 target = player.transform;
                 playerHasBeenEaten = true;
                 sharkState = (int)currentState.RETURNTOWATER;
                 StartCoroutine("RespawnPlayer");
             }
-
         }
     }
 
-    IEnumerator RespawnPlayer()
-    {
+    IEnumerator RespawnPlayer() {
         player.gameObject.SetActive(false);
         playerInFountain = false;
 
@@ -297,5 +239,3 @@ public class SharkScript : MonoBehaviour
         playerInFountain = false;
     }
 }
-
-

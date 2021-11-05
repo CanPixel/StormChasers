@@ -1,20 +1,12 @@
 
-[- Wat gebeurt er als portfolio op capaciteit limiet zit? Photo replacement?]
 
-- Decoupling the objectives [Invidually rated]
-- Tagless Manual Obj still work?
+
+- Portfolio camera 
+
+
+
 - DYNAMIC DISTANCE / SCALING ---> Object still visible on picture? Long Distance + small obj
-                - DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC / AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
-- FOCUS BEPAALT OOK MAIN SUBJECT. NIET ALLEEN HOE CENTERFRAME
-
-
-
-- Scrolling/Selection with d pad in portfolio
-
-- You should be able to pickup discarded images
-
-- Mission gets crossed after delivering picture
-- Physical picture gets sucked to mission marker
+                - AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
 
 
 
@@ -23,57 +15,11 @@
 
 
 
-- Mission bonus (+) & penalty (-)
-- Global bonus (+) & penalty (-)
-- Combination of tags could give combos 
 
 
 
 
 
-
-======= PICTURE GRADING
-- 1 Qualifier stage per keer (don't mix too many qualifiers)
-- Sequence of cinematics / volgordesysteem
-- Slowmotion carries on during grading
-- Grade system based on school-system (A tm F)
-- FOCUS is the only grade that is consistently important.
-- MOTION INST & CENTERFRAME are togglable 
-- BORDERS OF PICTURE === COLOR === TOTAL SCORE    
-- PICTURE NAME contains data about keypoints/how much of the object is captured, some bonus categories like DIRTY become the adjective.
-        DIRTY TOWER (1/3)
-        [Buzz-word category / genre / bonus] [Main Subject] [Amount of keypoints in frame]
-
-
-
-- In de [[[[BONUS]]]] stage (na focus stage), wordt een minimumwaarde voor focus gebruikt om te bepalen of bonus items uberhaupt REGISTREREN
-en uberhaupt dus invloed hebben op grading 
-AKA
-Minimum focus per non-important object on screen decides whether grading happens.
-
-
-
-
-===== ANIMATION SEQUENCE
-- [START]
-- MAIN SUBJECT STAGE
-- FOCUS STAGE 
-- [[[[[[[[[[[OPTIONALS / CONDITIONALS]]]]]]]]]]]
-- [[[[BONUS]]]]
-        Bonus Objects (Score reduction / increase)
-        Eventuele Mission bonus
-- [END ANIM]
-        Physical copy of photo, going in portfolio / exiting screen
-
-
-
-== [Optional]
-- Physical building ghost mode placement of polaroids
-- wobble on land visual + better haptics
-- vehicle damage fixen + ontrigger?
-- Screen diagonal split for cutscene / different visuals
-- destructible objects haptic feedback + sound
-- Dynamic sizing crosshairs based on distance                   [MARKERS FOR MISSIONS?]
 
   - STUNT BONUSES
                 - 180 flipped photo bonus (transform.up)        [STUNT]             (barrel roll!)
@@ -96,4 +42,14 @@ AUDIO:
 
 ???? - 2 SHADERS AT A TIME BLENDING - Continu 
 
+
+
+
+
+
+CHANGES:
+- DEPTH OF FIELD SWEEPING RANGE MORE DYNAMIC 
+- minimized Shader Reel screen space usage
+- Focus values are now consistent across SHADERS
+-   
 

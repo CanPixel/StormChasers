@@ -59,6 +59,9 @@ public class DialogSystem : MonoBehaviour {
     public Camera dialogCam;
     public AudioSource src;
     public Cinemachine.CinemachineVirtualCamera virtualCamera;
+    private Cinemachine.CinemachineOrbitalTransposer orbitalCam;
+    private Cinemachine.CinemachineComposer composerCam;
+    private Vector3 baseFollowOffset, baseTrackedOffset;
 
     private float displayTime = 0, charIncreaseTime = 0, timeUntilNextDialog = 0;
     private int characterIndex = 0, contentIndex = 0;
@@ -71,6 +74,11 @@ public class DialogSystem : MonoBehaviour {
         baseScale = transform.localScale.x;
         transform.localPosition = new Vector3(transform.localPosition.x, baseY * 2, transform.localPosition.z);
         foreach(var i in dialogs) dialogByName.Add(i.dialogName.ToLower().Trim(), i); 
+
+        orbitalCam = virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
+        composerCam = virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineComposer>();
+        baseFollowOffset = orbitalCam.m_FollowOffset;
+        baseTrackedOffset = composerCam.m_TrackedObjectOffset;
     }
     
     void Update() {
@@ -125,6 +133,8 @@ public class DialogSystem : MonoBehaviour {
         targetText = content;
         characterNameText.text = character.name;
         virtualCamera.m_Follow = virtualCamera.m_LookAt = character.target;
+        composerCam.m_TrackedObjectOffset = baseTrackedOffset + character.rotOffset;
+        orbitalCam.m_FollowOffset = baseFollowOffset + character.posOffset;
         triggered = true;
     }
     public void DisplayCurrentDialogIndex() {
