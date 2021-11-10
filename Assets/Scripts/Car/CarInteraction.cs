@@ -31,7 +31,7 @@ public class CarInteraction : MonoBehaviour {
         if(col.tag == "Player") {
             onEnter.Invoke();
             if(engageMission) {
-                missionManager.ScanMissionCompletion(transform.position);
+                if(missionManager.activeMission == mission) missionManager.ScanMissionCompletion(transform.position);
                 missionManager.StartMission(mission);
             }
         }
@@ -45,7 +45,7 @@ public class CarInteraction : MonoBehaviour {
     }
 
     public void SetDeliveryStage(bool i) {
-        if(missionMarker.gameObject == null) return;
+        if(missionMarker == null || missionMarker.gameObject == null) return;
         if(i) SetMissionMarkerColor(missionManager.deliverMarkerColor);   
         else SetMissionMarkerColor(missionManager.missionMarkerColor);   
     }

@@ -76,7 +76,7 @@ public class CarMovement : MonoBehaviour {
         MoveCalc();
     }
     public void OnDrift(InputValue val) {
-        if(camControl.photoBook) {
+        if(camControl.journal) {
             drift = 0;
             return;
         }
@@ -88,11 +88,21 @@ public class CarMovement : MonoBehaviour {
         } 
     }
     public void OnJump(InputValue val) {
+        if(camControl.journal && val.Get<float>() >= 0.5f) {
+            camControl.JournalSelect();
+            return;
+        }
         jump = val.Get<float>();
         if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
     }
     public void OnBoost(InputValue val) {
-        Boost(val.Get<float>());
+        var valu = val.Get<float>();
+        if(camControl.journal && valu >= 0.5f) {
+            if(camControl.photobook) camControl.ShowJournalBaseScreen();
+            else camControl.journal = false;
+            return;
+        }
+        Boost(valu);
     }
 
     public void OnBacklook(InputValue val) {
@@ -102,7 +112,10 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if(fl != 0 && !camControl.photoBook) camControl.CycleFilters(fl);
+        if(fl != 0) {
+            if(camControl.journal) camControl.ShowJournalInfo(); 
+            else camControl.CycleFilters(fl);
+        }
     }
     public void OnChangeFocus(InputValue val) {
         camCanvas.ChangeFocus(val.Get<float>());
@@ -117,10 +130,10 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraAim(InputValue val) {
         var ding = val.Get<float>();
 
-        if(camControl.photoBook && ding >= 0.5f) camControl.photoBook = false;
         camControl.camSystem.aim = ding;
         if(camControl.camSystem.aim >= 0.5f) {
-            camControl.photoBook = false;
+            camControl.ShowJournalBaseScreen();
+            camControl.journal = camControl.photobook = false;
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
             InputSystem.ResetHaptics();
@@ -140,23 +153,26 @@ public class CarMovement : MonoBehaviour {
     /* PhotoBook / Portfoio */
     public void OnPhotoBook(InputValue val) {
         if(camControl == null || camControl.camSystem.aim >= 0.4f) {
-            camControl.photoBook = false;
+            camControl.journal = camControl.photobook = false;
             return;
         }
-        if(val.Get<float>() >= 0.5f) camControl.photoBook = !camControl.photoBook;
+        if(val.Get<float>() >= 0.5f) {
+            camControl.journal = !camControl.journal;
+            if(camControl.journal) camControl.OpenJournal();
+            else camControl.ShowJournalBaseScreen();
+        }
     }
     public void OnScrollPortfolio(InputValue val) {
-        if(camControl == null || !camControl.photoBook) return;
-        var v = val.Get<float>();
-        if(v != 0) camControl.PortfolioSelection(v);
+        if(camControl == null || !camControl.journal) return;
+        var v = val.Get<Vector2>();
+        if(v != Vector2.zero) {
+            if(!camControl.photobook) camControl.JournalScroll(v);
+            else camControl.PortfolioSelection(v);
+        }
     }
     public void OnDiscardPicture(InputValue val) {
-        if(camControl == null || !camControl.photoBook) return;
+        if(camControl == null || !camControl.journal || !camControl.photobook) return;
         if(val.Get<float>() >= 0.5f) camControl.DiscardPicture();
-    }
-    public void OnMarkPictureForMission(InputValue val) {
-        if(camControl == null || !camControl.photoBook) return;
-        if(val.Get<float>() >= 0.5f) camControl.MarkPicture();
     }
 
     protected void Jump() {

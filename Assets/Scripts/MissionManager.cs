@@ -11,6 +11,7 @@ public class MissionManager : MonoBehaviour {
     private ObjectiveCriteria[] activeCriteria;
     [Space(10)]
     public List<Mission> missions = new List<Mission>();
+    private Dictionary<string, Mission> missionsByName = new Dictionary<string, Mission>();
     public bool startOnStart = false, activateAllPhotoItems = false;
     public int missionIndex = 0;
 
@@ -94,8 +95,9 @@ public class MissionManager : MonoBehaviour {
     [System.Serializable]
     public class ObjectiveCriteria {
         public string text = "Objective Criteria";
-        public bool mainSubject = false;
-        [ConditionalHide("mainSubject", false)] public bool optional = false;
+        //public bool mainSubject = false;
+        //[ConditionalHide("mainSubject", false)] 
+        public bool optional = false;
         public bool penalty = false;
         [ReadOnly] public bool finished = false;
         [Space(5)]
@@ -106,7 +108,7 @@ public class MissionManager : MonoBehaviour {
 
     [System.Serializable]
     public class Mission {
-        public string name;
+        public string name, description;
         public Sprite icon;
 
         public ObjectiveCriteria[] objectives;
@@ -150,6 +152,7 @@ public class MissionManager : MonoBehaviour {
         if(currentObjective == null) return;
         currentObjective.delivered = true;
         currentObjective.OnMissionFinished.Invoke();
+        camControl.JournalFinish();
     }
 
     public void ShowReadyForMark(bool i) {
@@ -159,7 +162,7 @@ public class MissionManager : MonoBehaviour {
     public void MarkForCurrentMission(bool mark) {
         if(currentObjective == null) return;
         currentObjective.hasMarkedPicture = mark;
-        foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(mark);
+        if(currentObjective.triggerLocations != null && currentObjective.triggerLocations.Length > 0) foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(mark);
     }
 
     public void DiscardMissionPicture() {
@@ -202,13 +205,11 @@ public class MissionManager : MonoBehaviour {
 
             if(/* activeCriteria[i].mainSubject &&*/ ComparePhotoItem(pic.item, key)) {
                 missionCleared[i] = true;
-                continue;
-            }
-
-           // if(!activeMission[i].mainSubject) {
+            } else {
+            // if(!activeMission[i].mainSubject) {
                 if(isOptional) missionCleared[i] = true;
                 else {
-                     if(isPenalty) {
+                        if(isPenalty) {
                         missionCleared[i] = true;
                         foreach(var m in pic.subScore) {
                             if(ComparePhotoItem(m.item, key) || ComparePhotoItem(pic.item, key)) {
@@ -218,6 +219,7 @@ public class MissionManager : MonoBehaviour {
                         }
                     } else {
                         foreach(var m in pic.subScore) {
+                            Debug.Log(m.item.name);
                             if(ComparePhotoItem(m.item, key)) {
                                 missionCleared[i] = true;
                                 break;
@@ -225,15 +227,11 @@ public class MissionManager : MonoBehaviour {
                         }
                     }
                 }
-        //    }
-
-            //var end = "Result: ";
-            bool completed = true;
-            foreach(var m in missionCleared) {
-              //  end += m + " ";
-                if(!m) completed = false;
             }
-            //Debug.Log(end);
+    //    }
+
+            bool completed = true;
+            foreach(var m in missionCleared) if(!m) completed = false;
 
             //Mission Checkmarks
             for(int m = 0; m < activeCriteria.Length; m++) {
@@ -241,11 +239,13 @@ public class MissionManager : MonoBehaviour {
           /*       activeMission[m].finished = true;
                 criteriaSplashes[m].Clear(); */
                 MarkCurrentObjective(m, true);
+                camControl.JournalMarkObjective(m);
             }
 
             if(completed) {
                 fullCompletion = true;
                 currentFinished = true;
+                screen.missionReference = currentObjective;
                 screen.forMission = true;
                 readyForMark.gameObject.SetActive(true);
                 if(currentObjective != null) currentObjective.cleared = true;
@@ -260,8 +260,8 @@ public class MissionManager : MonoBehaviour {
         else criteriaSplashes[m].Reset();
     }
 
-    protected bool ComparePhotoItem(PhotoBase item1, string key) {
-        return item1.tags.ToLower().Trim().Contains(key.ToLower().Trim());
+    protected bool ComparePhotoItem(PhotoBase item, string key) {
+        return item.tags.ToLower().Trim() == key.ToLower().Trim() || item.tags.ToLower().Trim().Contains(key.ToLower().Trim());
     }
 
     public static List<PhotoItem> EnableBySearch(string key, bool b) {
@@ -280,12 +280,15 @@ public class MissionManager : MonoBehaviour {
         foreach(var i in lockOnSystem.GetAllTargets()) i.active = j;
     }
 
-    private void SetCurrentMission(Mission miss) {
+    public void SetCurrentMission(Mission miss, bool alreadyInJournal = false) {
         foreach(var i in lockOnSystem.GetAllTargets()) i.active = false;
         foreach(var i in missions) i.Enable(false);
 
+        readyForMark.gameObject.SetActive(false);
+
         currentObjective = miss;
-        startSequence = 0;
+        if(!alreadyInJournal) startSequence = 0;
+        else startSequence = sequenceDuration;
         currentFinished = false;
         currentObjective.active = true;
         activeMission = miss;
@@ -300,7 +303,7 @@ public class MissionManager : MonoBehaviour {
         for(int i = 0; i < criteriaSplashes.Length; i++) {
             if(miss.objectives.Length <= i) {
                 criteriaSplashes[i].Disable();
-                break;
+                continue;
             }
             criteriaSplashes[i].Load(miss.objectives[i]);
         }
@@ -321,11 +324,18 @@ public class MissionManager : MonoBehaviour {
             }
         }
     }
-    public void StartMission(Mission i) {
-        if(i.cleared || currentObjective == i) return;
+    public void StartMission(Mission i, bool sounds = true) {
+        if(i.cleared || currentObjective == i || missionsByName.ContainsKey(i.name.ToLower().Trim())) return;
         SetCurrentMission(i);
-        SoundManager.PlayUnscaledSound("PhotoShoot");
-        SoundManager.PlayUnscaledSound("CamMode");
+
+        if(sounds) {
+            SoundManager.PlayUnscaledSound("PhotoShoot");
+            SoundManager.PlayUnscaledSound("CamMode");
+        }
+
+        missionsByName.Add(i.name.Trim().ToLower(), i);
+        camControl.AddMissionToJournal(i);
+        camControl.ForceSelect(i);
     }
 
     void OnValidate() {
@@ -344,7 +354,7 @@ public class MissionManager : MonoBehaviour {
         readyForMark.gameObject.SetActive(false);
 
         if(startOnStart) {
-            SetCurrentMission(missions[missionIndex]);
+            StartMission(missions[missionIndex], false);
             startedMission = true;
         } else {
             if(activateAllPhotoItems) ActivateAll(true);
@@ -353,16 +363,13 @@ public class MissionManager : MonoBehaviour {
     }
 
     void Update() {
-        readyForMark.text = "<size='121'>Ya got the picture!</size>\nMark it in your portfolio (<color='#ff0000'>" + portfolioButton.action.GetBindingDisplayString() + "</color>)";
-
         if(startedMission) {
             startSequence += Time.unscaledDeltaTime * sequenceSpeed;
-
             if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one * ((currentObjective != null && currentObjective.cleared) ? (missionParentScale + 0.2f) : missionParentScale), Time.unscaledDeltaTime * 5f);
         } else missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.zero, Time.unscaledDeltaTime * 5f);
 
         if(startSequence > sequenceDuration) missionName.text = "";
-        else if(currentObjective != null) missionName.text = currentObjective.name;
+        else if(currentObjective != null) missionName.text = "<color='#ff0000'>" + currentObjective.name + "</color>\nAdded to journal!";
 
         missionName.transform.localScale = missionTextCurve.Evaluate(startSequence) / 2f * Vector3.one;
         missionName.color = new Color(missionName.color.r, missionName.color.g, missionName.color.b, Mathf.Lerp(missionName.color.a, startSequence * 2f, Time.deltaTime * 8f * sequenceSpeed));

@@ -1,9 +1,33 @@
 
 
+- way of showing [OPTIONAL] TEXT before objective 
 
-- Portfolio camera 
 
 
+- unmarking picture caused bugged menu
+
+
+- Without missions being active, the photobook should scan through pictures, sort them, give them aproppriate border colors.
+
+
+
+
+
+- 3rd person mission markers should enlighten around the garage opening / trigger. Arrows pointing to gap like racing arcade thing
+
+- Hold RB for X seconds is skip entire dialog
+
+- Portfolio /// split screen 
+
+
+
+
+
+
+
+
+
+- Focus tweaking
 
 - DYNAMIC DISTANCE / SCALING ---> Object still visible on picture? Long Distance + small obj
                 - AUTOMATICALLY BIGGER ON CLOSE RANGE OBJECTS
