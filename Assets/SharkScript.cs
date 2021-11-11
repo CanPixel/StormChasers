@@ -247,7 +247,7 @@ public class SharkScript : MonoBehaviour
 
             // calculate distance to move  
             float step = jumpSpeed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x - 10, targetPos.y + 6, targetPos.z), step);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x - 10, targetPos.y + 7, targetPos.z), step);
             //transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPos.x , targetPos.y, targetPos.z), step);
 
             if (targetDistance < mouthOpenDistance)
