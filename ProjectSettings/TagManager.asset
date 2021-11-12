@@ -9,6 +9,8 @@ TagManager:
   - AREA
   - PickUp
   - MissionManager
+  - Shark
+  - SharkWaypoint
   layers:
   - Default
   - TransparentFX
@@ -31,7 +33,7 @@ TagManager:
   - NOBACK
   - DIALOG
   - IGNOREMINIMAP
-  - 
+  - SHARKWAYPOINT
   - 
   - 
   - 

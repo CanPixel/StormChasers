@@ -19,6 +19,7 @@ public class CarMovement : MonoBehaviour {
     public ArcadeKart kart;
 
     public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
+    public float jumpCheckHeight = 2f;
 
     private float baseSuspension;
     protected Vector2 moveVec = Vector2.zero;
@@ -34,9 +35,11 @@ public class CarMovement : MonoBehaviour {
 
     private Gamepad gamepad;
     private float hapticDuration = 0;
-    public LayerMask groundCheckLayerMask;
+
+    private float baseAirborneReorient;
 
     void Start() {
+        baseAirborneReorient = kart.AirborneReorientationCoefficient;
         baseSuspension = kart.SuspensionHeight;
         gamepad = Gamepad.current;
         controls = new Controls();
@@ -49,6 +52,8 @@ public class CarMovement : MonoBehaviour {
     }
 
     void Update() {
+        kart.AirborneReorientationCoefficient = baseAirborneReorient * kart.AirPercent;
+
         if(steering == 0 && drift >= 0.5f) {
             kart.ActivateDriftVFX(true);
             kart.IsDrifting = true;
@@ -93,7 +98,8 @@ public class CarMovement : MonoBehaviour {
             return;
         }
         jump = val.Get<float>();
-        if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
+        //if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
+        if(jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
     }
     public void OnBoost(InputValue val) {
         var valu = val.Get<float>();

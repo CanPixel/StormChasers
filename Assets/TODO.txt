@@ -2,11 +2,6 @@
 
 - way of showing [OPTIONAL] TEXT before objective 
 
-
-
-- unmarking picture caused bugged menu
-
-
 - Without missions being active, the photobook should scan through pictures, sort them, give them aproppriate border colors.
 
 
