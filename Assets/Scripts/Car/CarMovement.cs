@@ -24,7 +24,6 @@ public class CarMovement : MonoBehaviour
     public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
     public float jumpCheckHeight = 2f;
 
-    public float jumpCheckHeight;
     private float baseAirbornReorient;
 
     private float baseSuspension;
@@ -46,7 +45,8 @@ public class CarMovement : MonoBehaviour
 
     private float baseAirborneReorient;
 
-    void Start() {
+    void Start()
+    {
         baseAirborneReorient = kart.AirborneReorientationCoefficient;
         baseSuspension = kart.SuspensionHeight;
         gamepad = Gamepad.current;
@@ -60,10 +60,12 @@ public class CarMovement : MonoBehaviour
         SetBrakeLights(false);
     }
 
-    void Update() {
+    void Update()
+    {
         kart.AirborneReorientationCoefficient = baseAirborneReorient * kart.AirPercent;
 
-        if(steering == 0 && drift >= 0.5f) {
+        if (steering == 0 && drift >= 0.5f)
+        {
             kart.ActivateDriftVFX(true);
             kart.IsDrifting = true;
         }
@@ -92,51 +94,61 @@ public class CarMovement : MonoBehaviour
         steering = val.Get<float>();
         MoveCalc();
     }
-    public void OnDrift(InputValue val) {
-        if(camControl.journal) {
+    public void OnDrift(InputValue val)
+    {
+        if (camControl.journal)
+        {
             drift = 0;
             return;
         }
         drift = val.Get<float>();
         MoveCalc();
-        if(drift >= 0.5f) {
-            if(steering != 0) kart.LockDriftDirection(steering);
+        if (drift >= 0.5f)
+        {
+            if (steering != 0) kart.LockDriftDirection(steering);
             else MoveCalc();
         }
     }
-    public void OnJump(InputValue val) {
-        if(camControl.journal && val.Get<float>() >= 0.5f) {
+    public void OnJump(InputValue val)
+    {
+        if (camControl.journal && val.Get<float>() >= 0.5f)
+        {
             camControl.JournalSelect();
             return;
         }
         jump = val.Get<float>();
         //if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
-        if(jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
+        if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
     }
-    public void OnBoost(InputValue val) {
+    public void OnBoost(InputValue val)
+    {
         var valu = val.Get<float>();
-        if(camControl.journal && valu >= 0.5f) {
-            if(camControl.photobook) camControl.ShowJournalBaseScreen();
+        if (camControl.journal && valu >= 0.5f)
+        {
+            if (camControl.photobook) camControl.ShowJournalBaseScreen();
             else camControl.journal = false;
             return;
         }
         Boost(valu);
     }
 
-    public void OnBacklook(InputValue val) {
+    public void OnBacklook(InputValue val)
+    {
         bool pressed = val.Get<float>() >= 0.4f;
-        if(pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
+        if (pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
         else camControl.BackLook(false);
     }
     public void OnCycleFilter(InputValue val)
     {
         var fl = val.Get<float>();
-        if(fl != 0) {
-            if(camControl.journal) camControl.ShowJournalInfo(); 
+        if (fl != 0)
+        {
+            if (camControl.journal) camControl.ShowJournalInfo();
             else camControl.CycleFilters(fl);
         }
     }
-    public void OnChangeFocus(InputValue val) {
+    public void OnChangeFocus(InputValue val)
+    {
         camCanvas.ChangeFocus(val.Get<float>());
     }
 
@@ -147,11 +159,13 @@ public class CarMovement : MonoBehaviour
         //camCanvas.SynchLook();
     }
 
-    public void OnCameraAim(InputValue val) {
+    public void OnCameraAim(InputValue val)
+    {
         var ding = val.Get<float>();
 
         camControl.camSystem.aim = ding;
-        if(camControl.camSystem.aim >= 0.5f) {
+        if (camControl.camSystem.aim >= 0.5f)
+        {
             camControl.ShowJournalBaseScreen();
             camControl.journal = camControl.photobook = false;
             camControl.AnimateCameraMascotte();
@@ -169,32 +183,38 @@ public class CarMovement : MonoBehaviour
         if (camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
 
-        if(camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
+        if (camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
     }
 
     /* PhotoBook / Portfoio */
-    public void OnPhotoBook(InputValue val) {
-        if(camControl == null || camControl.camSystem.aim >= 0.4f) {
+    public void OnPhotoBook(InputValue val)
+    {
+        if (camControl == null || camControl.camSystem.aim >= 0.4f)
+        {
             camControl.journal = camControl.photobook = false;
             return;
         }
-        if(val.Get<float>() >= 0.5f) {
+        if (val.Get<float>() >= 0.5f)
+        {
             camControl.journal = !camControl.journal;
-            if(camControl.journal) camControl.OpenJournal();
+            if (camControl.journal) camControl.OpenJournal();
             else camControl.ShowJournalBaseScreen();
         }
     }
-    public void OnScrollPortfolio(InputValue val) {
-        if(camControl == null || !camControl.journal) return;
+    public void OnScrollPortfolio(InputValue val)
+    {
+        if (camControl == null || !camControl.journal) return;
         var v = val.Get<Vector2>();
-        if(v != Vector2.zero) {
-            if(!camControl.photobook) camControl.JournalScroll(v);
+        if (v != Vector2.zero)
+        {
+            if (!camControl.photobook) camControl.JournalScroll(v);
             else camControl.PortfolioSelection(v);
         }
     }
-    public void OnDiscardPicture(InputValue val) {
-        if(camControl == null || !camControl.journal || !camControl.photobook) return;
-        if(val.Get<float>() >= 0.5f) camControl.DiscardPicture();
+    public void OnDiscardPicture(InputValue val)
+    {
+        if (camControl == null || !camControl.journal || !camControl.photobook) return;
+        if (val.Get<float>() >= 0.5f) camControl.DiscardPicture();
     }
 
     protected void Jump()
@@ -203,15 +223,17 @@ public class CarMovement : MonoBehaviour
         SoundManager.PlaySound("Jump", 0.15f);
         HapticFeedback(0.4f, 0.3f, 0.2f);
     }
-    protected void Boost(float boost) {
-        if(camControl.camSystem.aim >= 0.5f) {
+    protected void Boost(float boost)
+    {
+        if (camControl.camSystem.aim >= 0.5f)
+        {
             boostScript.EndBoostState();
-            if(boost > 0.35f) camCanvas.ChangeSpeedToggle();
+            if (boost > 0.35f) camCanvas.ChangeSpeedToggle();
             return;
         }
 
-        if(boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) boostScript.StartBoostState();
-        else if(boost < 0.3f) boostScript.EndBoostState();
+        if (boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) boostScript.StartBoostState();
+        else if (boost < 0.3f) boostScript.EndBoostState();
     }
 
     public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1)
