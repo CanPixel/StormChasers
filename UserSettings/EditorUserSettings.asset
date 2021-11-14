@@ -6,6 +6,7 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedScenePath-0:
+<<<<<<< HEAD
       value: 22424703114646680e0b0227036c7b15051e1f24293a66032e2c1336acf53a31f6fe
       flags: 0
     RecentlyUsedScenePath-1:
@@ -13,11 +14,21 @@ EditorUserSettings:
       flags: 0
     RecentlyUsedScenePath-2:
       value: 22424703114646680e0b0227036c72111a1b2b292926237e38271427fb
+=======
+      value: 224247031146467f14000d2f19201223061b113e3f2b34352827503ee3f3203df0a817faf43f2b2f7631ec390a3b1270df0b0005b81e04020517
+      flags: 0
+    RecentlyUsedScenePath-1:
+      value: 22424703114646680e0b0227036c72111a1b2b292926237e38271427fb
+      flags: 0
+    RecentlyUsedScenePath-2:
+      value: 224247031146466b011b0b2b1e30102a1f150a2b63042f2138201920add33535f2eb33faa8093e31290eea0f073b0f3abc1f0702e212
+>>>>>>> BREDAMERGE
       flags: 0
     RecentlyUsedScenePath-3:
       value: 22424703114646680e0b0227036c72111f19563f22213229
       flags: 0
     RecentlyUsedScenePath-4:
+<<<<<<< HEAD
       value: 224247031146466b011b0b2b1e30102a1f150a2b63042f2138201920add33535f2eb33faa8093e31290eea0f073b0f3abc1f0702e212
       flags: 0
     RecentlyUsedScenePath-5:
@@ -31,6 +42,21 @@ EditorUserSettings:
       flags: 0
     RecentlyUsedScenePath-8:
       value: 224247031146467d010f181d2337461c13282e2f2421253c283a2215f0e53177c6e23be6a81e3a313650a1290a371526
+=======
+      value: 22424703114646680e0b0227036c6c181705130924293535633c133af6f9
+      flags: 0
+    RecentlyUsedScenePath-5:
+      value: 22424703114646680e0b0227036c7c1f060e2b292926237e38271427fb
+      flags: 0
+    RecentlyUsedScenePath-6:
+      value: 224247031146467802001f3602365c041f18166a1a2d2e392e251820a2b17a69add435ece93f2c731d07e23344100428bc1f0702e212
+      flags: 0
+    RecentlyUsedScenePath-7:
+      value: 224247031146466b222235053f0d1f131f03016a3c29253b623a1e36ece57b1ce7ea39dae43f31397717e1351027
+      flags: 0
+    RecentlyUsedScenePath-8:
+      value: 224247031146466f0400151d242c501e0f283b23383119142824127cd1e33136e7f479cde23730030a01ea3201701431fb1e10
+>>>>>>> BREDAMERGE
       flags: 0
     RecentlyUsedScenePath-9:
       value: 22424703114646680e0b0227036c6c18170513192f2d28357f67083debf42d
