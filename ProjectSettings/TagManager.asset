@@ -11,6 +11,7 @@ TagManager:
   - MissionManager
   - Shark
   - SharkWaypoint
+  - CarWaypoint
   layers:
   - Default
   - TransparentFX

@@ -7,25 +7,40 @@ using com.zibra.liquid.Utilities;
 using com.zibra.liquid.Manipulators;
 
 public class WaterGeyser : MonoBehaviour {
-    public GameObject geyserFluid;
-
-    private float timer = 0;
+    private float timer = 0, reorientTimer = 0;
 
     public com.zibra.liquid.Solver.ZibraLiquid zibra;
+    public GameObject triggerObject;
+    public PhotoItem photoObject;
     
     void Start() {
-        geyserFluid.SetActive(false);
+        zibra.gameObject.SetActive(false);
         zibra.sdfColliders.Add(GameObject.FindGameObjectWithTag("Player").GetComponent<com.zibra.liquid.SDFObjects.AnalyticSDFCollider>());
-        zibra.sdfColliders.Add(GameObject.FindGameObjectWithTag("Shark").GetComponent<com.zibra.liquid.SDFObjects.AnalyticSDFCollider>());
+        //zibra.sdfColliders.Add(GameObject.FindGameObjectWithTag("Shark").GetComponent<com.zibra.liquid.SDFObjects.AnalyticSDFCollider>());
+
+        zibra.containerPos = transform.position;
     }
 
     void Update() {
-        timer += Time.deltaTime;
-        //if(timer > 5) geyserFluid.SetActive(false);
+        if(zibra.activeParticleNumber >= zibra.MaxNumParticles) timer += Time.deltaTime;
+        if(timer > 1.5f) {
+            photoObject.tags = "";
+            zibra.gameObject.SetActive(false);
+            timer = 0;
+            reorientTimer = 0.1f;
+        }
+
+        if(reorientTimer > 0) {
+            reorientTimer += Time.deltaTime;
+            triggerObject.transform.rotation = Quaternion.Lerp(triggerObject.transform.rotation, Quaternion.identity, Time.deltaTime * 7f);
+            if(reorientTimer > 1.5f) reorientTimer = 0;
+        }
     }
 
     public void TriggerGeyser() {
-        geyserFluid.SetActive(true);
+        zibra.gameObject.SetActive(true);
         timer = 0;
+        reorientTimer = 0;    
+        photoObject.tags = "geyser";
     }
 }

@@ -24,18 +24,42 @@ public class LockOnSystem : MonoBehaviour {
     [SerializeField] private List<PhotoItem> allTargets = new List<PhotoItem>();
     private Transform target;
 
+    //Object triggers
+    private Dictionary<TriggerWhenOnScreen, bool> onScreen = new Dictionary<TriggerWhenOnScreen, bool>();
+    [SerializeField] private List<TriggerWhenOnScreen> screenTriggers = new List<TriggerWhenOnScreen>();
+
+    private MeshRenderer[] cull;
+
     void OnValidate() {
         allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
+        screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
     }
 
     void Start() {
+        cull = GameObject.FindObjectsOfType<MeshRenderer>();
+        allTargets.Clear();
+        onScreen.Clear();
         allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
+        screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
+        foreach(var i in screenTriggers) onScreen.Add(i, false);
+
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         
-        foreach(var i in allTargets) i.render.allowOcclusionWhenDynamic = true;
+        foreach(var i in allTargets) if(i.render != null) i.render.allowOcclusionWhenDynamic = true;
     }
 
     void Update() {
+        foreach(var i in cull) {
+            if(i != null) i.gameObject.SetActive(IsOnScreen(i.transform.position));
+        }
+
+
+        foreach(var i in onScreen.ToList()) {
+            var old = onScreen[i.Key];
+            onScreen[i.Key] = IsOnScreen(i.Key.transform.position);
+            if(old != onScreen[i.Key] && onScreen[i.Key]) i.Key.OnScreen();
+        }
+
         for (int i = 0; i < allTargets.Count; i++) {
             if(!allTargets[i].active) continue;
             bool isComposite = allTargets[i].isComposite;
@@ -82,14 +106,23 @@ public class LockOnSystem : MonoBehaviour {
         }
     }
 
-    protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
-        Vector3 targetPos = cam.WorldToViewportPoint(target.transform.position);
+    public bool IsOnScreen(Vector3 pos) {
+        Vector3 targetPos = cam.WorldToViewportPoint(pos);
         bool isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
-        bool inDistance = Vector3.Distance(target.transform.position, cam.transform.position) < cameraCanvas.maxDistance;
+        return isOnScreen; 
+    }
+
+    public bool IsInDistance(Vector3 pos, float maxDist) {
+        return Vector3.Distance(pos, cam.transform.position) < maxDist;   
+    }
+
+    protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
+        bool inDistance = IsInDistance(target.transform.position, cameraCanvas.maxDistance);
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
         var inFocus = GetObjectSharpness(target);
         bool isInFocus = inFocus >= cameraCanvas.objectInFocusThreshold;
+        bool isOnScreen = IsOnScreen(target.transform.position);
 
         if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target) && target.active && isInFocus) AddCrosshair(target);
         else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation || !isInFocus)) RemoveCrosshair(target);

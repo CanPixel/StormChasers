@@ -292,7 +292,7 @@ namespace com.zibra.liquid.Solver
         /// <summary>
         /// Solver container size
         /// </summary>
-        public Vector3 containerSize = new Vector3(10, 10, 10);
+        public Vector3 containerSize;
 
         /// <summary>
         /// Solver container position
@@ -703,7 +703,6 @@ namespace com.zibra.liquid.Solver
             if (referenceRenderer != null)
             {
                 containerPos = transform.InverseTransformPoint(referenceRenderer.bounds.center);
-                containerSize = referenceRenderer.bounds.size;
             }
         }
 

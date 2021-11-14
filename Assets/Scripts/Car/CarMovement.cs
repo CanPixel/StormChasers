@@ -11,8 +11,6 @@ public class CarMovement : MonoBehaviour
     public Light[] brakeLights;
     public Material brakeMaterial;
 
-    public GameObject raycastOrigin;
-
     public Transform carMesh;
     public DialogSystem dialogSystem;
     public CameraControl camControl;
@@ -219,7 +217,9 @@ public class CarMovement : MonoBehaviour
 
     protected void Jump()
     {
-        kart.SuspensionHeight = baseSuspension * jumpHeight;
+        var front = (kart.FrontLeftWheel.transform.position.y + kart.FrontRightWheel.transform.position.y) / 2f;
+        var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
+        kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
         SoundManager.PlaySound("Jump", 0.15f);
         HapticFeedback(0.4f, 0.3f, 0.2f);
     }

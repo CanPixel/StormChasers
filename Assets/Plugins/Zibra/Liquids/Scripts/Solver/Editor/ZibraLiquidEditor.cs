@@ -135,9 +135,9 @@ namespace com.zibra.liquid.Editor.Solver
             var localToWorld = Matrix4x4.TRS(ZibraLiquidInstance.transform.position,
                                              ZibraLiquidInstance.transform.rotation, Vector3.one);
 
-            //ZibraLiquidInstance.containerPos = ZibraLiquidInstance.transform.position;
+            ZibraLiquidInstance.containerPos = ZibraLiquidInstance.transform.position;
             //ZibraLiquidInstance.transform.rotation = Quaternion.identity;
-            //ZibraLiquidInstance.transform.localScale = Vector3.one;
+            ZibraLiquidInstance.transform.localScale = Vector3.one;
 
             using (new Handles.DrawingScope(containerColor, localToWorld))
             {
@@ -180,28 +180,30 @@ namespace com.zibra.liquid.Editor.Solver
                 return;
             }
 
-            //ZibraLiquidInstance.transform.position = ZibraLiquidInstance.containerPos;
+           // ZibraLiquidInstance.transform.position = ZibraLiquidInstance.containerPos;
             //ZibraLiquidInstance.transform.rotation = Quaternion.identity;
-            //ZibraLiquidInstance.transform.localScale = Vector3.one;
+            ZibraLiquidInstance.transform.localScale = Vector3.one;
 
             serializedObject.Update();
 
-          /*   EditorGUILayout.BeginHorizontal();
-            GUILayout.Space(20);
+            editMode = EditMode.Container;
 
-             if (GUILayout.Button(EditorGUIUtility.IconContent("EditCollider"), GUILayout.MaxWidth(40),
+/*             EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(20); */
+
+/*              if (GUILayout.Button(EditorGUIUtility.IconContent("EditCollider"), GUILayout.MaxWidth(40),
                                  GUILayout.Height(30)))
             {
                 editMode = editMode == EditMode.Container ? EditMode.None : EditMode.Container;
                 SceneView.RepaintAll();
-            }  */
-
-            /* GUILayout.Space(10);
+            }   */
+            
+/*             GUILayout.Space(10);
              EditorGUILayout.LabelField("Edit Container Area", containerText, GUILayout.MaxWidth(100),
                                        GUILayout.Height(30));
-            GUILayout.Space(40);
- */
-          /*   EditorGUI.BeginChangeCheck();
+            GUILayout.Space(40); */
+ 
+            /* EditorGUI.BeginChangeCheck();
             ZibraLiquidInstance.useContainerReference = GUILayout.Toggle(
                 ZibraLiquidInstance.useContainerReference, "Use Reference Mesh Renderer", GUILayout.Height(30));
 
@@ -210,9 +212,9 @@ namespace com.zibra.liquid.Editor.Solver
                 editMode = EditMode.None;
 
                 SceneView.RepaintAll();
-            }  */
+            }   */
 
-    /*         if (ZibraLiquidInstance.useContainerReference)
+/*             if (ZibraLiquidInstance.useContainerReference)
             {
                 if (ZibraLiquidInstance.ContainerReference != null)
                 {
@@ -221,12 +223,12 @@ namespace com.zibra.liquid.Editor.Solver
 
                     SceneView.RepaintAll();
                 }
-            }  */
+            }   */
 
-         //   EditorGUILayout.EndHorizontal();
+              //EditorGUILayout.EndHorizontal();
 
-            //if (ZibraLiquidInstance.useContainerReference)
-/*             {
+            if (!ZibraLiquidInstance.useContainerReference)
+/*              {
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.PropertyField(ContainerReference);
 
@@ -235,20 +237,21 @@ namespace com.zibra.liquid.Editor.Solver
                     SceneView.RepaintAll();
                 }
             }
-            else */
-            //{
+            else  */
+            {
                 EditorGUI.BeginChangeCheck();
                 ZibraLiquidInstance.containerPos = ZibraLiquidInstance.transform.position;
-                ZibraLiquidInstance.containerSize = ZibraLiquidInstance.transform.localScale;
+                //ZibraLiquidInstance.containerSize = ZibraLiquidInstance.transform.localScale;
+
                     //EditorGUILayout.Vector3Field(new GUIContent("Container Center"), ZibraLiquidInstance.containerPos);
-           //     ZibraLiquidInstance.containerSize =
-           //         EditorGUILayout.Vector3Field(new GUIContent("Container Size"), ZibraLiquidInstance.containerSize);
+                ZibraLiquidInstance.containerSize =
+                    EditorGUILayout.Vector3Field(new GUIContent("Container Size"), ZibraLiquidInstance.containerSize);
 
                 if (EditorGUI.EndChangeCheck())
                 {
                     SceneView.RepaintAll();
                 }
-            //}
+            }
 
             GUILayout.Space(25);
 

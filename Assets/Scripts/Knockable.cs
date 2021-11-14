@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Knockable : MonoBehaviour {
+    public bool knockableByShark = false;
+
     public UnityEvent onKnockShark, onKnockPlayer;
 
     void OnCollisionEnter(Collision col) {
@@ -18,12 +20,13 @@ public class Knockable : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider col) {
-        if(col.gameObject.tag == "Shark") {
+        if(col.gameObject.tag == "Shark" && knockableByShark) {
             var rb = GetComponent<Rigidbody>();
             rb.useGravity = true;
             rb.isKinematic = false;
             onKnockShark.Invoke();
-            rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 1500f);
+            rb.AddForce(new Vector3(0.05f, 1f, 0) * 15000f);
+            rb.AddTorque(new Vector3(10, 50, 5), ForceMode.Impulse);
         }
     }
 }

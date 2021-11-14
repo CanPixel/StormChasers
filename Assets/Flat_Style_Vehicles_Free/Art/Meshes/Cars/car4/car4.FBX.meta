@@ -1,0 +1,157 @@
+fileFormatVersion: 2
+guid: bab9bd88669500845b952f4cd883ff28
+timeCreated: 1485640801
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Axle_back
+    100002: Axle_front
+    100004: Bord
+    100006: Box027
+    100008: //RootNode
+    100010: Glass
+    100012: Hood
+    100014: Seat_back
+    100016: Seat_left
+    100018: Seat_right
+    100020: Steering_wheel
+    100022: Wheel_back_left
+    100024: Wheel_back_right
+    100026: Wheel_front_left
+    100028: Wheel_front_right
+    100030: Whiper_left
+    100032: Whiper_right
+    400000: Axle_back
+    400002: Axle_front
+    400004: Bord
+    400006: Box027
+    400008: //RootNode
+    400010: Glass
+    400012: Hood
+    400014: Seat_back
+    400016: Seat_left
+    400018: Seat_right
+    400020: Steering_wheel
+    400022: Wheel_back_left
+    400024: Wheel_back_right
+    400026: Wheel_front_left
+    400028: Wheel_front_right
+    400030: Whiper_left
+    400032: Whiper_right
+    2300000: Axle_back
+    2300002: Axle_front
+    2300004: Bord
+    2300006: Box027
+    2300008: Glass
+    2300010: Hood
+    2300012: Seat_back
+    2300014: Seat_left
+    2300016: Seat_right
+    2300018: Steering_wheel
+    2300020: Wheel_back_left
+    2300022: Wheel_back_right
+    2300024: Wheel_front_left
+    2300026: Wheel_front_right
+    2300028: Whiper_left
+    2300030: Whiper_right
+    3300000: Axle_back
+    3300002: Axle_front
+    3300004: Bord
+    3300006: Box027
+    3300008: Glass
+    3300010: Hood
+    3300012: Seat_back
+    3300014: Seat_left
+    3300016: Seat_right
+    3300018: Steering_wheel
+    3300020: Wheel_back_left
+    3300022: Wheel_back_right
+    3300024: Wheel_front_left
+    3300026: Wheel_front_right
+    3300028: Whiper_left
+    3300030: Whiper_right
+    4300000: Axle_back
+    4300002: Wheel_front_right
+    4300004: Glass
+    4300006: Bord
+    4300008: Steering_wheel
+    4300010: Whiper_left
+    4300012: Seat_back
+    4300014: Axle_front
+    4300016: Seat_left
+    4300018: Wheel_back_right
+    4300020: Wheel_front_left
+    4300022: Wheel_back_left
+    4300024: Box027
+    4300026: Seat_right
+    4300028: Whiper_right
+    4300030: Hood
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
