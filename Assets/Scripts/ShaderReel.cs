@@ -23,8 +23,8 @@ public class ShaderReel : MonoBehaviour {
             obj.transform.localScale = Vector3.one;
             var sf = obj.GetComponent<ShaderFilter>();
             filters.Add(sf);
-            sf.icon.sprite = fil.icon;
-            sf.text.text = fil.name;
+            if(sf.icon != null && fil.icon != null) sf.icon.sprite = fil.icon;
+            if(sf.text != null) sf.text.text = fil.name;
         }
     }
 

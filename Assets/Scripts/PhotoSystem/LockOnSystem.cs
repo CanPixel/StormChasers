@@ -21,27 +21,20 @@ public class LockOnSystem : MonoBehaviour {
     public Dictionary<PhotoBase, LockedObjects> onScreenTargets = new Dictionary<PhotoBase, LockedObjects>();
     [HideInInspector] public List<PhotoBase> sortedScreenObjects = new List<PhotoBase>();
 
-    [SerializeField] private List<PhotoItem> allTargets = new List<PhotoItem>();
+    [SerializeField, ReadOnly] private List<PhotoItem> allTargets = new List<PhotoItem>();
     private Transform target;
 
     //Object triggers
-    private Dictionary<TriggerWhenOnScreen, bool> onScreen = new Dictionary<TriggerWhenOnScreen, bool>();
-    [SerializeField] private List<TriggerWhenOnScreen> screenTriggers = new List<TriggerWhenOnScreen>();
-
-    private MeshRenderer[] cull;
-
-    void OnValidate() {
-        allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
-        screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
-    }
+    //private Dictionary<TriggerWhenOnScreen, bool> onScreen = new Dictionary<TriggerWhenOnScreen, bool>();
+    //[SerializeField] private List<TriggerWhenOnScreen> screenTriggers = new List<TriggerWhenOnScreen>();
 
     void Start() {
-        cull = GameObject.FindObjectsOfType<MeshRenderer>();
         allTargets.Clear();
-        onScreen.Clear();
+        //onScreen.Clear();
         allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
-        screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
-        foreach(var i in screenTriggers) onScreen.Add(i, false);
+        
+        //screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
+        //foreach(var i in screenTriggers) onScreen.Add(i, false);
 
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         
@@ -49,16 +42,11 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     void Update() {
-        foreach(var i in cull) {
-            if(i != null) i.gameObject.SetActive(IsOnScreen(i.transform.position));
-        }
-
-
-        foreach(var i in onScreen.ToList()) {
+/*         foreach(var i in onScreen.ToList()) {
             var old = onScreen[i.Key];
             onScreen[i.Key] = IsOnScreen(i.Key.transform.position);
             if(old != onScreen[i.Key] && onScreen[i.Key]) i.Key.OnScreen();
-        }
+        } */
 
         for (int i = 0; i < allTargets.Count; i++) {
             if(!allTargets[i].active) continue;

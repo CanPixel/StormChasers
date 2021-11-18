@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5612056722873547573
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  mode:
+    overrideState: 1
+    value: 0
+  color:
+    overrideState: 1
+    value: {r: 0.31132078, g: 0.116444536, b: 0.0980954, a: 1}
+  center:
+    overrideState: 1
+    value: {x: 0.5, y: 0.5}
+  intensity:
+    overrideState: 1
+    value: 0.132
+  smoothness:
+    overrideState: 1
+    value: 1
+  roundness:
+    overrideState: 1
+    value: 1
+  rounded:
+    overrideState: 1
+    value: 1
+  mask:
+    overrideState: 0
+    value: {fileID: 0}
+    defaultState: 1
+  opacity:
+    overrideState: 0
+    value: 1
 --- !u!114 &-4947533442922618633
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -21,7 +65,7 @@ MonoBehaviour:
     value: 0
   intensity:
     overrideState: 1
-    value: 0.5
+    value: 0.576
   size:
     overrideState: 0
     value: 1
@@ -44,7 +88,8 @@ MonoBehaviour:
   - {fileID: 4216415303268451677}
   - {fileID: 2632636352135397008}
   - {fileID: -4947533442922618633}
-  - {fileID: 8956199889704439800}
+  - {fileID: 5533410871924586082}
+  - {fileID: -5612056722873547573}
 --- !u!114 &2632636352135397008
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -57,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
   m_Name: ChromaticAberration
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -67,7 +112,7 @@ MonoBehaviour:
     defaultState: 1
   intensity:
     overrideState: 1
-    value: 0.529
+    value: 0.291
   fastMode:
     overrideState: 1
     value: 1
@@ -105,7 +150,7 @@ MonoBehaviour:
   scale:
     overrideState: 1
     value: 1
---- !u!114 &8956199889704439800
+--- !u!114 &5533410871924586082
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,5 +176,5 @@ MonoBehaviour:
     overrideState: 1
     value: 50
   kernelSize:
-    overrideState: 0
-    value: 1
+    overrideState: 1
+    value: 0

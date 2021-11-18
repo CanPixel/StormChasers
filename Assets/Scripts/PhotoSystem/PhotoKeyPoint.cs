@@ -34,7 +34,8 @@ public class PhotoKeyPoint : PhotoBase {
         Gizmos.DrawRay(transform.position, forwardDir * rayRange);
     }
 
-    void Start() {
+    public new void Start() {
+        base.Start();
         isKeyPoint = true;
         if(!hostObject.isComposite) return;
         gameObject.name = hostObject.name + " (" + (transform.GetSiblingIndex() + 1) + "/" + hostObject.GetKeyPoints().Length + ")";
@@ -43,6 +44,7 @@ public class PhotoKeyPoint : PhotoBase {
 
 public abstract class PhotoBase : MonoBehaviour {
     [ReadOnly] public bool active = true;
+    [ReadOnly] public string staticTags;
     public bool specificOrientation = false; 
     [HideInInspector] public bool isKeyPoint = false;
     public string tags;
@@ -51,14 +53,16 @@ public abstract class PhotoBase : MonoBehaviour {
     [ConditionalHide("specificOrientation", true)] public float orientationViewCone = 70f;
     [ConditionalHide("specificOrientation", true)] public float rayRange = 10.0f;
 
+    public void Start() {
+        staticTags = tags;
+    }
+
     public bool InOrientation(Vector3 pos) {
         var forwardDir = (transform.forward + transform.TransformVector(axisOffset)).normalized;
 
         Vector3 relativeNormalizedPos = (pos - transform.position).normalized;
         float dot = Vector3.Dot(relativeNormalizedPos, forwardDir);
         float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
-
-        //Debug.Log(angle + " | " +  (angle < orientationViewCone));
 
         return angle < orientationViewCone;
     }

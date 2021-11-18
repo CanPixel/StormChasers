@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -95,15 +94,13 @@ public class MissionManager : MonoBehaviour {
     [System.Serializable]
     public class ObjectiveCriteria {
         public string text = "Objective Criteria";
-        //public bool mainSubject = false;
-        //[ConditionalHide("mainSubject", false)] 
-        public bool optional = false;
+        public bool optional = false, show = true;
         public bool penalty = false;
         [ReadOnly] public bool finished = false;
         [Space(5)]
-        public bool editPhotoItemsManually = false;
-        [ConditionalHide("editPhotoItemsManually", false)] public string photoItemNameKey;
-        [ConditionalHide("editPhotoItemsManually", true)] public MissionObjectWrapper missionObjects;
+        public string photoItemNameKey;
+        public UnityEvent OnPictureDoAction;
+        [HideInInspector] public MissionObjectWrapper missionObjects;
     }
 
     [System.Serializable]
@@ -118,12 +115,6 @@ public class MissionManager : MonoBehaviour {
         [Space(5)]
         public CarInteraction[] triggerLocations;
 
-        [Header("Criteria")]
-        public bool centerFrameImportant = true;
-        [ConditionalHide("centerFrameImportant", true)] [Range(0, 100)] public int minCenterFrame = 50;
-
-        [Range(0, 100)] public int minMotionStability = 50, minSharpness = 50;
-        public int minKeyPointsRequired = 1;
         public BonusObject[] bonuses;
         public BonusObject[] penalties;
 
@@ -132,16 +123,13 @@ public class MissionManager : MonoBehaviour {
 
         public void Enable(bool a) {
             foreach(var obj in objectives) {
-                if(obj.editPhotoItemsManually) foreach(var i in obj.missionObjects.missionObjects) i.objective.active = active = a;
-                else {
-                    var l = MissionManager.EnableBySearch(obj.photoItemNameKey, a);
-                    obj.missionObjects = new MissionObjectWrapper();
-                    obj.missionObjects.missionObjects = new MissionObject[l.Count];
-                    for(int i = 0; i < obj.missionObjects.missionObjects.Length; i++) {
-                        obj.missionObjects.missionObjects[i] = new MissionObject();
-                        obj.missionObjects.missionObjects[i].weight = 1f;
-                        obj.missionObjects.missionObjects[i].objective = l[i];
-                    }
+                var l = MissionManager.EnableBySearch(obj.photoItemNameKey, a);
+                obj.missionObjects = new MissionObjectWrapper();
+                obj.missionObjects.missionObjects = new MissionObject[l.Count];
+                for(int i = 0; i < obj.missionObjects.missionObjects.Length; i++) {
+                    obj.missionObjects.missionObjects[i] = new MissionObject();
+                    obj.missionObjects.missionObjects[i].weight = 1f;
+                    obj.missionObjects.missionObjects[i].objective = l[i];
                 }
             }
             foreach(var i in bonuses) i.item.active = true;
@@ -186,7 +174,6 @@ public class MissionManager : MonoBehaviour {
 
         //Reset
         if(!currentFinished) for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
-
         if(pic.item == null) return false;
 
         bool fullCompletion = false;
@@ -203,10 +190,11 @@ public class MissionManager : MonoBehaviour {
             bool isOptional = activeCriteria[i].optional;
             string key = activeCriteria[i].photoItemNameKey.ToLower().Trim();
 
-            if(/* activeCriteria[i].mainSubject &&*/ ComparePhotoItem(pic.item, key)) {
+            if(ComparePhotoItem(pic.item, key)) {
                 missionCleared[i] = true;
-            } else {
-            // if(!activeMission[i].mainSubject) {
+                activeCriteria[i].OnPictureDoAction.Invoke();
+            }
+            else {
                 if(isOptional) missionCleared[i] = true;
                 else {
                         if(isPenalty) {
@@ -221,6 +209,7 @@ public class MissionManager : MonoBehaviour {
                         foreach(var m in pic.subScore) {
                             Debug.Log(m.item.name);
                             if(ComparePhotoItem(m.item, key)) {
+                                activeCriteria[i].OnPictureDoAction.Invoke();
                                 missionCleared[i] = true;
                                 break;
                             }
@@ -228,7 +217,6 @@ public class MissionManager : MonoBehaviour {
                     }
                 }
             }
-    //    }
 
             bool completed = true;
             foreach(var m in missionCleared) if(!m) completed = false;
@@ -267,7 +255,7 @@ public class MissionManager : MonoBehaviour {
     public static List<PhotoItem> EnableBySearch(string key, bool b) {
         List<PhotoItem> temp = new List<PhotoItem>();
         foreach(var i in missionManager.lockOnSystem.GetAllTargets()) {
-            if(i.tags.Trim().ToLower().Contains(key.Trim().ToLower())) {
+            if(key.Trim().ToLower().Contains(i.staticTags.Trim().ToLower())) {
                 i.active = b;
                 temp.Add(i);
             }
@@ -300,13 +288,8 @@ public class MissionManager : MonoBehaviour {
 
         missionCross.fillAmount = 0;
 
-        for(int i = 0; i < criteriaSplashes.Length; i++) {
-            if(miss.objectives.Length <= i) {
-                criteriaSplashes[i].Disable();
-                continue;
-            }
-            criteriaSplashes[i].Load(miss.objectives[i]);
-        }
+        foreach(var i in criteriaSplashes) i.Disable();
+        for(int i = 0; i < miss.objectives.Length; i++) if(miss.objectives[i].show) criteriaSplashes[i].Load(miss.objectives[i]);
 
         activeCriteria = miss.objectives;
         
@@ -340,11 +323,6 @@ public class MissionManager : MonoBehaviour {
 
     void OnValidate() {
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
-
-        foreach(var i in missions) {
-            if(i.minKeyPointsRequired < 1) i.minKeyPointsRequired = 1;
-            i.minCenterFrame = Mathf.Clamp(i.minCenterFrame, 0, 100);
-        }
     }
 
     void Start() {

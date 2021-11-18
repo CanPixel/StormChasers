@@ -328,12 +328,10 @@ public class CameraControl : MonoBehaviour {
             yInfoButton.SetActive(!mission.delivered);
 
             missionDescription.text = mission.description;
+            foreach(var i in missionRequirement) i.Disable();
             for(int i = 0; i < missionRequirement.Length; i++) {
-                if(mission.objectives.Length <= i) {
-                    missionRequirement[i].Disable();
-                    continue;
-                }
-                missionRequirement[i].Load(mission.objectives[i]);
+                if(mission.objectives.Length <= i) continue;
+                if(mission.objectives[i].show) missionRequirement[i].Load(mission.objectives[i]);
                 if(mission.objectives[i].finished) missionRequirement[i].Clear();
             }
         }
@@ -402,6 +400,7 @@ public class CameraControl : MonoBehaviour {
         JournalScroll();
     }
     public void JournalScroll() {
+        if(journalSelectedMission > journalMissions.Count) return;
         if(journalMissions.Count > 0 && journalMissions[journalSelectedMission] != null) ShowMissionInfo(journalMissions[journalSelectedMission].mission);
         pictureDelivered.sprite = journalMissions[journalSelectedMission].finalPicture;
     }

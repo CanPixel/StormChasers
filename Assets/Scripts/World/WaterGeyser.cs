@@ -23,7 +23,7 @@ public class WaterGeyser : MonoBehaviour {
 
     void Update() {
         if(zibra.activeParticleNumber >= zibra.MaxNumParticles) timer += Time.deltaTime;
-        if(timer > 1.5f) {
+        if(timer > 1) {
             photoObject.tags = "";
             zibra.gameObject.SetActive(false);
             timer = 0;

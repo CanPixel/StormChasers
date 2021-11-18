@@ -14,7 +14,8 @@ public class PhotoItem : PhotoBase {
     [ConditionalHide("isComposite", true)] [SerializeField] private KeyPointList keyPoints;
     public float gizmosScale = 1.0f;
 
-    void Start() {
+    public new void Start() {
+        base.Start();
         if(isComposite) keyPoints.list = GetComponentsInChildren<PhotoKeyPoint>();
     }
 

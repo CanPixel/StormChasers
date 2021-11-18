@@ -19,7 +19,10 @@ public class CarInteraction : MonoBehaviour {
     }
 
     void OnValidate() {
-        if(missionManager == null) missionManager = GameObject.FindGameObjectWithTag("MissionManager").GetComponent<MissionManager>();
+        if(missionManager == null) {
+            var miss = GameObject.FindGameObjectWithTag("MissionManager");
+            if(miss != null) missionManager = miss.GetComponent<MissionManager>();
+        }
         var missions = missionManager.missions;
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
         mission = missions[missionIndex];
