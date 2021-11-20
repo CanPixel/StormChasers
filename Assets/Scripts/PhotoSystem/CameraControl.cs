@@ -314,7 +314,8 @@ public class CameraControl : MonoBehaviour {
         markPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null && screenshots[currentSelectedPortfolioPhoto].forMission);
         discardPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null);
         yInfoButton.SetActive(screenshots.Count > 0);
-        markButtonText.text = ((markedScreenshot != null) ? "UN" : "") +  "MARK";
+        //markButtonText.text = ((markedScreenshot != null) ? "UN" : "") +  "MARK";
+        markButtonText.text = ((markedScreenshot != null) ? "RETRACT" : "SUBMIT");
     }
 
     public void OpenJournal() {
@@ -400,7 +401,7 @@ public class CameraControl : MonoBehaviour {
         JournalScroll();
     }
     public void JournalScroll() {
-        if(journalSelectedMission > journalMissions.Count) return;
+        if(journalSelectedMission > journalMissions.Count || journalMissions.Count <= 0) return;
         if(journalMissions.Count > 0 && journalMissions[journalSelectedMission] != null) ShowMissionInfo(journalMissions[journalSelectedMission].mission);
         pictureDelivered.sprite = journalMissions[journalSelectedMission].finalPicture;
     }

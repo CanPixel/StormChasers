@@ -1,0 +1,22 @@
+{
+    "name": "MoreMountains.Feel.Demos.HDRP",
+    "references": [
+        "GUID:dad624460036b51448e1b1849358a96a",
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:457756d89b35d2941b3e7b37b4ece6f1",
+        "GUID:f8c8b3c2341ca9d41a84e23d5e80af4a",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:b56951d4b6881a2498d9f58e16fb0cd0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "MOREMOUNTAINS_FEEDBACKS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
