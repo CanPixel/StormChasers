@@ -26,7 +26,7 @@ public class SharkAI : MonoBehaviour {
     public AnimationCurve sharkBarrelRoll;
     public float chompSpeed = 1f;
     private float chompTimer = 0;
-    public float jumpFactor = 0.5f, sharkJumpFactor = 1;
+    public float drainJumpFactor = 9, sharkJumpFactor = 1;
 
     [System.Serializable]
     public enum SharkState {
@@ -149,7 +149,7 @@ public class SharkAI : MonoBehaviour {
             if(drain != null) {
                 if(chompTimer < 0.7f) drain.transform.Rotate(200f * Time.deltaTime, 0, 0);
                 else drain.transform.localRotation = Quaternion.Lerp(drain.transform.localRotation, Quaternion.Euler(-90, 0, 0), Time.deltaTime * 12f);
-                drain.transform.localPosition = new Vector3(0, sharkLungeY.Evaluate(chompTimer) * jumpFactor, 0);
+                drain.transform.localPosition = new Vector3(0, sharkLungeY.Evaluate(chompTimer) * drainJumpFactor, 0);
             }
         }
     }

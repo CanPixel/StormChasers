@@ -8,19 +8,20 @@ public class Drain : MonoBehaviour {
 
     [Header("References")]
     public GameObject zibra;
-    public GameObject rubbleParticle;
+    public ParticleSystem rubbleParticle;
     public GameObject waterGeyser;
     public Cinemachine.CinemachineImpulseSource impulseSource;
 
     public void TriggerShark() {
         waterGeyser.SetActive(true);
-        rubbleParticle.SetActive(true);
+        rubbleParticle.Play();
         impulseSource.GenerateImpulseAt(transform.position, Vector3.one * 2);
     }
 
     public void Detrigger() {
         waterGeyser.SetActive(false);
         target = null;
+        rubbleParticle.Stop();
     }
 
     void OnTriggerEnter(Collider col) {
