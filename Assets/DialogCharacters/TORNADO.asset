@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TORNADO
   m_EditorClassIdentifier: 
   characterName: Tornado
-  posOffset: {x: -4.5, y: 0.97, z: -2.13}
-  rotOffset: {x: 3.77, y: -4.28, z: 4.16}
+  posOffset: {x: -46.25, y: 4, z: 0}
+  rotOffset: {x: 3.77, y: -0.71, z: -8}
   postProcessProfile: {fileID: 11400000, guid: 30b920aff788e3341930b5b9c821fbd8, type: 2}
   target: {fileID: 0}
   voices: []

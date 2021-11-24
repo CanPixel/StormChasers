@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class CarInteraction : MonoBehaviour {
     public bool engageMission = false;
     [ConditionalHide("engageMission", true)] public int missionIndex = 0;
+    [ConditionalHide("engageMission", true)] public string missionName;
     [ConditionalHide("engageMission", true)] public MeshRenderer missionMarker;
     [ConditionalHide("engageMission", true)] public GameObject[] destroyOnMissionComplete;
     [ReadOnly] public MissionManager.Mission mission;
@@ -26,6 +27,7 @@ public class CarInteraction : MonoBehaviour {
         var missions = missionManager.missions;
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
         mission = missions[missionIndex];
+        missionName = mission.name;
     }
 
     public UnityEvent onEnter;

@@ -13,6 +13,7 @@ public class MissionManager : MonoBehaviour {
     private Dictionary<string, Mission> missionsByName = new Dictionary<string, Mission>();
     public bool startOnStart = false, activateAllPhotoItems = false;
     public int missionIndex = 0;
+    [ConditionalHide("startOnStart", true), ReadOnly] public string missionOnStart;
 
     public static MissionManager missionManager;
 
@@ -49,6 +50,7 @@ public class MissionManager : MonoBehaviour {
     }
 
     private bool startedMission = false;
+    [Space(10)]
     public AnimationCurve missionTextCurve;
     public float sequenceSpeed = 2f, sequenceDuration = 2f;
     public Color missionMarkerColor, deliverMarkerColor;
@@ -61,13 +63,13 @@ public class MissionManager : MonoBehaviour {
     public Text missionTitle, readyForMark;
     public Image missionIcon, missionCross;
     public RatingSystem ratingSystem;
+    public UIBob journalSelectControl;
     [SerializeField] private InputActionReference portfolioButton;
     public LockOnSystem lockOnSystem;
     public CameraControl camControl;
     public MissionCriteria[] criteriaSplashes;
 
     private Mission currentObjective;
-    private bool currentFinished = false;
     private static float startSequence = 0;
 
     private float postDeliveredTime = 0;
@@ -96,6 +98,7 @@ public class MissionManager : MonoBehaviour {
         public string text = "Objective Criteria";
         public bool optional = false, show = true;
         public bool penalty = false;
+        public bool customMarkCompletion = false;
         [ReadOnly] public bool finished = false;
         [Space(5)]
         public string photoItemNameKey;
@@ -119,7 +122,9 @@ public class MissionManager : MonoBehaviour {
         public BonusObject[] penalties;
 
         [Space(5)]
+        public UnityEvent OnMissionStarted;
         public UnityEvent OnMissionFinished;
+        public UnityEvent OnMissionDelivered;
 
         public void Enable(bool a) {
             foreach(var obj in objectives) {
@@ -139,7 +144,7 @@ public class MissionManager : MonoBehaviour {
     public void Deliver() {
         if(currentObjective == null) return;
         currentObjective.delivered = true;
-        currentObjective.OnMissionFinished.Invoke();
+        currentObjective.OnMissionDelivered.Invoke();
         camControl.JournalFinish();
     }
 
@@ -173,10 +178,8 @@ public class MissionManager : MonoBehaviour {
         if(activeCriteria == null || activeCriteria.Length < 1) return false;
 
         //Reset
-        if(!currentFinished) for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
+        //if(!currentFinished) for(int m = 0; m < activeCriteria.Length; m++) MarkCurrentObjective(m, false);
         if(pic.item == null) return false;
-
-        bool fullCompletion = false;
 
         //List<PhotoBase> items = new List<PhotoBase>();
         //items.Add(pic.item);
@@ -185,6 +188,7 @@ public class MissionManager : MonoBehaviour {
         //Debug.Log(items.Count);
 
         bool[] missionCleared = new bool[activeCriteria.Length];
+        bool completed = true;
         for(int i = 0; i < activeCriteria.Length; i++) {
             bool isPenalty = activeCriteria[i].penalty;
             bool isOptional = activeCriteria[i].optional;
@@ -218,32 +222,59 @@ public class MissionManager : MonoBehaviour {
                 }
             }
 
-            bool completed = true;
-            foreach(var m in missionCleared) if(!m) completed = false;
+            completed = true;
+            for(int m = 0; m < missionCleared.Length; m++) if(!missionCleared[m]) {
+                completed = false;
+                break;
+            }
 
             //Mission Checkmarks
             for(int m = 0; m < activeCriteria.Length; m++) {
-                if(!missionCleared[m]) continue;
+                if(!missionCleared[m] || activeCriteria[m].customMarkCompletion) continue;
           /*       activeMission[m].finished = true;
                 criteriaSplashes[m].Clear(); */
                 MarkCurrentObjective(m, true);
                 camControl.JournalMarkObjective(m);
             }
 
+            bool shouldFinishMark = true;
+            int customMarkID = -1;
+            for(int m = 0; m < missionCleared.Length; m++) {
+                if(activeCriteria[m].customMarkCompletion) customMarkID = m;
+                if(!activeCriteria[m].finished && !activeCriteria[m].customMarkCompletion && !activeCriteria[m].optional) shouldFinishMark = false;
+            }
+            if(shouldFinishMark) {
+                if(customMarkID >= 0) {
+                    MarkCurrentObjective(customMarkID, true);
+                    camControl.JournalMarkObjective(customMarkID);
+                }
+                completed = true;
+            }
+
             if(completed) {
-                fullCompletion = true;
-                currentFinished = true;
+                //currentFinished = true;
+                currentObjective.OnMissionFinished.Invoke();
                 screen.missionReference = currentObjective;
                 screen.forMission = true;
                 readyForMark.gameObject.SetActive(true);
-                if(currentObjective != null) currentObjective.cleared = true;
+                if(currentObjective != null) {
+                    currentObjective.cleared = true;
+                    journalSelectControl.Bob();
+                }
             } //else for(int m = 0; m < activeMission.Length; m++) MarkCurrentObjective(m, false);
         }
-        return fullCompletion;
+        return completed;
+    }
+
+    public void MarkCurrentObjectives() {
+        for(int i = 0; i < activeCriteria.Length; i++) MarkCurrentObjective(i, true);
     }
 
     public void MarkCurrentObjective(int m, bool finished) {
+        if(activeCriteria.Length <= m) return;
         activeCriteria[m].finished = finished;
+        if(criteriaSplashes.Length - 1 < m) return;
+
         if(finished) criteriaSplashes[m].Clear();
         else criteriaSplashes[m].Reset();
     }
@@ -255,7 +286,7 @@ public class MissionManager : MonoBehaviour {
     public static List<PhotoItem> EnableBySearch(string key, bool b) {
         List<PhotoItem> temp = new List<PhotoItem>();
         foreach(var i in missionManager.lockOnSystem.GetAllTargets()) {
-            if(key.Trim().ToLower().Contains(i.staticTags.Trim().ToLower())) {
+            if(i != null && i.staticTags != null && key.Trim().ToLower().Contains(i.staticTags.Trim().ToLower())) {
                 i.active = b;
                 temp.Add(i);
             }
@@ -265,11 +296,11 @@ public class MissionManager : MonoBehaviour {
 
     public void ActivateAll(bool j) {
         foreach(var i in missions) i.Enable(j);
-        foreach(var i in lockOnSystem.GetAllTargets()) i.active = j;
+        foreach(var i in lockOnSystem.GetAllTargets()) if(i != null) i.active = j;
     }
 
     public void SetCurrentMission(Mission miss, bool alreadyInJournal = false) {
-        foreach(var i in lockOnSystem.GetAllTargets()) i.active = false;
+        foreach(var i in lockOnSystem.GetAllTargets()) if(i != null) i.active = false;
         foreach(var i in missions) i.Enable(false);
 
         readyForMark.gameObject.SetActive(false);
@@ -277,9 +308,9 @@ public class MissionManager : MonoBehaviour {
         currentObjective = miss;
         if(!alreadyInJournal) startSequence = 0;
         else startSequence = sequenceDuration;
-        currentFinished = false;
         currentObjective.active = true;
         activeMission = miss;
+        miss.OnMissionStarted.Invoke();
 
         missionIcon.enabled = true;
         missionTitle.text = miss.name;
@@ -323,6 +354,7 @@ public class MissionManager : MonoBehaviour {
 
     void OnValidate() {
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
+        missionOnStart = missions[missionIndex].name;
     }
 
     void Start() {

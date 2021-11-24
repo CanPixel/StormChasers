@@ -49,7 +49,7 @@ public class RatingSystem : MonoBehaviour {
     }
     public Dictionary<string, float> scoreUnits = new Dictionary<string, float>();
 
-    [HideInInspector] public bool ready = true;
+    private bool ready = true;
     [Space(10)]
     [SerializeField] private CameraControl camControl;
     [SerializeField] private VerticalLayoutGroup layoutGroup; 
@@ -93,6 +93,8 @@ public class RatingSystem : MonoBehaviour {
     void Start() {
         scoreUnits.Clear();
         baseSpacing = layoutGroup.spacing;
+
+        polaroidUI.gameObject.SetActive(true);
         
         polaroidTopPos = polaroidUI.transform.position.y;
         polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, polaroidBottomPos, polaroidUI.transform.position.z);
@@ -108,7 +110,7 @@ public class RatingSystem : MonoBehaviour {
         postPictureDelay += Time.unscaledDeltaTime;
 
         polaroidSkip.text = ("<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color> to Skip").ToUpper();
-        if(camControl.camSystem.shoot >= 0.7f && screenshotTimer > 1f) Skip();
+        //if(camControl.camSystem.shoot >= 0.7f && screenshotTimer > 1f) Reset();
 
         if(polaroidScreenshot.fillAmount < 1) polaroidScreenshot.fillAmount += Time.unscaledDeltaTime * 1.5f;
 
@@ -143,7 +145,7 @@ public class RatingSystem : MonoBehaviour {
 
            // if(screenshotTimer > polaroidInterval.y) Reset();
 
-            if(screenshotTimer > polaroidInterval.x) {
+            if(IsFading()) {
                 polaroidUI.transform.position = new Vector3(polaroidUI.transform.position.x, Mathf.Lerp(polaroidUI.transform.position.y, polaroidBottomPos, Time.unscaledDeltaTime * 5f), polaroidUI.transform.position.z);
                 polaroidUI.transform.localScale = Vector3.Lerp(polaroidUI.transform.localScale, Vector3.zero, Time.unscaledDeltaTime * 4f);
             }
@@ -165,9 +167,9 @@ public class RatingSystem : MonoBehaviour {
     }
 
     private void Reset() {
-        ready = true;
         mainScore = null;
         crosshairRestObjects = false;
+        ready = true;
         extraItems.Clear();
         screenshotTimer = 0;
         totalScore = 0;
@@ -250,10 +252,10 @@ public class RatingSystem : MonoBehaviour {
         totalScoreValue.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)totalScore / 100f)) + "'>" + screen.score.ToString() + "</color>";
     }
 
-    public void Skip() {
+/*     public void Skip() {
         screenshotTimer = polaroidInterval.x;
         Reset();
-    }
+    } */
 
     public bool HasTakenPicture() {
         return screenshotTimer > 0;

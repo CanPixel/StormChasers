@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4895179897094258982}
   - component: {fileID: 5155148991591855988}
-  - component: {fileID: 3642253571835622074}
   - component: {fileID: 4189054049763533630}
   - component: {fileID: 635371353709925644}
   - component: {fileID: 4646955976166969179}
@@ -78,8 +77,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   allManipulators:
+  - {fileID: 0}
   - {fileID: 3062606452767155213}
   fluidInitialVelocity: {x: 0, y: 0, z: 0}
   manipulatorManager: {fileID: 4189054049763533630}
@@ -91,18 +90,6 @@ MonoBehaviour:
   smoothDeltaTime: 0
   containerReference: {fileID: 0}
   initialized: 0
---- !u!114 &3642253571835622074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1411664746995245219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f611e5bf5b6d32408afe589a8b40607, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4189054049763533630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,10 +192,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConstAdditionalData: []
-  AdditionalData: {x: 6666, y: -0.0000005066395, z: 8.500001, w: 0}
+  AdditionalData: {x: 1908, y: -0.000002026558, z: 8.500002, w: 0}
   ParticlesPerSec: 20000
   VelocityMagnitude: 8.5
-  Velocity: {x: -0.0000005066395, y: 8.500001, z: 0}
+  Velocity: {x: -0.000002026558, y: 8.500002, z: 0}
 --- !u!1 &8054848987171480400
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,3 +242,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zibra: {fileID: 5155148991591855988}
+  triggerObject: {fileID: 0}
+  photoObject: {fileID: 0}

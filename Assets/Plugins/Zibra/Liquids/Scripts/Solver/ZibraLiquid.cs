@@ -410,6 +410,7 @@ namespace com.zibra.liquid.Solver
 
         protected void OnEnable()
         {
+            //Selection.activeGameObject = gameObject;
             SetupScriptableRenderComponents();
 
 #if ZIBRA_LIQUID_PAID_VERSION
@@ -708,11 +709,11 @@ namespace com.zibra.liquid.Solver
 
         protected void Update()
         {
+            containerPos = transform.position;
             allSDFColliders = SDFCollider.AllColliders;
             allManipulators = Manipulator.AllManipulators;
 
-            if (useContainerReference)
-                SetContainerReference();
+            if (useContainerReference) SetContainerReference();
 
 #if UNITY_EDITOR
             if (gameObject.GetComponent<ZibraLiquidMaterialParameters>() ==

@@ -12,6 +12,7 @@ TagManager:
   - Shark
   - SharkWaypoint
   - CarWaypoint
+  - CarCivilian
   layers:
   - Default
   - TransparentFX

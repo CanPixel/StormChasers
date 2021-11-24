@@ -386,7 +386,7 @@ public class CameraControl : MonoBehaviour {
     }
     public void JournalMarkObjective(int objectiveIndex) {
         journalMissions[journalSelectedMission].mission.objectives[objectiveIndex].finished = true;
-        missionRequirement[objectiveIndex].Clear();
+        if(objectiveIndex < missionRequirement.Length) missionRequirement[objectiveIndex].Clear();
     }
     public void JournalFinish() {
         journalMissions[journalSelectedMission].mission.delivered = true;
@@ -532,7 +532,7 @@ public class CameraControl : MonoBehaviour {
 
         SynchTransposer();
 
-        if(camSystem.shoot >= 0.5f && !ratingSystem.HasTakenPicture()) TakePicture();
+        if(camSystem.shoot >= 0.5f) TakePicture();
     }
     protected void ThirdPersonLook() {
         cam.cullingMask = thirdPersonCull;
@@ -579,7 +579,7 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void TakePicture() {
-        if(!ratingSystem.ready || !ratingSystem.AfterDelay(pictureDelayUntilNext) || ratingSystem.HasTakenPicture()) return;
+        if(!ratingSystem.AfterDelay(pictureDelayUntilNext) || (HasTakenPicture() && !ratingSystem.IsFading())) return;
 
         pictureShotTimer = 0;
         carMovement.HapticFeedback(0f, 0.75f, 0.2f);

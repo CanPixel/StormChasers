@@ -47,7 +47,7 @@ public class DialogSystem : MonoBehaviour {
             public DialogCharacter.Emotion emotion;
             public UnityEvent onSpeak;
         }
-        [HideInInspector] public bool displayed = false;
+        [ReadOnly] public bool displayed = false;
     }
 
     [Space(10)]
@@ -73,6 +73,8 @@ public class DialogSystem : MonoBehaviour {
 
     private bool runAudio = false;
 
+    private Dialog.Orientation previousOrientation = Dialog.Orientation.UP;
+
     void Start() {
         cameraCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
@@ -84,7 +86,10 @@ public class DialogSystem : MonoBehaviour {
         baseY = transform.localPosition.y;
         baseScale = transform.localScale.x;
         transform.localPosition = new Vector3(transform.localPosition.x, baseY * 2, transform.localPosition.z);
-        foreach(var i in dialogs) dialogByName.Add(i.dialogName.ToLower().Trim(), i); 
+        foreach(var i in dialogs) {
+            i.displayed = false;
+            dialogByName.Add(i.dialogName.ToLower().Trim(), i); 
+        }
 
         orbitalCam = virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         composerCam = virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineComposer>();
@@ -123,9 +128,25 @@ public class DialogSystem : MonoBehaviour {
                 break;
             }
         } else {
-            dialogCamera.rect = new Rect(Mathf.Lerp(dialogCamera.rect.x, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+            switch(previousOrientation) {
+                case Dialog.Orientation.DOWN: 
+                    dialogCamera.rect = new Rect(0, 0, Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+                    mainCamera.rect = new Rect(0, Mathf.Lerp(mainCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
+                break;
+                case Dialog.Orientation.UP: 
+                    dialogCamera.rect = new Rect(0, Mathf.Lerp(dialogCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+                    mainCamera.rect = new Rect(0, Mathf.Lerp(mainCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
+                break;
+                case Dialog.Orientation.LEFT: 
+                    dialogCamera.rect = new Rect(Mathf.Lerp(dialogCamera.rect.x, 0, Time.deltaTime * splitSpeed), 0, Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+                    mainCamera.rect = new Rect(Mathf.Lerp(mainCamera.rect.x, 0, Time.deltaTime * splitSpeed), 0, Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
+                break;
+                case Dialog.Orientation.RIGHT: 
+                    dialogCamera.rect = new Rect(Mathf.Lerp(dialogCamera.rect.x, 1, Time.deltaTime * splitSpeed), 0, Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+                    mainCamera.rect = new Rect(Mathf.Lerp(mainCamera.rect.x, 0, Time.deltaTime * splitSpeed), 0, Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
+                break;
+            }
             if(dialogCamera.rect.width <= 0.02f) dialogCamera.enabled = false;
-            mainCamera.rect = new Rect(Mathf.Lerp(mainCamera.rect.x, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
         }
 
         skipText.text = "(<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color>)";
@@ -179,7 +200,11 @@ public class DialogSystem : MonoBehaviour {
     }
 
     private void EndDialog() {
-        currentDialog.displayed = true;
+        if(currentDialog != null) currentDialog.displayed = true;
+        Reset();
+    }
+
+    public void Reset() {
         triggered = false;
         contentIndex = 0;
         current = null;
@@ -193,7 +218,7 @@ public class DialogSystem : MonoBehaviour {
         displayTime = charIncreaseTime = timeUntilNextDialog = 0;
         characterIndex = 0;
         this.current = character;
-        this.current.LoadCharacter(dialogChars[character.characterName].transform);
+        if(dialogChars.ContainsKey(character.characterName)) this.current.LoadCharacter(dialogChars[character.characterName].transform);
         if(this.current.postProcessProfile != null) dialogPostProcess.m_Profile = this.current.postProcessProfile;
         targetText = content;
         characterNameText.text = character.name;
@@ -212,12 +237,15 @@ public class DialogSystem : MonoBehaviour {
             var emotion = DialogCharacter.Emotion.NEUTRAL;
             if(currentDialog.host != null && currentDialog.host.voiceByEmotion.ContainsKey(currentSentence.emotion)) emotion = currentDialog.host.voiceByEmotion[currentSentence.emotion].emotion;
 
-            var voice = currentDialog.host.voiceByEmotion[emotion];
-            if(voice != null && voice.sample != null) {
-                src.volume = narrationVolume;
-                src.clip = voice.sample;
-                src.Play();
-                runAudio = true;
+            var host = currentDialog.host;
+            if(host.voiceByEmotion.ContainsKey(emotion)) {
+                var voice = host.voiceByEmotion[emotion];
+                if(voice != null && voice.sample != null) {
+                    src.volume = narrationVolume;
+                    src.clip = voice.sample;
+                    src.Play();
+                    runAudio = true;
+                }
             }
         }
     }
@@ -231,7 +259,11 @@ public class DialogSystem : MonoBehaviour {
         var d = dialogName.Trim().ToLower();
         if(d.Length <= 0 || !dialogByName.ContainsKey(d)) return;
         contentIndex = 0;
+
+        if(dialogByName[d].displayed) return;
+
         currentDialog = dialogByName[d];
+        previousOrientation = currentDialog.orientation;
 
         cameraCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         cameraCanvas.worldCamera = mainCamera;
