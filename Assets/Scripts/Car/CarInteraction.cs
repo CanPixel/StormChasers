@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class CarInteraction : MonoBehaviour {
     public bool engageMission = false;
     [ConditionalHide("engageMission", true)] public int missionIndex = 0;
+    [ConditionalHide("engageMission", true)] public string missionName;
     [ConditionalHide("engageMission", true)] public MeshRenderer missionMarker;
     [ConditionalHide("engageMission", true)] public GameObject[] destroyOnMissionComplete;
     [ReadOnly] public MissionManager.Mission mission;
@@ -19,10 +20,14 @@ public class CarInteraction : MonoBehaviour {
     }
 
     void OnValidate() {
-        if(missionManager == null) missionManager = GameObject.FindGameObjectWithTag("MissionManager").GetComponent<MissionManager>();
+        if(missionManager == null) {
+            var miss = GameObject.FindGameObjectWithTag("MissionManager");
+            if(miss != null) missionManager = miss.GetComponent<MissionManager>();
+        }
         var missions = missionManager.missions;
         missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
         mission = missions[missionIndex];
+        missionName = mission.name;
     }
 
     public UnityEvent onEnter;
@@ -31,7 +36,7 @@ public class CarInteraction : MonoBehaviour {
         if(col.tag == "Player") {
             onEnter.Invoke();
             if(engageMission) {
-                missionManager.ScanMissionCompletion(transform.position);
+                if(missionManager.activeMission == mission) missionManager.ScanMissionCompletion(transform.position);
                 missionManager.StartMission(mission);
             }
         }
@@ -45,7 +50,7 @@ public class CarInteraction : MonoBehaviour {
     }
 
     public void SetDeliveryStage(bool i) {
-        if(missionMarker.gameObject == null) return;
+        if(missionMarker == null || missionMarker.gameObject == null) return;
         if(i) SetMissionMarkerColor(missionManager.deliverMarkerColor);   
         else SetMissionMarkerColor(missionManager.missionMarkerColor);   
     }

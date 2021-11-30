@@ -145,14 +145,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""MarkPictureForMission"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""2b56b145-a0bc-4f6f-9e95-08cbd759c7ff"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -664,8 +656,8 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Gamepad"",
-                    ""id"": ""f6e697ee-928b-4b3c-a795-656f814a9178"",
-                    ""path"": ""1DAxis"",
+                    ""id"": ""21cc3453-4eb4-478f-bebb-fc24c4bbad13"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -674,9 +666,9 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
-                    ""id"": ""3fd01e32-5863-4be3-a4e7-e474a351536b"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""name"": ""up"",
+                    ""id"": ""92386711-e15c-466b-b95c-1515634aa27e"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -685,9 +677,31 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""e540cd5d-1028-4808-b6d2-a44446789188"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""name"": ""down"",
+                    ""id"": ""2ff3785d-8bfa-4e99-ac3f-5f7041f863bc"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ScrollPortfolio"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""5da5640c-86ac-4eb4-8936-39cbe67bb61e"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ScrollPortfolio"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b0a26bd6-8cdf-45a8-8dfb-64fee3c02b77"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -703,17 +717,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""DiscardPicture"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d16da124-445b-41f7-9451-52ec5c53f029"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""MarkPictureForMission"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -768,7 +771,6 @@ public class @Controls : IInputActionCollection, IDisposable
         m_GameControls_SkipPicture = m_GameControls.FindAction("SkipPicture", throwIfNotFound: true);
         m_GameControls_ScrollPortfolio = m_GameControls.FindAction("ScrollPortfolio", throwIfNotFound: true);
         m_GameControls_DiscardPicture = m_GameControls.FindAction("DiscardPicture", throwIfNotFound: true);
-        m_GameControls_MarkPictureForMission = m_GameControls.FindAction("MarkPictureForMission", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -834,7 +836,6 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_GameControls_SkipPicture;
     private readonly InputAction m_GameControls_ScrollPortfolio;
     private readonly InputAction m_GameControls_DiscardPicture;
-    private readonly InputAction m_GameControls_MarkPictureForMission;
     public struct GameControlsActions
     {
         private @Controls m_Wrapper;
@@ -855,7 +856,6 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @SkipPicture => m_Wrapper.m_GameControls_SkipPicture;
         public InputAction @ScrollPortfolio => m_Wrapper.m_GameControls_ScrollPortfolio;
         public InputAction @DiscardPicture => m_Wrapper.m_GameControls_DiscardPicture;
-        public InputAction @MarkPictureForMission => m_Wrapper.m_GameControls_MarkPictureForMission;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -913,9 +913,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 @DiscardPicture.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
                 @DiscardPicture.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
                 @DiscardPicture.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnDiscardPicture;
-                @MarkPictureForMission.started -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
-                @MarkPictureForMission.performed -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
-                @MarkPictureForMission.canceled -= m_Wrapper.m_GameControlsActionsCallbackInterface.OnMarkPictureForMission;
             }
             m_Wrapper.m_GameControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -968,9 +965,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 @DiscardPicture.started += instance.OnDiscardPicture;
                 @DiscardPicture.performed += instance.OnDiscardPicture;
                 @DiscardPicture.canceled += instance.OnDiscardPicture;
-                @MarkPictureForMission.started += instance.OnMarkPictureForMission;
-                @MarkPictureForMission.performed += instance.OnMarkPictureForMission;
-                @MarkPictureForMission.canceled += instance.OnMarkPictureForMission;
             }
         }
     }
@@ -1011,6 +1005,5 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnSkipPicture(InputAction.CallbackContext context);
         void OnScrollPortfolio(InputAction.CallbackContext context);
         void OnDiscardPicture(InputAction.CallbackContext context);
-        void OnMarkPictureForMission(InputAction.CallbackContext context);
     }
 }

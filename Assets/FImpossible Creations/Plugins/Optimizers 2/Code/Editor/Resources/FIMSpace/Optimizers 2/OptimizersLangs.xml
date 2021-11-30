@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Languages>
+
+  <English>
+    <string name="Optimizer Setup">Optimizer Setup</string>
+    <string name="To Optimize List">To Optimize List</string>
+    <string name="Additional Features">Additional Features</string>
+    
+    <string name="Realtime Preview">Realtime Preview</string>
+    <string name="LOD Levels Setup">LOD Levels Setup</string>
+    
+    <string name="LangManageInfo">Here you can manage components for optimization</string>
+    <string name="Complex Detection Shape">Complex Detection Shape</string>
+    <string name="Obstacles Detection">Obstacles Detection</string>
+    
+    <string name="Detect UNITY C">Detect UNITY Components to optimize</string>
+    <string name="Find Comps in c">Find Comps. in children</string>
+    <string name="Find Custom Comps">Find Custom Comps. in children</string>
+    <string name="Assigning">Assigning new components tab</string>
+    <string name="Suggest">Suggest</string>
+  </English>
+
+  <Polski>
+    <string name="Optimizer Setup">Dostosuj Optimizera</string>
+    <string name="To Optimize List">Komponenty do optymalizacji</string>
+    <string name="Additional Features">Dodatkowe Możliwości</string>
+
+    <string name="Realtime Preview">Aktywny Podgląd</string>
+    <string name="LOD Levels Setup">Ustawienia Poziomów Detali</string>
+
+    <string name="LangManageInfo">Wybierz które komponenty chcesz optymalizować</string>
+    <string name="Complex Detection Shape">Wielokształtne Pole Wykrywania</string>
+    <string name="Obstacles Detection">Wykrywanie Przeszkód</string>
+
+    <string name="Detect UNITY C">Znajdź komponenty UNITY</string>
+    <string name="Find Comps in c">Znajdź komponenty wgłąb</string>
+    <string name="Find Custom Comps">Znajdź niestandardowe</string>
+    <string name="Assigning">Zakładka przypisywania komponentów</string>
+    <string name="Suggest">Zasugeruj</string>
+  </Polski>
+
+
+  <русский>
+    <string name="Optimizer Setup">Optimizer Настройка</string>
+    <string name="To Optimize List">Для оптимизации списка</string>
+    <string name="Additional Features">Дополнительные функции</string>
+
+    <string name="Realtime Preview">Предварительный просмотр в режиме реального времени</string>
+    <string name="LOD Levels Setup">Настройка уровней</string>
+
+    <string name="LangManageInfo">Здесь вы можете управлять компонентами для оптимизации</string>
+    <string name="Complex Detection Shape">Комплексная форма обнаружения</string>
+    <string name="Obstacles Detection">Обнаружение препятствий</string>
+
+    <string name="Detect UNITY C">Обнаружение компонентов для оптимизации</string>
+    <string name="Find Comps in c">Найти глубокие компоненты</string>
+    <string name="Find Custom Comps">Найти пользовательские глубокие компоненты</string>
+    <string name="Assigning">Назначение новых компонентов</string>
+    <string name="Suggest">Предложите</string>
+  </русский>
+
+
+  <中文>
+    <string name="Optimizer Setup">Optimizer 设置</string>
+    <string name="To Optimize List">优化列表</string>
+    <string name="Additional Features">附加功能</string>
+
+    <string name="Realtime Preview">实时预览</string>
+    <string name="LOD Levels Setup">级设置</string>
+
+    <string name="LangManageInfo">您可以在这里管理组件以进行优化</string>
+    <string name="Complex Detection Shape">复杂检测形状</string>
+    <string name="Obstacles Detection">障碍检测</string>
+
+    <string name="Detect UNITY C">检测组件以优化</string>
+    <string name="Find Comps in c">查找深度组件</string>
+    <string name="Find Custom Comps">查找自定义深度组件</string>
+    <string name="Assigning">分配新组件</string>
+    <string name="Suggest">建议</string>
+  </中文>
+
+
+
+
+  <日本語>
+    <string name="Optimizer Setup">Optimizer セットアップ</string>
+    <string name="To Optimize List">リストを最適化する</string>
+    <string name="Additional Features">追加機能</string>
+
+    <string name="Realtime Preview">リアルタイムプレビュ</string>
+    <string name="LOD Levels Setup">レベル設定</string>
+
+    <string name="LangManageInfo">ここでは、最適化</string>
+    <string name="Complex Detection Shape">複雑な検出形状</string>
+    <string name="Obstacles Detection">障害物検出</string>
+
+    <string name="Detect UNITY C">コンポーネントを管理して</string>
+    <string name="Find Comps in c">ディープコンポーネントを検索する</string>
+    <string name="Find Custom Comps">カスタムディープコンポーネントを最適化します</string>
+    <string name="Assigning">新しいコンポーネントをに割り当てる</string>
+    <string name="Suggest">提案する</string>
+  </日本語>
+
+
+
+  <한국어>
+    <string name="Optimizer Setup">Optimizer 설정</string>
+    <string name="To Optimize List">목록 최적화</string>
+    <string name="Additional Features">추가 기능</string>
+
+    <string name="Realtime Preview">실시간 미리보기</string>
+    <string name="LOD Levels Setup">레벨 설정</string>
+
+    <string name="LangManageInfo">최적화를 위한 구성 요소를 관리할 수 있습니다</string>
+    <string name="Complex Detection Shape">복잡한 탐지 모양</string>
+    <string name="Obstacles Detection">장애물 감지</string>
+
+    <string name="Detect UNITY C">최적화할 구성 요소 감지</string>
+    <string name="Find Comps in c">깊은 구성 요소 찾기</string>
+    <string name="Find Custom Comps">사용자 지정 심층 구성 요소 찾기</string>
+    <string name="Assigning">새로운 구성 요소 할당</string>
+    <string name="Suggest">제안</string>
+  </한국어>
+  
+</Languages>

@@ -246,10 +246,10 @@ namespace KartGame.KartSystems
             Rigidbody = GetComponent<Rigidbody>();
             m_Inputs = GetComponents<IInput>();
 
-            UpdateSuspensionParams(FrontLeftWheel);
-            UpdateSuspensionParams(FrontRightWheel);
-            UpdateSuspensionParams(RearLeftWheel);
-            UpdateSuspensionParams(RearRightWheel);
+            if(FrontLeftWheel != null) UpdateSuspensionParams(FrontLeftWheel);
+            if(FrontRightWheel != null) UpdateSuspensionParams(FrontRightWheel);
+            if(RearLeftWheel != null) UpdateSuspensionParams(RearLeftWheel);
+            if(RearRightWheel != null) UpdateSuspensionParams(RearRightWheel);
 
             m_CurrentGrip = baseStats.Grip;
 
@@ -292,10 +292,10 @@ namespace KartGame.KartSystems
 
         void FixedUpdate()
         {
-            UpdateSuspensionParams(FrontLeftWheel);
-            UpdateSuspensionParams(FrontRightWheel);
-            UpdateSuspensionParams(RearLeftWheel);
-            UpdateSuspensionParams(RearRightWheel);
+            if(FrontLeftWheel != null) UpdateSuspensionParams(FrontLeftWheel);
+            if(FrontRightWheel != null) UpdateSuspensionParams(FrontRightWheel);
+            if(RearLeftWheel != null) UpdateSuspensionParams(RearLeftWheel);
+            if(RearRightWheel != null) UpdateSuspensionParams(RearRightWheel);
 
             GatherInputs();
 
@@ -306,24 +306,17 @@ namespace KartGame.KartSystems
             Rigidbody.centerOfMass = transform.InverseTransformPoint(CenterOfMass.position);
 
             int groundedCount = 0;
-            if (FrontLeftWheel.isGrounded && FrontLeftWheel.GetGroundHit(out WheelHit hit))
-                groundedCount++;
-            if (FrontRightWheel.isGrounded && FrontRightWheel.GetGroundHit(out hit))
-                groundedCount++;
-            if (RearLeftWheel.isGrounded && RearLeftWheel.GetGroundHit(out hit))
-                groundedCount++;
-            if (RearRightWheel.isGrounded && RearRightWheel.GetGroundHit(out hit))
-                groundedCount++;
+            if (FrontLeftWheel != null && FrontLeftWheel.isGrounded && FrontLeftWheel.GetGroundHit(out WheelHit hit)) groundedCount++;
+            if (FrontRightWheel != null && FrontRightWheel.isGrounded && FrontRightWheel.GetGroundHit(out hit)) groundedCount++;
+            if (RearLeftWheel != null && RearLeftWheel.isGrounded && RearLeftWheel.GetGroundHit(out hit)) groundedCount++;
+            if (RearRightWheel != null && RearRightWheel.isGrounded && RearRightWheel.GetGroundHit(out hit)) groundedCount++;
 
             // calculate how grounded and airborne we are
             GroundPercent = (float) groundedCount / 4.0f;
             AirPercent = 1 - GroundPercent;
 
             // apply vehicle physics
-            if (m_CanMove)
-            {
-                MoveVehicle(Input.AccelerateInput, Input.Brake, Input.Drift, Input.TurnInput);
-            }
+            if (m_CanMove) MoveVehicle(Input.AccelerateInput, Input.Brake, Input.Drift, Input.TurnInput);
             GroundAirbourne();
 
             m_PreviousGroundPercent = GroundPercent;

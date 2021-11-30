@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fb857f0adbc6d42a6c7398c53ee79c, type: 3}
+  m_Name: FLOD_Light Reference
+  m_EditorClassIdentifier: 
+  settings:
+    SetDisabled: 0
+    cmp: {fileID: 0}
+    IntensityMul: 1
+    RangeMul: 1
+    ShadowsMode: 2
+    ShadowsStrength: 1
+    RenderMode: 0
+    ChangeIntensity: 1

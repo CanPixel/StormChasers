@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UIFloat : MonoBehaviour {
+	public bool translate = true, rotate = true, scale = true;
 	private Vector3 targetPos, targetScale, targetRot;
 	private Vector3 basePos, baseScale, baseRot;
 	public float scaleSpeed = 0.5f, translateSpeed = 0.5f, rotateSpeed = 0.5f;
@@ -21,10 +22,11 @@ public class UIFloat : MonoBehaviour {
 	void Update () {
 		targetPos = basePos + posDir * Mathf.Sin(Time.time * posFreq) * posAmp;
 		targetScale = baseScale + scaleDir * Mathf.Cos(Time.time * scaleFreq) * scaleAmp;
-		transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * translateSpeed);
-		transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
+		
+		if(translate) transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * translateSpeed);
+		if(scale) transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
 
-		if(rotDir != Vector3.zero) {
+		if(rotDir != Vector3.zero && rotate) {
 			targetRot = baseRot + rotDir * Mathf.Sin(Time.time * rotFreq) * rotAmp;
 			transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(targetRot), Time.deltaTime * rotateSpeed);
 		}

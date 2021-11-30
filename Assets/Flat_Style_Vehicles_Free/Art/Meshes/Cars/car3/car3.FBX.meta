@@ -1,0 +1,167 @@
+fileFormatVersion: 2
+guid: 26aa819164ac9c143b10d57f98ce7de4
+timeCreated: 1485640784
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Bord
+    100002: //RootNode
+    100004: Cylinder009
+    100006: Cylinder010
+    100008: Glass
+    100010: Hood
+    100012: Seat_ltft
+    100014: Seat_right
+    100016: Steering_wheel
+    100018: Wheel_back_left
+    100020: Wheel_back_right
+    100022: Wheel_front_left
+    100024: Wheel_front_right
+    100026: Axle_back
+    100028: Axle_front
+    100030: Seat_back
+    100032: Seat_left
+    100034: Whiper_left
+    100036: Whiper_right
+    400000: Bord
+    400002: //RootNode
+    400004: Cylinder009
+    400006: Cylinder010
+    400008: Glass
+    400010: Hood
+    400012: Seat_ltft
+    400014: Seat_right
+    400016: Steering_wheel
+    400018: Wheel_back_left
+    400020: Wheel_back_right
+    400022: Wheel_front_left
+    400024: Wheel_front_right
+    400026: Axle_back
+    400028: Axle_front
+    400030: Seat_back
+    400032: Seat_left
+    400034: Whiper_left
+    400036: Whiper_right
+    2300000: Bord
+    2300002: Cylinder009
+    2300004: Cylinder010
+    2300006: Glass
+    2300008: Hood
+    2300010: Seat_ltft
+    2300012: Seat_right
+    2300014: Steering_wheel
+    2300016: Wheel_back_left
+    2300018: Wheel_back_right
+    2300020: Wheel_front_left
+    2300022: Wheel_front_right
+    2300024: Axle_back
+    2300026: Axle_front
+    2300028: Seat_back
+    2300030: Seat_left
+    2300032: Whiper_left
+    2300034: Whiper_right
+    3300000: Bord
+    3300002: Cylinder009
+    3300004: Cylinder010
+    3300006: Glass
+    3300008: Hood
+    3300010: Seat_ltft
+    3300012: Seat_right
+    3300014: Steering_wheel
+    3300016: Wheel_back_left
+    3300018: Wheel_back_right
+    3300020: Wheel_front_left
+    3300022: Wheel_front_right
+    3300024: Axle_back
+    3300026: Axle_front
+    3300028: Seat_back
+    3300030: Seat_left
+    3300032: Whiper_left
+    3300034: Whiper_right
+    4300000: Cylinder009
+    4300002: Wheel_front_right
+    4300004: Glass
+    4300006: Seat_ltft
+    4300008: Bord
+    4300010: Steering_wheel
+    4300012: Wheel_back_left
+    4300014: Cylinder010
+    4300016: Seat_right
+    4300018: Wheel_back_right
+    4300020: Wheel_front_left
+    4300022: Hood
+    4300024: Axle_front
+    4300026: Axle_back
+    4300028: Whiper_left
+    4300030: Seat_left
+    4300032: Whiper_right
+    4300034: Seat_back
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

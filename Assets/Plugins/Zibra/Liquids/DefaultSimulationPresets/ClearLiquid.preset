@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ClearLiquid
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: b9d9f4948168ee245b0a8e48922540ba,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: RefractionColor.r
+    value: 0.31372553
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: RefractionColor.g
+    value: 0.7803755
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: RefractionColor.b
+    value: 0.9019608
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: RefractionColor.a
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Smoothness
+    value: 0.946
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Metal
+    value: 0.24
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Opacity
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Shadowing
+    value: 0.098
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: RefractionDistort
+    value: 0.161
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ParticleScale
+    value: 2.37
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Foam
+    value: 0.07
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: FoamDensity
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: BlurRadius
+    value: 0.018
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: BilateralWeight
+    value: 2.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ReflectionColor.r
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ReflectionColor.g
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ReflectionColor.b
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ReflectionColor.a
+    value: 1
+    objectReference: {fileID: 0}

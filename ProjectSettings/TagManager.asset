@@ -9,6 +9,10 @@ TagManager:
   - AREA
   - PickUp
   - MissionManager
+  - Shark
+  - SharkWaypoint
+  - CarWaypoint
+  - CarCivilian
   layers:
   - Default
   - TransparentFX
@@ -31,7 +35,7 @@ TagManager:
   - NOBACK
   - DIALOG
   - IGNOREMINIMAP
-  - 
+  - SHARKWAYPOINT
   - 
   - 
   - 
@@ -45,4 +49,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3944704423
+    locked: 0
+  - name: Foreground
+    uniqueID: 658734703
     locked: 0

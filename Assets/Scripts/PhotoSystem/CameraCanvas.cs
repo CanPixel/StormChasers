@@ -73,9 +73,6 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     void Update() {
-        //MotionBlurReticle();
-//        if(player.GetLooking() == Vector2.zero) movementReticle.transform.localPosition = Vector3.Lerp(movementReticle.transform.localPosition, Vector3.zero, Time.deltaTime * movementDamping);
-
         dof.focusDistance.value = Mathf.Clamp(dof.focusDistance.value + focusInput * focusSensitivity * sensitivityValue, minFocusRange, maxFocusRange);
         focusMeter.value = (dof.focusDistance.value / maxFocusRange);
         
@@ -122,24 +119,6 @@ public class CameraCanvas : MonoBehaviour {
         return "";
     }
 
-  /*   public void SynchLook() {
-        return;
-        if(!cameraControl.cinemachineBrain.IsLive(cameraControl.firstPersonLook) || cameraControl.cinemachineBrain.IsBlending) return;
-        var look = player.GetLooking();
-        if(look == Vector2.zero || look.magnitude < movementSensitivityThreshold) return;
-        movementReticle.transform.localPosition = new Vector3(look.x, look.y, 0) * -movementRange;
-    }
-
-    protected void MotionBlurReticle() {
-        return;
-        if(motionBlur == null) motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
-        var motionDist = Vector3.Distance(movementReticle.transform.position, baseReticle.transform.position) * motionReticleSensitivity;
-        motionBlur.shutterAngle.value = Mathf.Clamp(motionDist, motionBlurRange.x, motionBlurRange.y);
-        if(motionDist < 100) motionBlur.enabled.value = false;
-        else motionBlur.enabled.value = true; 
-        motion = motionDist;
-    } */
-
     public float GetMotion() {
         return motion;
     }
@@ -161,6 +140,5 @@ public class CameraCanvas : MonoBehaviour {
         cameraControl.carMovement.HapticFeedback(0f, focus, 0.05f);
         focusMeterOutline.effectDistance = Vector2.one * (((1f - focus) * 2 - 1));
         focusMeterOutline.transform.localScale = Vector3.one * ((focus + 1) / 2f + 0.25f);
-        //focusMeterImg.effectDistance = Vector2.one * (1f - focus) * 3 + (Vector2.one * sensitivityValue);
     }
 }

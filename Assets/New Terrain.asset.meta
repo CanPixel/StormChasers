@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 7517ab47807354668adb81d3d4ab507e
+=======
+guid: dd228f50128b42144b9624dca99eff2d
+>>>>>>> BREDAMERGE
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 15600000

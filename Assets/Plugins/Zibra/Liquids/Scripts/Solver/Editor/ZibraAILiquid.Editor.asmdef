@@ -1,0 +1,30 @@
+{
+    "name": "ZibraAILiquid.Editor",
+    "references": [
+        "ZibraAILiquid",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.RenderPipelines.Core.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "",
+            "define": "UNITY_PIPELINE_HDRP"
+        },
+        {
+            "name": "com.unity.scriptablebuildpipeline",
+            "expression": "",
+            "define": "UNITY_PIPELINE_HDRP"
+        }
+    ],
+    "noEngineReferences": false
+}

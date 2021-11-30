@@ -6,13 +6,14 @@ namespace KartGame.KartSystems
     [DefaultExecutionOrder(100)]
     public class KartAnimation : MonoBehaviour
     {
-        [Serializable] public class Wheel
+        [Serializable]
+        public class Wheel
         {
             [Tooltip("A reference to the transform of the wheel.")]
             public Transform wheelTransform;
             [Tooltip("A reference to the WheelCollider of the wheel.")]
             public WheelCollider wheelCollider;
-            
+
             Quaternion m_SteerlessLocalRotation;
 
             public void Setup() => m_SteerlessLocalRotation = wheelTransform.localRotation;
@@ -51,9 +52,9 @@ namespace KartGame.KartSystems
             rearRightWheel.Setup();
         }
 
-        void FixedUpdate() 
+        void FixedUpdate()
         {
-            m_SmoothedSteeringInput = Mathf.MoveTowards(m_SmoothedSteeringInput, kartController.Input.TurnInput, 
+            m_SmoothedSteeringInput = Mathf.MoveTowards(m_SmoothedSteeringInput, kartController.Input.TurnInput,
                 steeringAnimationDamping * Time.deltaTime);
 
             // Steer front wheels
