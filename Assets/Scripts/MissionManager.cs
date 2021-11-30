@@ -118,12 +118,12 @@ public class MissionManager : MonoBehaviour {
         [Space(5)]
         public CarInteraction[] triggerLocations;
 
-        public BonusObject[] bonuses;
-        public BonusObject[] penalties;
+        //public BonusObject[] bonuses;
+        //public BonusObject[] penalties;
 
         [Space(5)]
         public UnityEvent OnMissionStarted;
-        public UnityEvent OnMissionFinished;
+        public UnityEvent OnMissionFinished, AfterMissionFinished;
         public UnityEvent OnMissionDelivered;
 
         public void Enable(bool a) {
@@ -137,9 +137,12 @@ public class MissionManager : MonoBehaviour {
                     obj.missionObjects.missionObjects[i].objective = l[i];
                 }
             }
-            foreach(var i in bonuses) i.item.active = true;
+            //foreach(var i in bonuses) i.item.active = true;
         }
     }
+
+    private float finishTime = 0;
+    private bool afterFinishInvoked = false;
 
     public void Deliver() {
         if(currentObjective == null) return;
@@ -211,7 +214,6 @@ public class MissionManager : MonoBehaviour {
                         }
                     } else {
                         foreach(var m in pic.subScore) {
-                            Debug.Log(m.item.name);
                             if(ComparePhotoItem(m.item, key)) {
                                 activeCriteria[i].OnPictureDoAction.Invoke();
                                 missionCleared[i] = true;
@@ -255,6 +257,7 @@ public class MissionManager : MonoBehaviour {
                 //currentFinished = true;
                 currentObjective.OnMissionFinished.Invoke();
                 screen.missionReference = currentObjective;
+                finishTime = 0.65f;
                 screen.forMission = true;
                 readyForMark.gameObject.SetActive(true);
                 if(currentObjective != null) {
@@ -373,6 +376,14 @@ public class MissionManager : MonoBehaviour {
     }
 
     void Update() {
+        if(finishTime > 0) finishTime -= Time.deltaTime;
+        else if(currentObjective != null) {
+            if(!afterFinishInvoked) {
+                currentObjective.AfterMissionFinished.Invoke();
+                afterFinishInvoked = true;
+            }
+        }
+
         if(startedMission) {
             startSequence += Time.unscaledDeltaTime * sequenceSpeed;
             if(startSequence > sequenceDuration) missionParent.transform.localScale = Vector3.Lerp(missionParent.transform.localScale, Vector3.one * ((currentObjective != null && currentObjective.cleared) ? (missionParentScale + 0.2f) : missionParentScale), Time.unscaledDeltaTime * 5f);
@@ -402,5 +413,7 @@ public class MissionManager : MonoBehaviour {
         startSequence = 0;
         activeMission = null;
         startedMission = false;
+        afterFinishInvoked = false;
+        finishTime = 0;
     }
 }

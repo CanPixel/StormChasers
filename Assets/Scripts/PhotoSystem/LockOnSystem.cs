@@ -17,6 +17,8 @@ public class LockOnSystem : MonoBehaviour {
     public GameObject canvas;
     public Camera cam;
 
+    public bool occlusion = true, focus = true, physicalDistance = true;
+
     [Space(10)]
     public Dictionary<PhotoBase, LockedObjects> onScreenTargets = new Dictionary<PhotoBase, LockedObjects>();
     [HideInInspector] public List<PhotoBase> sortedScreenObjects = new List<PhotoBase>();
@@ -24,30 +26,15 @@ public class LockOnSystem : MonoBehaviour {
     [SerializeField, ReadOnly] private List<PhotoItem> allTargets = new List<PhotoItem>();
     private Transform target;
 
-    //Object triggers
-    //private Dictionary<TriggerWhenOnScreen, bool> onScreen = new Dictionary<TriggerWhenOnScreen, bool>();
-    //[SerializeField] private List<TriggerWhenOnScreen> screenTriggers = new List<TriggerWhenOnScreen>();
-
     void Start() {
         allTargets.Clear();
-        //onScreen.Clear();
         allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
         
-        //screenTriggers = GameObject.FindObjectsOfType<TriggerWhenOnScreen>().ToList();
-        //foreach(var i in screenTriggers) onScreen.Add(i, false);
-
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-        
         foreach(var i in allTargets) if(i.render != null) i.render.allowOcclusionWhenDynamic = true;
     }
 
     void Update() {
-/*         foreach(var i in onScreen.ToList()) {
-            var old = onScreen[i.Key];
-            onScreen[i.Key] = IsOnScreen(i.Key.transform.position);
-            if(old != onScreen[i.Key] && onScreen[i.Key]) i.Key.OnScreen();
-        } */
-
         for (int i = 0; i < allTargets.Count; i++) {
             if(!allTargets[i].active) continue;
             bool isComposite = allTargets[i].isComposite;
@@ -69,8 +56,8 @@ public class LockOnSystem : MonoBehaviour {
         if(sortedScreenObjects.Count > 0) {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
-                if(!k.isKeyPoint) objects += k.name.Trim() + "! \n";
-                else objects += "<color='#ff00ff'>" + k.name + "</color> \n";
+                if(!k.isKeyPoint) objects += k.tags.Trim() + "\n";
+                else objects += "<color='#ff00ff'>" + k.tags + "</color> \n";
                 FadeCrosshair(k);
             }
             cameraCanvas.highlightedObjectText.text = objects;
@@ -105,12 +92,17 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
+        if(target == null) return;
         bool inDistance = IsInDistance(target.transform.position, cameraCanvas.maxDistance);
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
         var inFocus = GetObjectSharpness(target);
         bool isInFocus = inFocus >= cameraCanvas.objectInFocusThreshold;
         bool isOnScreen = IsOnScreen(target.transform.position);
+
+        if(!occlusion) isOccluded = false;
+        if(!focus) isInFocus = true;
+        if(!physicalDistance) inDistance = true;
 
         if (!isOccluded && inDistance && isOrientation && isOnScreen && !onScreenTargets.ContainsKey(target) && target.active && isInFocus) AddCrosshair(target);
         else if (onScreenTargets.ContainsKey(target) && (!isOnScreen || !inDistance || isOccluded || !isOrientation || !isInFocus)) RemoveCrosshair(target);
@@ -155,8 +147,15 @@ public class LockOnSystem : MonoBehaviour {
         //Is in FOV
         if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;
         
-        RaycastHit hit;
+        // // / / / / ORIGINAL CODE
+/*         RaycastHit hit;
         if (Physics.Linecast(cam.transform.position, point, out hit)) {
+            if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform))) {
+                return false;
+            }
+        } */
+        RaycastHit hit;
+        if (Physics.Linecast(point, cam.transform.position, out hit)) {
             if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform))) return false;
         }
         return true;

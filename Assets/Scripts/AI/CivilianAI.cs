@@ -7,6 +7,7 @@ public class CivilianAI : MonoBehaviour {
     public GameObject roadPathsObject;
     private Transform[] roadPaths;
     private Vector3 targetPos;
+    public GameObject parentObj;
 
     public Vector2 retargetDuration;
 
@@ -14,6 +15,7 @@ public class CivilianAI : MonoBehaviour {
     private float reorientTime = 0;
 
     [Header("References")]
+    public PhotoItem photoItem;
     public UnityEngine.AI.NavMeshAgent navigation; 
     public Rigidbody rb;
 

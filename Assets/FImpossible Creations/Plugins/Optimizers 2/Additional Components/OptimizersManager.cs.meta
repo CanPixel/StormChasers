@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 14abe8e040d5f4d42bf57a7642a6fae9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - TargetCamera: {instanceID: 0}
+  - HumanScaleGuide: {fileID: 2800000, guid: 0b4f6f393aad1744ca4d960ba4a6c509, type: 3}
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: aaeaded38db39c042b64fd98ea661b74, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

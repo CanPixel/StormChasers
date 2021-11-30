@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f65dfd28613fb4cbb96b059c17e50b, type: 3}
+  m_Name: FLOD_Terrain Reference
+  m_EditorClassIdentifier: 
+  settings:
+    SetDisabled: 0
+    cmp: {fileID: 0}
+    PixelError: 5
+    BasemapDistance: 1250
+    DetailDistance: 100
+    DetailDensity: 1
+    TreeDistance: 2000
+    TreeLODBias: 1
+    BillboardStart: 50
+    DrawFoliage: 1
+    Mode: 0
+    CastShadows: 1
+    DrawHeightmap: 1
+    ResolutionDivider: 0
+    MeshReplacement: {fileID: 0}

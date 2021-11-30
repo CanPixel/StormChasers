@@ -11,6 +11,9 @@ public class SharkAI : MonoBehaviour {
     public bool loopPath = false;
     private List<Transform> roamingWayPoints = new List<Transform>();
     private List<SharkAttackPoint> huntingPoints = new List<SharkAttackPoint>();
+    
+    public bool talkingShark = false;
+    public float talkInterval = 0.5f;
 
     private GameObject drain;
     private Drain lastDrain;
@@ -43,7 +46,6 @@ public class SharkAI : MonoBehaviour {
 
     [Header("References")]
     public NavMeshAgent navigation; 
-    public Animator animator;
     public Animator huntingSharkAnim;
     public MMFeedbacks feedback;
     public Transform chompingPosition;
@@ -107,8 +109,20 @@ public class SharkAI : MonoBehaviour {
         }
     }
 
+    private float talkTime = 0;
+    private bool talkToggle = false;
     protected void RoamingUpdate() {
-        
+        if(talkingShark) {
+            huntingSharkAnim.Play("Babbel");
+
+            talkTime += Time.deltaTime;
+            if(talkTime > talkInterval) {
+                talkToggle = !talkToggle;
+                huntingSharkAnim.SetBool("MouthOpen", talkToggle);
+                huntingSharkAnim.SetBool("MouthClosed", !talkToggle);
+                talkTime = 0;
+            }
+        }
     }
     protected void HuntingUpdate() {
         if(!isHunting) huntTimer += Time.deltaTime;
@@ -125,14 +139,15 @@ public class SharkAI : MonoBehaviour {
             if(chompTimer >= 1) {
                 isChomping = false;
                 huntTimer = 0;
-                huntingSharkAnim.SetBool("MouthOpen", false);
+                huntingSharkAnim.SetBool("MouthOpen", false); 
+                huntingSharkAnim.SetBool("MouthClosed", true); //
                 drain.transform.localPosition = Vector3.zero;
                 drain.transform.localRotation = Quaternion.Euler(-90, 0, 0);
                 feedback.enabled = false;
                 lastDrain.Detrigger();
                 
                 // Respawning cars is essential !!!!!!!!!!!!!!!!!1
-                if(civilianCasualty != null && civilianCasualty.gameObject != null) Destroy(civilianCasualty.gameObject);
+                if(civilianCasualty != null && civilianCasualty.parentObj != null) Destroy(civilianCasualty.parentObj);
                 //
 
 
@@ -141,6 +156,7 @@ public class SharkAI : MonoBehaviour {
                 drain = null;
             }
 
+huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
             huntingSharkAnim.SetBool("MouthClosed", chompTimer > 0.8f);
 
             huntingSharkAnim.transform.localPosition = new Vector3(huntingSharkAnim.transform.localPosition.x, baseY + sharkLungeY.Evaluate(chompTimer) * sharkJumpFactor, huntingSharkAnim.transform.localPosition.z);
@@ -202,6 +218,7 @@ public class SharkAI : MonoBehaviour {
                         chompTimer = 0;
                         civilianCasualty = sap.drain.target.GetComponent<CivilianAI>();
                         if(civilianCasualty != null) {
+                            civilianCasualty.photoItem.tags += "BitByShark ";
                             civilianCasualty.Chomp(chompingPosition);
                             sap.drain.TriggerShark();
                             feedback.enabled = true;

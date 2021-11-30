@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7050470412032656440}
   - component: {fileID: 6559857008320002641}
   - component: {fileID: 2726142634957053646}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HOLE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2668989909443372714}
   - component: {fileID: 2668989909443372717}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Emitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2668989909459006426}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: FountainGeyser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 2668989910500312834}
   - component: {fileID: 2668989910500312835}
   - component: {fileID: 2668989910500312832}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ZibraFluid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 2432562897299294536}
   - component: {fileID: 1133402549244247235}
   - component: {fileID: 4599121410141313461}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
