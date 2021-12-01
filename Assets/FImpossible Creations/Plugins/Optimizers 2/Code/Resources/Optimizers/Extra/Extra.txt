@@ -1,1 +1,0 @@
-Extra directory is for custom implementations of any component, not just MonoBehaviours
