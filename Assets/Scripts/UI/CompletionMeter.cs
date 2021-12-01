@@ -33,6 +33,10 @@ public class CompletionMeter : MonoBehaviour {
         percentage.transform.localScale = Vector3.zero;
     }
 
+    public void HideCompletion() {
+        gameObject.SetActive(false);
+    }
+
     public void SetCompletion(float i) {
         fillTarget = i;
         fillTarget = Mathf.Clamp01(fillTarget);

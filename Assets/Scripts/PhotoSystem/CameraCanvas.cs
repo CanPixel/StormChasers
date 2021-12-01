@@ -84,7 +84,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void ReloadFX() {
-        if(dof == null) dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
+        dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
         var focusDist = dof.focusDistance.value;
         var focalLn = dof.focalLength.value;
         dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
@@ -128,6 +128,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public int GetFocusValue() {
+        if(dof == null) dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
         return (int)((dof.focusDistance.value / maxFocusRange) * 100f);
     }
 
