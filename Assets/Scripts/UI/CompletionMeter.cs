@@ -8,6 +8,9 @@ public class CompletionMeter : MonoBehaviour {
     public Image completionFill;
     public UIBob uIBob;
 
+    public float hydrantCaseValue = 0.5f;
+    public float bitBuildingCaseValue = 0.5f;
+
     private float fillTarget = 0;
 
     private float basePercentageScale;
@@ -45,5 +48,17 @@ public class CompletionMeter : MonoBehaviour {
     public void AddCompletion(float i) {
         fillTarget += i;
         fillTarget = Mathf.Clamp01(fillTarget);
+    }
+
+
+    private bool hydrant = false, bitBuilding = false;
+    public void AddHydrant() {
+        hydrant = true;
+        AddCompletion(hydrantCaseValue);
+    }
+
+    public void AddBittenBuilding() {
+        bitBuilding = true;
+        AddCompletion(bitBuildingCaseValue);
     }
 }

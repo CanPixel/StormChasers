@@ -115,11 +115,10 @@ public class MissionManager : MonoBehaviour {
         [HideInInspector] public bool active = false;
         [ReadOnly] public bool cleared = false, hasMarkedPicture = false, delivered = false;
 
+        public bool bypassDelivery = false;
+
         [Space(5)]
         public CarInteraction[] triggerLocations;
-
-        //public BonusObject[] bonuses;
-        //public BonusObject[] penalties;
 
         [Space(5)]
         public UnityEvent OnMissionStarted;
@@ -137,7 +136,6 @@ public class MissionManager : MonoBehaviour {
                     obj.missionObjects.missionObjects[i].objective = l[i];
                 }
             }
-            //foreach(var i in bonuses) i.item.active = true;
         }
     }
 
@@ -264,6 +262,8 @@ public class MissionManager : MonoBehaviour {
                     currentObjective.cleared = true;
                     journalSelectControl.Bob();
                 }
+
+                if(currentObjective.bypassDelivery) Deliver();
             } //else for(int m = 0; m < activeMission.Length; m++) MarkCurrentObjective(m, false);
         }
         return completed;
