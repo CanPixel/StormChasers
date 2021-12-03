@@ -80,7 +80,7 @@ public class DialogSystem : MonoBehaviour {
 
         dialogChars.Clear();
         dialogCharacters = GameObject.FindObjectsOfType(typeof(DialogChar)) as DialogChar[];
-        foreach(var i in dialogCharacters) dialogChars.Add(i.characterName, i);
+        foreach(var i in dialogCharacters) dialogChars.Add(i.characterName.ToLower().Trim(), i);
 
         triggered = false;
         baseY = transform.localPosition.y;
@@ -106,7 +106,8 @@ public class DialogSystem : MonoBehaviour {
         }
 
         if(currentDialog != null && currentDialog.host != null) {
-            if(dialogChars.ContainsKey(currentDialog.host.characterName) && dialogChars[currentDialog.host.characterName].talkAnimation != null) dialogChars[currentDialog.host.characterName].talkAnimation.enabled = IsHostTalking();
+            string charName = currentDialog.host.characterName.ToLower().Trim();
+            if(dialogChars.ContainsKey(charName) && dialogChars[charName].talkAnimation != null) dialogChars[charName].talkAnimation.enabled = IsHostTalking();
         
             float restSplit = 1 - splitRange;
             switch(currentDialog.orientation) {
@@ -218,7 +219,7 @@ public class DialogSystem : MonoBehaviour {
         displayTime = charIncreaseTime = timeUntilNextDialog = 0;
         characterIndex = 0;
         this.current = character;
-        if(dialogChars.ContainsKey(character.characterName)) this.current.LoadCharacter(dialogChars[character.characterName].transform);
+        if(dialogChars.ContainsKey(character.characterName.ToLower().Trim())) this.current.LoadCharacter(dialogChars[character.characterName.ToLower().Trim()].transform);
         if(this.current.postProcessProfile != null) dialogPostProcess.m_Profile = this.current.postProcessProfile;
         targetText = content;
         characterNameText.text = character.name;

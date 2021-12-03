@@ -139,24 +139,14 @@ public class LockOnSystem : MonoBehaviour {
 
     private bool CanSee(PhotoBase toCheck, PhotoItem host = null) {
         var point = toCheck.transform.position;
-
         Vector3 pointOnScreen = cam.WorldToScreenPoint(point);
  
-        //Is in front
-        if (pointOnScreen.z < 0) return false;
-        //Is in FOV
-        if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;
+        if (pointOnScreen.z < 0) return false;         //Is in front
+        if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;         //Is in FOV
         
-        // // / / / / ORIGINAL CODE
-/*         RaycastHit hit;
-        if (Physics.Linecast(cam.transform.position, point, out hit)) {
-            if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform))) {
-                return false;
-            }
-        } */
         RaycastHit hit;
         if (Physics.Linecast(point, cam.transform.position, out hit)) {
-            if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform))) return false;
+            if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform)) && hit.transform.tag != "Player") return false;
         }
         return true;
     }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ca79cfa35272a4aa2bb445b623302c, type: 3}
   m_Name: TORNADO
   m_EditorClassIdentifier: 
-  characterName: Tornado
+  characterName: tornado
   posOffset: {x: -46.25, y: 4, z: 0}
   rotOffset: {x: 3.77, y: -0.71, z: -8}
   postProcessProfile: {fileID: 11400000, guid: 30b920aff788e3341930b5b9c821fbd8, type: 2}
