@@ -47,14 +47,26 @@ public abstract class PhotoBase : MonoBehaviour {
     [ReadOnly] public string staticTags;
     public bool specificOrientation = false; 
     [HideInInspector] public bool isKeyPoint = false;
-    public string tags;
+    public string baseTag;
+    public string tags {
+        get; private set;
+    }
 
     [ConditionalHide("specificOrientation", true)] public Vector3 axisOffset = new Vector3(0, 0, 0);
     [ConditionalHide("specificOrientation", true)] public float orientationViewCone = 70f;
     [ConditionalHide("specificOrientation", true)] public float rayRange = 10.0f;
 
     public void Start() {
-        staticTags = tags;
+        tags = tags = staticTags = baseTag;
+    }
+
+    public void AddTag(string i) {
+        string add = i.Trim();
+        tags += add + " ";
+    }
+
+    public void OverwriteTag(string i) {
+        tags = i;
     }
 
     public bool InOrientation(Vector3 pos) {

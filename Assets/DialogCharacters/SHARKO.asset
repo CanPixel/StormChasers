@@ -20,4 +20,4 @@ MonoBehaviour:
   voices:
   - name: NEUTRAL
     emotion: 0
-    sample: {fileID: 8300000, guid: f7783f5c0fe8fe3458a993ecfae6aad8, type: 3}
+    sample: {fileID: 8300000, guid: 7fd0165d1b9a8b44da11d8dae32e0803, type: 3}

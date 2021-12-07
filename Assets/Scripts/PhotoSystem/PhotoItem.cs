@@ -19,6 +19,10 @@ public class PhotoItem : PhotoBase {
         if(isComposite) keyPoints.list = GetComponentsInChildren<PhotoKeyPoint>();
     }
 
+    void OnDestroy() {
+        LockOnSystem.DeletePhotoItem(this);
+    }
+
     public PhotoKeyPoint[] GetKeyPoints() {
         if(!isComposite) return null;
         return keyPoints.list;

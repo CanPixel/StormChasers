@@ -7,7 +7,11 @@ using UnityEngine.Events;
 public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
 
-    public UnityEvent onKnockShark, onKnockPlayer;
+    public UnityEvent onKnockShark, onKnockPlayer, onKnock;
+
+    void Start() {
+        gameObject.tag = "Knockable";
+    }
 
     void OnCollisionEnter(Collision col) {
         if(col.gameObject.tag == "Player" || col.gameObject.tag == "Shark") {
@@ -15,6 +19,7 @@ public class Knockable : MonoBehaviour {
             rb.useGravity = true;
             rb.isKinematic = false;
             onKnockPlayer.Invoke();
+            onKnock.Invoke();
             rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 100f);
         }
     }
@@ -25,6 +30,7 @@ public class Knockable : MonoBehaviour {
             rb.useGravity = true;
             rb.isKinematic = false;
             onKnockShark.Invoke();
+            onKnock.Invoke();
             rb.AddForce(new Vector3(0.05f, 1f, 0) * 15000f);
             rb.AddTorque(new Vector3(10, 50, 5), ForceMode.Impulse);
         }

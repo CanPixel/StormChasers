@@ -141,7 +141,7 @@ public class CarMovement : MonoBehaviour
         var fl = val.Get<float>();
         if (fl != 0)
         {
-            if (camControl.journal) camControl.ShowJournalInfo();
+            if (camControl.journal) ;//camControl.ShowJournalInfo();
             else camControl.CycleFilters(fl);
         }
     }

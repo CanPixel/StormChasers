@@ -36,7 +36,7 @@ public class CarInteraction : MonoBehaviour {
         if(col.tag == "Player") {
             onEnter.Invoke();
             if(engageMission) {
-                if(missionManager.activeMission == mission) missionManager.ScanMissionCompletion(transform.position);
+                if(missionManager.activeMission == mission) missionManager.ScanMissionCompletion(transform);
                 missionManager.StartMission(mission);
             }
         }

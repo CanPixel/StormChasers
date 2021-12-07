@@ -13,6 +13,8 @@ TagManager:
   - SharkWaypoint
   - CarWaypoint
   - CarCivilian
+  - SplashSound
+  - Knockable
   layers:
   - Default
   - TransparentFX

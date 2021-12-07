@@ -77,9 +77,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   allManipulators:
   - {fileID: 0}
-  - {fileID: 3062606452767155213}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   fluidInitialVelocity: {x: 0, y: 0, z: 0}
   manipulatorManager: {fileID: 4189054049763533630}
   sdfColliders: []
@@ -192,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConstAdditionalData: []
-  AdditionalData: {x: 1908, y: -0.000002026558, z: 8.500002, w: 0}
+  AdditionalData: {x: 4252, y: -0.000002026558, z: 8.500002, w: 0}
   ParticlesPerSec: 20000
   VelocityMagnitude: 8.5
   Velocity: {x: -0.000002026558, y: 8.500002, z: 0}
@@ -206,6 +211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4100981759708152525}
   - component: {fileID: 830639308686095894}
+  - component: {fileID: 4764593776957261717}
   m_Layer: 0
   m_Name: WaterGeyser
   m_TagString: Untagged
@@ -244,3 +250,16 @@ MonoBehaviour:
   zibra: {fileID: 5155148991591855988}
   triggerObject: {fileID: 0}
   photoObject: {fileID: 0}
+--- !u!65 &4764593776957261717
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8054848987171480400}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 50, y: 40, z: 50}
+  m_Center: {x: 0, y: 13, z: 0}

@@ -26,7 +26,15 @@ public class LockOnSystem : MonoBehaviour {
     [SerializeField, ReadOnly] private List<PhotoItem> allTargets = new List<PhotoItem>();
     private Transform target;
 
+    private static LockOnSystem self;
+
+    public static void DeletePhotoItem(PhotoItem i) {
+        self.allTargets.Remove(i);
+    }    
+
     void Start() {
+        self = this;
+
         allTargets.Clear();
         allTargets = GameObject.FindObjectsOfType<PhotoItem>().ToList();
         
@@ -44,6 +52,7 @@ public class LockOnSystem : MonoBehaviour {
         }
 
         foreach(KeyValuePair<PhotoBase, LockedObjects> k in onScreenTargets) {
+            if(onScreenTargets[k.Key].target == null || k.Key == null) continue;
             target = onScreenTargets[k.Key].target.transform;
             onScreenTargets[k.Key].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }
@@ -56,6 +65,7 @@ public class LockOnSystem : MonoBehaviour {
         if(sortedScreenObjects.Count > 0) {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
+                if(k.tags.Trim().Length <= 1) continue;
                 if(!k.isKeyPoint) objects += k.tags.Trim() + "\n";
                 else objects += "<color='#ff00ff'>" + k.tags + "</color> \n";
                 FadeCrosshair(k);
@@ -79,6 +89,10 @@ public class LockOnSystem : MonoBehaviour {
             //bool aboveMin = focusVal >= dist - 3;             `\\ check if true
             //bool roof = (focusVal <= dist + 15);                      \\ check if true
         }
+    }
+    
+    public static bool OnScreen(Vector3 pos) {
+        return self.IsOnScreen(pos);
     }
 
     public bool IsOnScreen(Vector3 pos) {
@@ -152,6 +166,7 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     protected void AddCrosshair(PhotoBase pi) {
+        if(pi == null || pi.tag.Length <= 2 || pi.baseTag.Length <= 2) return;
         var createImage = Instantiate(crossHair) as GameObject;
         createImage.transform.SetParent(canvas.transform, true);
         createImage.SetActive(true);

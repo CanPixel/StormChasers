@@ -88,6 +88,8 @@ public class CameraControl : MonoBehaviour {
         public bool forMission = false;
         [HideInInspector] public MissionManager.Mission missionReference;
 
+        public string containedObjectTags;
+
         [Range(0, 100)]
         public int score = 0;
 
@@ -119,7 +121,7 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
-    [HideInInspector] public List<Screenshot> screenshots = new List<Screenshot>();
+    public List<Screenshot> screenshots = new List<Screenshot>();
     private Screenshot markedScreenshot;
 
     [Space(10)]
@@ -158,7 +160,7 @@ public class CameraControl : MonoBehaviour {
     public GameObject journalSelection, journalPictureDeliveredPanel;
     public Outline journalSelectionOutline;
     public GameObject journalInfoSelectedBG;
-    public GameObject baseJournalButtons;
+    public GameObject baseJournalButtons, aMissionSelectButton;
     public Image pictureDelivered;
     public GameObject markPictureButton, discardPictureButton;
     public GameObject missionListOverlay;
@@ -192,6 +194,11 @@ public class CameraControl : MonoBehaviour {
     private int journalSelectedMission = 0;
 
     private float portfolioPictureBaseScale, portfolioTargetY = 0;
+
+    void OnDisable() {
+        foreach(var i in screenshots) Destroy(i.image);
+        screenshots.Clear();
+    } 
 
     void Start() {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
@@ -241,11 +248,11 @@ public class CameraControl : MonoBehaviour {
 
         if(isLookingBack) RecenterY();
 
-        if(deliverPicture && !missionManager.IsCurrentMissionBypassDelivery()) {
+        if(deliverTo != null && deliverPicture != null && !missionManager.IsCurrentMissionBypassDelivery()) {
             deliverTime += Time.deltaTime;
 
             deliverPicture.transform.localScale = Vector3.Lerp(deliverPicture.transform.localScale, Vector3.zero, Time.deltaTime * 1f);
-            deliverPicture.transform.position = Vector3.Lerp(deliverPicture.transform.position, deliverTo, Time.deltaTime * 1.5f);
+            deliverPicture.transform.position = Vector3.Lerp(deliverPicture.transform.position, deliverTo.position, Time.deltaTime * 1.5f);
             if(deliverTime > 1) {
                 Destroy(deliverPicture);
                 missionManager.Deliver();
@@ -316,6 +323,7 @@ public class CameraControl : MonoBehaviour {
         yInfoButton.SetActive(screenshots.Count > 0);
         //markButtonText.text = ((markedScreenshot != null) ? "UN" : "") +  "MARK";
         markButtonText.text = ((markedScreenshot != null) ? "RETRACT" : "SUBMIT");
+        aMissionSelectButton.SetActive(journalMissions.Count > 0 && !journalMissions[journalSelectedMission].mission.delivered && !journalMissions[journalSelectedMission].active);
     }
 
     public void OpenJournal() {
@@ -391,8 +399,8 @@ public class CameraControl : MonoBehaviour {
     public void JournalFinish(MissionManager.Mission miss) {
          for(int i = 0; i < journalMissions.Count; i++) 
             if(journalMissions[i].mission == miss) {
-                journalMissions[journalSelectedMission].mission.delivered = true;
-                journalMissions[journalSelectedMission].journalElement.transform.SetAsLastSibling();
+                journalMissions[i].mission.delivered = true;
+                journalMissions[i].journalElement.transform.SetAsLastSibling();
                 completedMissions++;
                 return;
             }
@@ -483,10 +491,15 @@ public class CameraControl : MonoBehaviour {
         return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
     }
 
-    private GameObject deliverPicture;
-    private Vector3 deliverTo;
+    public void DeliverReset() {
+        deliverTime = 0;
+        deliverPicture = null;
+    }
+
+    private GameObject deliverPicture = null;
+    private Transform deliverTo;
     private float deliverTime = 0;
-    public void DeliverPicture(Vector3 pos) {
+    public void DeliverPicture(Transform pos) {
         if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
         deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
@@ -495,11 +508,11 @@ public class CameraControl : MonoBehaviour {
         rb.useGravity = false;
         deliverPicture.transform.localScale = Vector3.one * 0.15f;
         var spr = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+
         deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
-        
         journalMissions[journalSelectedMission].finalPicture = spr;
         ShowJournalBaseScreen();
-
+        
         DeletePicture(currentSelectedPortfolioPhoto, false);
         currentSelectedPortfolioPhoto = 0;
         UnmarkPicture();
@@ -516,29 +529,30 @@ public class CameraControl : MonoBehaviour {
         return null;
     }
 
-    public void DeliverPicture(MissionManager.Mission miss) {
+    private Sprite lastMissionSprite;
+    public void DeliverPicture(MissionManager.Mission miss, Transform dest) {
         if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
         deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
         var rb = deliverPicture.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.up * DiscardForce * 50f);
-        rb.useGravity = false;
+        rb.AddForce(Vector3.up * DiscardForce * 100f);
+        rb.AddTorque(new Vector3(-1, 2, 1) * 10000f);
         deliverPicture.transform.localScale = Vector3.one * 0.15f;
-        var spr = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+
+        var journalInstance = new Texture2D(resWidth, resHeight);
+        journalInstance.SetPixels(screenshots[currentSelectedPortfolioPhoto].image.GetPixels());
+        journalInstance.Apply();
+
+        var spr = Sprite.Create(journalInstance, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
         
-        JournalMission jM = FindMissionInJournal(miss);
-        if(jM == null) return;
-
-        jM.finalPicture = spr;
+        journalMissions[journalSelectedMission].finalPicture = lastMissionSprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         ShowJournalBaseScreen();
 
-        DeletePicture(currentSelectedPortfolioPhoto, false);
-        currentSelectedPortfolioPhoto = 0;
-        UnmarkPicture();
+        MarkPicture();
         
         journal = false;
-        deliverTo = Vector3.zero;
+        if(dest != null) deliverTo = dest;
         deliverTime = 0;
     }
 
@@ -628,6 +642,10 @@ public class CameraControl : MonoBehaviour {
         return ratingSystem.HasTakenPicture();
     }
 
+    public Sprite GetLastScreenshot() {
+        return lastMissionSprite;
+    }
+
     protected void TakePicture() {
         if(!ratingSystem.AfterDelay(pictureDelayUntilNext) || (HasTakenPicture() && !ratingSystem.IsFading())) return;
 
@@ -664,6 +682,7 @@ public class CameraControl : MonoBehaviour {
         PictureScore score = new PictureScore();
 
         var allObjects = lockOnSystem.GetOnScreenObjects();
+        string objectTags = "";
         List<PhotoBase> restItems = new List<PhotoBase>();
 
         PhotoBase i = null;
@@ -691,7 +710,10 @@ public class CameraControl : MonoBehaviour {
             score.objectSharpness = lockOnSystem.GetObjectSharpness(i);
 //                Debug.Log(score);
         }
-        foreach(var obj in allObjects) if(obj != i) restItems.Add(obj);
+        foreach(var obj in allObjects) {
+            objectTags += obj.tags + " ";
+            if(obj != i) restItems.Add(obj);
+        }
 
         //SubScores with multiple objects
         foreach(var rest in restItems) {
@@ -711,6 +733,8 @@ public class CameraControl : MonoBehaviour {
             sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);
             score.subScore.Add(sub);
         }
+
+        scren.containedObjectTags = objectTags;
 
         //Visualize
         ratingSystem.VisualizeScore(score, scren);

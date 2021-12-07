@@ -9,6 +9,8 @@ public class CivilianAI : MonoBehaviour {
     private Vector3 targetPos;
     public GameObject parentObj;
 
+    [ReadOnly] public bool flipped = false;
+
     public Vector2 retargetDuration;
 
     public float reorientAfter = 10;
@@ -21,6 +23,8 @@ public class CivilianAI : MonoBehaviour {
 
     private float time = 0, randomDuration;
     private bool flipping = false, chomped = false;
+
+    private bool onScreen = false;
 
     void Start() {
         roadPaths = roadPathsObject.GetComponentsInChildren<Transform>();
@@ -43,8 +47,12 @@ public class CivilianAI : MonoBehaviour {
         if(chomped) return;
 
         time += Time.deltaTime;
+
+        flipped = Mathf.Abs(transform.rotation.z) > 0.25f;
+        photoItem.OverwriteTag(photoItem.staticTags + (flipped ? " flippedcar " : ""));
         
-        if(time > randomDuration) {
+        onScreen = LockOnSystem.OnScreen(transform.position);
+        if(time > randomDuration && !onScreen) {
             SetTarget(RandomLocation());
             time = 0;
         }
@@ -52,7 +60,7 @@ public class CivilianAI : MonoBehaviour {
         if(reorientTime <= 0) {
             navigation.enabled = true;
             if(flipping) {
-                SetTarget(RandomLocation());
+                if(navigation.destination == null) SetTarget(RandomLocation());
                 flipping = false;
             }
         }

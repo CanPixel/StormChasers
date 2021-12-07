@@ -60,6 +60,7 @@ public class RatingSystem : MonoBehaviour {
     [SerializeField] private Text polaroidTitle, polaroidSkip, totalScoreBase, totalScoreValue;
     [SerializeField] private Image polaroidUI, polaroidScreenshot;
     [SerializeField] private InputActionReference skipBinding;
+    public ChaosMeter chaosMeter;
 
     private float screenshotTimer = 0;
     private int totalScore;
@@ -208,6 +209,7 @@ public class RatingSystem : MonoBehaviour {
     }
 
     public void VisualizeScore(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+        Debug.Log(screen.containedObjectTags);
         polaroidScreenshot.fillAmount = 0;
         if(!ready || pic.item == null) return;
         Reset();
@@ -250,6 +252,11 @@ public class RatingSystem : MonoBehaviour {
         if(index > 0) totalScore /= index;
         screen.score = (int)totalScore;
         totalScoreValue.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)totalScore / 100f)) + "'>" + screen.score.ToString() + "</color>";
+        
+        var actMission = MissionManager.missionManager.activeMission;
+        if(actMission != null && !actMission.delivered) {
+            if(actMission.objectiveType == MissionManager.Mission.MissionType.CHAOS_STACK) chaosMeter.CalculateChaos(pic, screen, actMission);
+        }
     }
 
 /*     public void Skip() {

@@ -12,23 +12,26 @@ public class WaterGeyser : MonoBehaviour {
     public com.zibra.liquid.Solver.ZibraLiquid zibra;
     public GameObject triggerObject;
     public PhotoItem photoObject;
+    [ReadOnly] public bool gushing = false;
     
     void Start() {
         zibra.gameObject.SetActive(false);
         zibra.sdfColliders.Add(GameObject.FindGameObjectWithTag("Player").GetComponent<com.zibra.liquid.SDFObjects.AnalyticSDFCollider>());
         //zibra.sdfColliders.Add(GameObject.FindGameObjectWithTag("Shark").GetComponent<com.zibra.liquid.SDFObjects.AnalyticSDFCollider>());
 
-        zibra.containerPos = transform.position;
+        //zibra.containerPos = transform.position;
     }
 
     void Update() {
         if(zibra.activeParticleNumber >= zibra.MaxNumParticles) timer += Time.deltaTime;
         if(timer > 1) {
-            photoObject.tags = "";
             zibra.gameObject.SetActive(false);
+            gushing = false;
             timer = 0;
             reorientTimer = 0.1f;
-        }
+        } 
+
+        photoObject.OverwriteTag(gushing ? "geyser" : "");
 
         if(reorientTimer > 0) {
             reorientTimer += Time.deltaTime;
@@ -41,6 +44,14 @@ public class WaterGeyser : MonoBehaviour {
         zibra.gameObject.SetActive(true);
         timer = 0;
         reorientTimer = 0;    
-        photoObject.tags = "geyser";
+        gushing = true;
+    }
+
+    void OnTriggerStay(Collider col) {
+        if((col.gameObject.tag == "CarCivilian"/*  || col.gameObject.tag == "Player"*/) && gushing) {
+            col.attachedRigidbody.AddForce(Vector3.up * 6400f);
+            col.GetComponent<CivilianAI>().enabled = false;
+            col.GetComponent<PhotoItem>().OverwriteTag("launchedcar");
+        }
     }
 }

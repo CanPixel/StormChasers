@@ -53,6 +53,8 @@ public class SharkAI : MonoBehaviour {
     private float wait = 0;
     private float baseY;
 
+    private float huntDelay = 0;
+
     void OnValidate() {
         wayPointGizmosScale = Mathf.Clamp(wayPointGizmosScale, 0, 50);
     }
@@ -125,6 +127,8 @@ public class SharkAI : MonoBehaviour {
         }
     }
     protected void HuntingUpdate() {
+        if(huntDelay > 0) huntDelay -= Time.deltaTime;
+
         if(!isHunting) huntTimer += Time.deltaTime;
         if(huntTimer > huntInterval) {
             isHunting = true;
@@ -147,7 +151,10 @@ public class SharkAI : MonoBehaviour {
                 lastDrain.Detrigger();
                 
                 // Respawning cars is essential !!!!!!!!!!!!!!!!!1
-                if(civilianCasualty != null && civilianCasualty.parentObj != null) Destroy(civilianCasualty.parentObj);
+                if(civilianCasualty != null) {
+                    if(civilianCasualty.parentObj != null) Destroy(civilianCasualty.parentObj);
+                    Destroy(civilianCasualty.gameObject);
+                }
                 //
 
 
@@ -156,7 +163,7 @@ public class SharkAI : MonoBehaviour {
                 drain = null;
             }
 
-huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
+            huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
             huntingSharkAnim.SetBool("MouthClosed", chompTimer > 0.8f);
 
             huntingSharkAnim.transform.localPosition = new Vector3(huntingSharkAnim.transform.localPosition.x, baseY + sharkLungeY.Evaluate(chompTimer) * sharkJumpFactor, huntingSharkAnim.transform.localPosition.z);
@@ -165,7 +172,7 @@ huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
             if(drain != null) {
                 if(chompTimer < 0.7f) drain.transform.Rotate(200f * Time.deltaTime, 0, 0);
                 else drain.transform.localRotation = Quaternion.Lerp(drain.transform.localRotation, Quaternion.Euler(-90, 0, 0), Time.deltaTime * 12f);
-                drain.transform.localPosition = new Vector3(0, sharkLungeY.Evaluate(chompTimer) * drainJumpFactor, 0);
+                drain.transform.localPosition = new Vector3(0, Mathf.Clamp(sharkLungeY.Evaluate(chompTimer) * drainJumpFactor, 0, float.MaxValue), 0);
             }
         }
     }
@@ -195,6 +202,15 @@ huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
         navigation.destination = pos;
     }
 
+    void OnTriggerExit(Collider col) {
+         switch(sharkState) {
+                case SharkState.HUNTING:
+                    var sap = col.GetComponent<SharkAttackPoint>();
+                    if(sap != null && sap.drain != null) sap.drain.shouldNudgeAI = false;
+                    break;
+         }
+    }
+
     void OnTriggerStay(Collider col) {
         if(col.tag == "SharkWaypoint") {
             switch(sharkState) {
@@ -212,13 +228,16 @@ huntingSharkAnim.SetBool("MouthOpen", chompTimer <= 0.8f); //
                 case SharkState.HUNTING:
                     if(isChomping) break;
                     var sap = col.GetComponent<SharkAttackPoint>();
-                    if(sap != null && sap.drain != null && sap.drain.target != null) {
+                    if(sap != null && sap.drain != null) sap.drain.shouldNudgeAI = true;
+
+                    if(sap != null && sap.drain != null && sap.drain.target != null && huntDelay <= 0) {
                         drain = sap.drain.blastMesh;
                         lastDrain = sap.drain;
+                        huntDelay = 2;
                         chompTimer = 0;
                         civilianCasualty = sap.drain.target.GetComponent<CivilianAI>();
                         if(civilianCasualty != null) {
-                            civilianCasualty.photoItem.tags += "BitByShark ";
+                            civilianCasualty.photoItem.AddTag("sharkvictim");
                             civilianCasualty.Chomp(chompingPosition);
                             sap.drain.TriggerShark();
                             feedback.enabled = true;

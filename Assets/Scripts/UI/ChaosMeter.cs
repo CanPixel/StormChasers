@@ -13,6 +13,12 @@ public class ChaosMeter : MonoBehaviour {
         
     }
 
+    public void CalculateChaos(CameraControl.PictureScore pic, CameraControl.Screenshot screen, MissionManager.Mission miss) {
+        foreach(var i in miss.stackedTags.tagDictionary) {
+            
+        }
+    }
+
     public void StartChaos() {
         meter.SetActive(true);
     }
