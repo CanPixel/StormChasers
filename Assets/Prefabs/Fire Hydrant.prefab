@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   knockableByShark: 1
+  addKnockedTag: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls:

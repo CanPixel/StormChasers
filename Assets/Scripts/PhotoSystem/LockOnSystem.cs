@@ -166,7 +166,7 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     protected void AddCrosshair(PhotoBase pi) {
-        if(pi == null || pi.tag.Length <= 2 || pi.baseTag.Length <= 2) return;
+        if(pi == null || pi.tag == null || pi.baseTag == null || pi.tag.Length <= 2 || pi.baseTag.Length <= 2) return;
         var createImage = Instantiate(crossHair) as GameObject;
         createImage.transform.SetParent(canvas.transform, true);
         createImage.SetActive(true);

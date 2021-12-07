@@ -6,11 +6,15 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody))]
 public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
+    public bool addKnockedTag = true;
+    private PhotoItem photoItem;
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
     void Start() {
         gameObject.tag = "Knockable";
+        photoItem = GetComponent<PhotoItem>();
+        if(photoItem == null) photoItem = gameObject.AddComponent<PhotoItem>();
     }
 
     void OnCollisionEnter(Collision col) {
@@ -21,6 +25,8 @@ public class Knockable : MonoBehaviour {
             onKnockPlayer.Invoke();
             onKnock.Invoke();
             rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 100f);
+
+            if(addKnockedTag && photoItem != null) photoItem.AddTag("knocked");
         }
     }
 
