@@ -17,8 +17,8 @@ Mesh:
     firstVertex: 0
     vertexCount: 15000
     localAABB:
-      m_Center: {x: 0, y: -0.0000014454126, z: 0}
-      m_Extent: {x: 375, y: 0.4999981, z: 375}
+      m_Center: {x: 0, y: 0.00014300644, z: 0}
+      m_Extent: {x: 375, y: 0.49983227, z: 375}
   m_Shapes:
     vertices: []
     shapes: []
@@ -151,8 +151,8 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: 0, y: -0.0000014454126, z: 0}
-    m_Extent: {x: 375, y: 0.4999981, z: 375}
+    m_Center: {x: 0, y: 0.00014300644, z: 0}
+    m_Extent: {x: 375, y: 0.49983227, z: 375}
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 

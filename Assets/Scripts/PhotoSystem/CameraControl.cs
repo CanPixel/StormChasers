@@ -152,7 +152,7 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
-    public List<Screenshot> screenshots = new List<Screenshot>();
+    [HideInInspector] public List<Screenshot> screenshots = new List<Screenshot>();
     private Screenshot markedScreenshot;
 
     [Space(10)]
@@ -177,8 +177,6 @@ public class CameraControl : MonoBehaviour {
     public GameObject physicalPhotoPrefab;
     public Text photoBookCapacity;
     public UIBob reticleBob;
-    public Image worldAimReticle;
-    public Text worldAimControlText;
     public GameObject minimapCamera;
     public CarMovement carMovement;
     public CameraCanvas cameraCanvas;
@@ -193,6 +191,7 @@ public class CameraControl : MonoBehaviour {
     public GameObject journalInfoSelectedBG;
     public GameObject baseJournalButtons, aMissionSelectButton;
     public Image pictureDelivered;
+    public GameObject journalControl;
     public GameObject markPictureButton, discardPictureButton;
     public GameObject missionListOverlay;
     public GameObject yInfoButton;
@@ -201,6 +200,7 @@ public class CameraControl : MonoBehaviour {
     public Text missionDescription, markButtonText; 
     public MissionManager.MissionCriteria[] missionRequirement;
 
+    public GameObject shaders;
     public ShaderReel shaderReel;
     public GameObject cycleFilterYButton;
 
@@ -212,6 +212,8 @@ public class CameraControl : MonoBehaviour {
 
     private float blend = 0;
     private int currentSelectedPortfolioPhoto = 0;
+
+    private float takePictureDelay = 0;
 
     [System.Serializable]
     public class JournalMission {
@@ -271,6 +273,10 @@ public class CameraControl : MonoBehaviour {
     private float distTarget = 1f;
 
     void Update() {
+        //journalControl.SetActive(journalMissions.Count > 0);
+
+        if(takePictureDelay > 0) takePictureDelay -= Time.unscaledDeltaTime;
+
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
 
@@ -298,15 +304,12 @@ public class CameraControl : MonoBehaviour {
         cameraCanvas.postProcessVolume.weight = blend;
 
         /* 3D World Aim Reticle */
-        worldAimControlText.text = "Aim (<color='#ff0000'>" + cameraAimButton.action.GetBindingDisplayString() + "</color>)";
         RaycastHit hit;
         if(Physics.Raycast(cameraMascotte.transform.position + Vector3.up, -cameraMascotte.transform.up, out hit, 200)) {
             worldReticleTarget = cam.WorldToScreenPoint(hit.point);
             distTarget = Mathf.Clamp(1f - ((hit.transform.position - transform.position).magnitude) / 100f, 0.2f, 1);
         }
         if(distTarget <= 0.21f || isLookingBack) distTarget = 0;
-        worldAimReticle.transform.position = Vector3.Lerp(worldAimReticle.transform.position, worldReticleTarget, Time.unscaledDeltaTime * 4f);
-        worldAimReticle.transform.localScale = Vector3.Lerp(worldAimReticle.transform.localScale, Vector3.one * distTarget, Time.unscaledDeltaTime * 4f);
 
         journalUI.SetActive(journal);
 
@@ -347,7 +350,8 @@ public class CameraControl : MonoBehaviour {
             foreach(var jM in journalMissions) jM.journalTitle.color = (jM.active && !jM.mission.delivered) ? activeMissionColor : inactiveMissionColor;
             photoBookScrollPanel.localPosition = Vector3.Lerp(photoBookScrollPanel.localPosition, new Vector3(photoBookScrollPanel.localPosition.x, portfolioTargetY, photoBookScrollPanel.localPosition.z), Time.unscaledDeltaTime * 12f);
         }
-        cycleFilterYButton.SetActive(!journal);
+        cycleFilterYButton.SetActive(!journal && camSystem.aim >= 0.5f);
+        shaders.SetActive(camSystem.aim >= 0.5f);
         journalSelection.SetActive(journalMissions.Count > 0);
         markPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null && screenshots[currentSelectedPortfolioPhoto].forMission);
         discardPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null);
@@ -678,10 +682,10 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void TakePicture() {
-  //      if(!ratingSystem.AfterDelay(pictureDelayUntilNext) || (HasTakenPicture() && !ratingSystem.IsFading())) return;
+        if(takePictureDelay > 0) return;
 
         pictureShotTimer = 0;
-        carMovement.HapticFeedback(0f, 0.75f, 0.2f);
+        HapticManager.Haptics("TakePicture");
 
         var cam = cinemachineBrain.OutputCamera;
         RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
@@ -706,47 +710,16 @@ public class CameraControl : MonoBehaviour {
         var sf = pol.GetComponent<ShaderFilter>();
         sf.icon.sprite = temp;
 
-
-
-        //=============== [Photo Naming - Object Prioritization - Scoring section]
+        //=============== [Photo Naming - Object Section]
         string photoName = "", photoWithoutScore = "";
         PictureScore score = new PictureScore();
 
         var allObjects = lockOnSystem.GetOnScreenObjects();
         string objectTags = "";
-       // List<PhotoBase> restItems = new List<PhotoBase>();
 
         PhotoBase i = null;
         Vector3 targetPos = Vector3.zero;
-        //bool isOnScreen = true;
-        //if(allObjects.Count > 0) {
-            //i = allObjects[0];
-            //if(i != null) {
-                //targetPos = cam.WorldToViewportPoint(i.transform.position);
-          //      isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
-            //}
-       // }
 
-        //Main Object score
-      //  if(isOnScreen) {
-           // photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
-/*             score.item = i;
-            score.name = photoName;
-            score.screenshot = scren;
-            score.physicalDistance = cameraCanvas.GetPhysicalDistance(i);
-            score.onScreen = isOnScreen;
-            score.motion = 100 - (int)Mathf.Clamp(cameraCanvas.GetMotion(), 0, 100);
-            score.centerFrame = lockOnSystem.GetCrosshairCenter(i);
-            score.focus = cameraCanvas.GetFocusValue();
-            score.objectSharpness = lockOnSystem.GetObjectSharpness(i); */
-//                Debug.Log(score);
-   //     }
-       /*  foreach(var obj in allObjects) {
-            objectTags += obj.tags + " ";
-            //if(obj != i) restItems.Add(obj);
-        } */
-
-        //SubScores with multiple objects                   restItems
         scren.picturedObjects = new Screenshot.PicturedObject[allObjects.Count];
         int index = 0;
         foreach(var rest in allObjects) {
@@ -760,7 +733,6 @@ public class CameraControl : MonoBehaviour {
             isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
             photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
-           // photoName = photoWithoutScore = (rest != null) ? rest.name : "Random Picture";
             sub.name = photoName;
             sub.item = rest;
             sub.screenshot = scren;
@@ -772,8 +744,6 @@ public class CameraControl : MonoBehaviour {
             sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);
 
             scren.picturedObjects[index].score = sub;
-
-     //       score.subScore.Add(sub);
             index++;
         }
 
@@ -799,13 +769,15 @@ public class CameraControl : MonoBehaviour {
         ratingSystem.SetPolaroidTitle(photoWithoutScore);
         sf.text.text = score.name = photoName;
 
+        takePictureDelay = 0.5f;
+
         //Physical Pictures        
         //foreach(var pic in physPictures) {
           //  pic.sprite = Sprite.Create(screenshots[Random.Range(0, screenshots.Count)].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
           //  pic.transform.localScale = basePicScale * physPicScale;
         //}
 
-        SoundManager.PlayUnscaledSound("PhotoShoot", 0.8f);
+        SoundManager.PlayUnscaledSound("PhotoShoot", 0.6f);
         ratingSystem.ResetScreenshot();
     }
 

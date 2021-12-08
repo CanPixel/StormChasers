@@ -136,48 +136,39 @@ public class CarMovement : MonoBehaviour
         if (pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
         else camControl.BackLook(false);
     }
-    public void OnCycleFilter(InputValue val)
-    {
+    public void OnCycleFilter(InputValue val) {
         var fl = val.Get<float>();
-        if (fl != 0)
-        {
+        if (fl != 0) {
             if (camControl.journal) ;//camControl.ShowJournalInfo();
-            else camControl.CycleFilters(fl);
+            else if(camControl.camSystem.aim >= 0.5) camControl.CycleFilters(fl);
         }
     }
-    public void OnChangeFocus(InputValue val)
-    {
+    public void OnChangeFocus(InputValue val) {
         camCanvas.ChangeFocus(val.Get<float>());
     }
 
-    public void OnLooking(InputValue val)
-    {
+    public void OnLooking(InputValue val) {
         //if (camControl.ratingSystem.HasTakenPicture() && !camControl.ratingSystem.IsFading()) return;
         rotationInput = val.Get<Vector2>();
         //camCanvas.SynchLook();
     }
 
-    public void OnCameraAim(InputValue val)
-    {
+    public void OnCameraAim(InputValue val) {
         var ding = val.Get<float>();
 
         camControl.camSystem.aim = ding;
-        if (camControl.camSystem.aim >= 0.5f)
-        {
+        if (camControl.camSystem.aim >= 0.5f) {
             camControl.ShowJournalBaseScreen();
             camControl.journal = camControl.photobook = false;
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
             InputSystem.ResetHaptics();
-        }
-        else
-        {
+        } else {
             if (camControl.HasTakenPicture()) camControl.Recenter();
             camControl.RecenterY();
         }
     }
-    public void OnCameraShoot(InputValue val)
-    {
+    public void OnCameraShoot(InputValue val) {
         if (camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
 
@@ -185,22 +176,19 @@ public class CarMovement : MonoBehaviour
     }
 
     /* PhotoBook / Portfoio */
-    public void OnPhotoBook(InputValue val)
-    {
-        if (camControl == null || camControl.camSystem.aim >= 0.4f)
-        {
+    public void OnPhotoBook(InputValue val) {
+        return;
+        if (camControl == null || camControl.camSystem.aim >= 0.4f) {
             camControl.journal = camControl.photobook = false;
             return;
         }
-        if (val.Get<float>() >= 0.5f)
-        {
+        if (val.Get<float>() >= 0.5f) {
             camControl.journal = !camControl.journal;
             if (camControl.journal) camControl.OpenJournal();
             else camControl.ShowJournalBaseScreen();
         }
     }
-    public void OnScrollPortfolio(InputValue val)
-    {
+    public void OnScrollPortfolio(InputValue val) {
         if (camControl == null || !camControl.journal) return;
         var v = val.Get<Vector2>();
         if (v != Vector2.zero)
@@ -209,22 +197,19 @@ public class CarMovement : MonoBehaviour
             else camControl.PortfolioSelection(v);
         }
     }
-    public void OnDiscardPicture(InputValue val)
-    {
+    public void OnDiscardPicture(InputValue val) {
         if (camControl == null || !camControl.journal || !camControl.photobook) return;
         if (val.Get<float>() >= 0.5f) camControl.DiscardPicture();
     }
 
-    protected void Jump()
-    {
+    protected void Jump() {
         var front = (kart.FrontLeftWheel.transform.position.y + kart.FrontRightWheel.transform.position.y) / 2f;
         var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
         kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
         SoundManager.PlaySound("Jump", 0.15f);
-        HapticFeedback(0.4f, 0.3f, 0.2f);
+        HapticManager.Haptics("Jump");
     }
-    protected void Boost(float boost)
-    {
+    protected void Boost(float boost) {
         if (camControl.camSystem.aim >= 0.5f)
         {
             boostScript.EndBoostState();
@@ -236,12 +221,17 @@ public class CarMovement : MonoBehaviour
         else if (boost < 0.3f) boostScript.EndBoostState();
     }
 
-    public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1)
-    {
+    public void HapticFeedback(HapticManager.HapticFeedback haptic) {
+        if (gamepad == null) return;
+        gamepad.SetMotorSpeeds(haptic.lowFreq, haptic.hiFreq);
+        hapticDuration = haptic.duration;
+    }
+
+    public void HapticFeedback(float lowFreq = 0.25f, float hiFreq = 0.75f, float duration = 1) {
         if (gamepad == null) return;
         gamepad.SetMotorSpeeds(lowFreq, hiFreq);
         hapticDuration = duration;
-    }
+    } 
 
     protected void SetBrakeLights(bool on)
     {

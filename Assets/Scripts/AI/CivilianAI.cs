@@ -52,7 +52,7 @@ public class CivilianAI : MonoBehaviour {
         photoItem.OverwriteTag(photoItem.staticTags + (flipped ? " flippedcar " : ""));
         
         //onScreen = LockOnSystem.OnScreen(transform.position);
-        if(time > randomDuration /* && !onScreen */&& navigation.destination == null) {
+        if(time > randomDuration /* && !onScreen && navigation.destination == null*/) {
             SetTarget(RandomLocation());
             time = 0;
         }

@@ -138,7 +138,7 @@ public class CameraCanvas : MonoBehaviour {
     }
 
     public void SetFocusResponse(float focus) {
-        cameraControl.carMovement.HapticFeedback(0f, focus, 0.05f);
+        HapticManager.ManualHaptics(0, focus, 0.05f);
         focusMeterOutline.effectDistance = Vector2.one * (((1f - focus) * 2 - 1));
         focusMeterOutline.transform.localScale = Vector3.one * ((focus + 1) / 2f + 0.25f);
     }

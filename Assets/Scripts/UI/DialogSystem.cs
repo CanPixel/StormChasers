@@ -109,7 +109,7 @@ public class DialogSystem : MonoBehaviour {
 
         if(currentDialog != null && currentDialog.host != null) {
             string charName = currentDialog.host.characterName.ToLower().Trim();
-            if(dialogChars.ContainsKey(charName) && dialogChars[charName].talkAnimation != null) {
+            if(dialogChars.ContainsKey(charName) && dialogChars[charName].talkAnimation != null && dialogChars[charName].hypeAnimation != null) {
                 if(emotion == DialogCharacter.Emotion.NEUTRAL) {
                     dialogChars[charName].talkAnimation.enabled = IsHostTalking();
                     dialogChars[charName].hypeAnimation.enabled = false;
@@ -142,7 +142,7 @@ public class DialogSystem : MonoBehaviour {
         } else {
             switch(previousOrientation) {
                 case Dialog.Orientation.DOWN: 
-                    dialogCamera.rect = new Rect(0, 0, Mathf.Lerp(dialogCamera.rect.width, 0.01f, Time.deltaTime * splitSpeed), Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
+                    dialogCamera.rect = new Rect(0, 0, 1, Mathf.Lerp(dialogCamera.rect.height, 0.01f, Time.deltaTime * splitSpeed));
                     mainCamera.rect = new Rect(0, Mathf.Lerp(mainCamera.rect.y, 0, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
                 break;
                 case Dialog.Orientation.UP: 
@@ -158,7 +158,7 @@ public class DialogSystem : MonoBehaviour {
                     mainCamera.rect = new Rect(Mathf.Lerp(mainCamera.rect.x, 0, Time.deltaTime * splitSpeed), 0, Mathf.Lerp(mainCamera.rect.width, 1, Time.deltaTime * splitSpeed), Mathf.Lerp(mainCamera.rect.height, 1, Time.deltaTime * splitSpeed));
                 break;
             }
-            if(dialogCamera.rect.width <= 0.02f) dialogCamera.enabled = false;
+            if(dialogCamera.rect.height <= 0.02f) dialogCamera.enabled = false;
         }
 
         skipText.text = "(<color='#ff0000'>" + skipBinding.action.GetBindingDisplayString() + "</color>)";
@@ -244,14 +244,15 @@ public class DialogSystem : MonoBehaviour {
             var currentSentence = currentDialog.content[contentIndex];
             DisplayDialog(currentSentence.text, currentDialog.host);
 
-            StartCoroutine(DelayedAction(currentSentence.onSpeak));
+            /* StartCoroutine(DelayedAction(*/currentSentence.onSpeak.Invoke();//));
 
-            emotion = DialogCharacter.Emotion.NEUTRAL;
+            var em = DialogCharacter.Emotion.NEUTRAL;
+            emotion = currentSentence.emotion;
             if(currentDialog.host != null && currentDialog.host.voiceByEmotion.ContainsKey(currentSentence.emotion)) emotion = currentDialog.host.voiceByEmotion[currentSentence.emotion].emotion;
 
             var host = currentDialog.host;
-            if(host.voiceByEmotion.ContainsKey(emotion)) {
-                var voice = host.voiceByEmotion[emotion];
+            if(host.voiceByEmotion.ContainsKey(em)) {
+                var voice = host.voiceByEmotion[em];
                 if(voice != null && voice.sample != null) {
                     src.volume = narrationVolume;
                     src.clip = voice.sample;
@@ -263,7 +264,7 @@ public class DialogSystem : MonoBehaviour {
     }
 
     IEnumerator DelayedAction(UnityEvent post) {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.2f);
         post.Invoke();
     }
 
