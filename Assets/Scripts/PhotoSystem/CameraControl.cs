@@ -60,6 +60,11 @@ public class CameraControl : MonoBehaviour {
     public AnimationCurve yPosOffs;
 
     [System.Serializable]
+    public enum Theme {
+        NULL, CHAOS, ROMANTIC
+    }
+
+    [System.Serializable]
     public class PictureScore {
         public Screenshot screenshot;
 
@@ -88,7 +93,33 @@ public class CameraControl : MonoBehaviour {
         public bool forMission = false;
         [HideInInspector] public MissionManager.Mission missionReference;
 
+        public PicturedObject[] picturedObjects;
         public string containedObjectTags;
+
+        [System.Serializable]
+        public class PicturedObject {
+            public string tag;
+            public PhotoBase objectReference;
+            public Dictionary<Theme, int> themeScores = new Dictionary<Theme, int>();
+
+            public PictureScore score;
+
+            public PicturedObject(string tag, PhotoBase reference) {
+                this.tag = tag;
+                this.objectReference = reference;
+            }
+
+            public PicturedObject SetThemeScore(Theme theme, int value) {
+                themeScores.Add(theme, value);
+                return this;
+            } 
+        }
+
+/*         [System.Serializable]
+        public class ThemeScore {
+            public Theme theme;
+            public int value;
+        } */
 
         [Range(0, 100)]
         public int score = 0;
@@ -280,7 +311,7 @@ public class CameraControl : MonoBehaviour {
         journalUI.SetActive(journal);
 
         /* SlowMo */
-        Time.timeScale = Mathf.Lerp(Time.timeScale, (IsAiming() || (ratingSystem.HasTakenPicture() && !ratingSystem.IsFading())) ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
+        Time.timeScale = Mathf.Lerp(Time.timeScale, IsAiming() ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
         SoundManager.SlowMo();
 
         if(recenterTime > 0 && Mathf.Abs(orbitalTransposer.m_XAxis.Value) > 1) {
@@ -363,7 +394,7 @@ public class CameraControl : MonoBehaviour {
             return;
         }
 
-        if(journalMissions[journalSelectedMission].mission.delivered) return;
+        if(journalMissions[journalSelectedMission].mission.delivered || journalMissions[journalSelectedMission].active) return;
 
         foreach(var i in journalMissions) {
             i.active = false;
@@ -647,7 +678,7 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void TakePicture() {
-        if(!ratingSystem.AfterDelay(pictureDelayUntilNext) || (HasTakenPicture() && !ratingSystem.IsFading())) return;
+  //      if(!ratingSystem.AfterDelay(pictureDelayUntilNext) || (HasTakenPicture() && !ratingSystem.IsFading())) return;
 
         pictureShotTimer = 0;
         carMovement.HapticFeedback(0f, 0.75f, 0.2f);
@@ -683,23 +714,23 @@ public class CameraControl : MonoBehaviour {
 
         var allObjects = lockOnSystem.GetOnScreenObjects();
         string objectTags = "";
-        List<PhotoBase> restItems = new List<PhotoBase>();
+       // List<PhotoBase> restItems = new List<PhotoBase>();
 
         PhotoBase i = null;
         Vector3 targetPos = Vector3.zero;
-        bool isOnScreen = true;
-        if(allObjects.Count > 0) {
-            i = allObjects[0];
-            if(i != null) {
-                targetPos = cam.WorldToViewportPoint(i.transform.position);
-                isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
-            }
-        }
+        //bool isOnScreen = true;
+        //if(allObjects.Count > 0) {
+            //i = allObjects[0];
+            //if(i != null) {
+                //targetPos = cam.WorldToViewportPoint(i.transform.position);
+          //      isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
+            //}
+       // }
 
         //Main Object score
-        if(isOnScreen) {
-            photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
-            score.item = i;
+      //  if(isOnScreen) {
+           // photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
+/*             score.item = i;
             score.name = photoName;
             score.screenshot = scren;
             score.physicalDistance = cameraCanvas.GetPhysicalDistance(i);
@@ -707,21 +738,29 @@ public class CameraControl : MonoBehaviour {
             score.motion = 100 - (int)Mathf.Clamp(cameraCanvas.GetMotion(), 0, 100);
             score.centerFrame = lockOnSystem.GetCrosshairCenter(i);
             score.focus = cameraCanvas.GetFocusValue();
-            score.objectSharpness = lockOnSystem.GetObjectSharpness(i);
+            score.objectSharpness = lockOnSystem.GetObjectSharpness(i); */
 //                Debug.Log(score);
-        }
-        foreach(var obj in allObjects) {
+   //     }
+       /*  foreach(var obj in allObjects) {
             objectTags += obj.tags + " ";
-            if(obj != i) restItems.Add(obj);
-        }
+            //if(obj != i) restItems.Add(obj);
+        } */
 
-        //SubScores with multiple objects
-        foreach(var rest in restItems) {
+        //SubScores with multiple objects                   restItems
+        scren.picturedObjects = new Screenshot.PicturedObject[allObjects.Count];
+        int index = 0;
+        foreach(var rest in allObjects) {
+            bool isOnScreen = true;
+            objectTags += rest.tags + " ";
+
+            scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tags, rest);  /////// THEME APPEND HERE
+
             PictureScore sub = new PictureScore();
             targetPos = cam.WorldToViewportPoint(rest.transform.position);
             isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
-            photoName = photoWithoutScore = (rest != null) ? rest.name : "Random Picture";
+            photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
+           // photoName = photoWithoutScore = (rest != null) ? rest.name : "Random Picture";
             sub.name = photoName;
             sub.item = rest;
             sub.screenshot = scren;
@@ -731,12 +770,17 @@ public class CameraControl : MonoBehaviour {
             sub.centerFrame = lockOnSystem.GetCrosshairCenter(rest);
             sub.focus = cameraCanvas.GetFocusValue();
             sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);
-            score.subScore.Add(sub);
+
+            scren.picturedObjects[index].score = sub;
+
+     //       score.subScore.Add(sub);
+            index++;
         }
 
         scren.containedObjectTags = objectTags;
 
         //Visualize
+        lockOnSystem.VisualizePictureItems(score, scren);
         ratingSystem.VisualizeScore(score, scren);
         photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
 
@@ -750,7 +794,7 @@ public class CameraControl : MonoBehaviour {
         var completed = missionManager.CheckCompletion(score, scren);
 
         //Border Colors
-        if(completed) scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;;
+        if(completed) scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;
 
         ratingSystem.SetPolaroidTitle(photoWithoutScore);
         sf.text.text = score.name = photoName;

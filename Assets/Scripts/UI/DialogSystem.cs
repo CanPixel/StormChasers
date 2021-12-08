@@ -75,6 +75,8 @@ public class DialogSystem : MonoBehaviour {
 
     private Dialog.Orientation previousOrientation = Dialog.Orientation.UP;
 
+    private DialogCharacter.Emotion emotion;
+
     void Start() {
         cameraCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
@@ -107,8 +109,17 @@ public class DialogSystem : MonoBehaviour {
 
         if(currentDialog != null && currentDialog.host != null) {
             string charName = currentDialog.host.characterName.ToLower().Trim();
-            if(dialogChars.ContainsKey(charName) && dialogChars[charName].talkAnimation != null) dialogChars[charName].talkAnimation.enabled = IsHostTalking();
-        
+            if(dialogChars.ContainsKey(charName) && dialogChars[charName].talkAnimation != null) {
+                if(emotion == DialogCharacter.Emotion.NEUTRAL) {
+                    dialogChars[charName].talkAnimation.enabled = IsHostTalking();
+                    dialogChars[charName].hypeAnimation.enabled = false;
+                }
+                else {
+                    dialogChars[charName].hypeAnimation.enabled = IsHostTalking();
+                    dialogChars[charName].talkAnimation.enabled = false;
+                }
+            }
+
             float restSplit = 1 - splitRange;
             switch(currentDialog.orientation) {
                 case Dialog.Orientation.DOWN: 
@@ -235,7 +246,7 @@ public class DialogSystem : MonoBehaviour {
 
             StartCoroutine(DelayedAction(currentSentence.onSpeak));
 
-            var emotion = DialogCharacter.Emotion.NEUTRAL;
+            emotion = DialogCharacter.Emotion.NEUTRAL;
             if(currentDialog.host != null && currentDialog.host.voiceByEmotion.ContainsKey(currentSentence.emotion)) emotion = currentDialog.host.voiceByEmotion[currentSentence.emotion].emotion;
 
             var host = currentDialog.host;
@@ -258,7 +269,7 @@ public class DialogSystem : MonoBehaviour {
 
     public void TriggerDialog(string dialogName) {
         var d = dialogName.Trim().ToLower();
-        if(d.Length <= 0 || !dialogByName.ContainsKey(d)) return;
+        if(d.Length <= 0 || !dialogByName.ContainsKey(d) || split) return;
         contentIndex = 0;
 
         if(dialogByName[d].displayed) return;

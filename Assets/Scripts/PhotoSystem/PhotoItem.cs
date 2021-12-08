@@ -5,6 +5,7 @@ using UnityEngine;
 public class PhotoItem : PhotoBase {
     public MeshRenderer render;
     public bool isComposite = false;
+    public bool fetchMeshRendererAutomatically = false;
 
     [System.Serializable]
     public class KeyPointList {
@@ -17,6 +18,8 @@ public class PhotoItem : PhotoBase {
     public new void Start() {
         base.Start();
         if(isComposite) keyPoints.list = GetComponentsInChildren<PhotoKeyPoint>();
+
+        if(fetchMeshRendererAutomatically) render = GetComponent<MeshRenderer>();
     }
 
     void OnDestroy() {

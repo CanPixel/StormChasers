@@ -14,7 +14,6 @@ public class Knockable : MonoBehaviour {
     void Start() {
         gameObject.tag = "Knockable";
         photoItem = GetComponent<PhotoItem>();
-        if(photoItem == null) photoItem = gameObject.AddComponent<PhotoItem>();
     }
 
     void OnCollisionEnter(Collision col) {
@@ -26,7 +25,7 @@ public class Knockable : MonoBehaviour {
             onKnock.Invoke();
             rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 100f);
 
-            if(addKnockedTag && photoItem != null) photoItem.AddTag("knocked");
+            if(addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
         }
     }
 

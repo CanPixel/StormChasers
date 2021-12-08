@@ -7,6 +7,13 @@ public class Crosshair : MonoBehaviour {
     public Animator animator;
     public Image crosshair;
 
+    [HideInInspector] public PhotoBase target;
+
+    public Text label;
+
+    public bool updateCrosshairOnDestroy = false;
+
+    public float fillSpeed = 1;
     public float duration = 3;
     public bool destroyAfterDuration = false;
     private float time = 0;
@@ -20,10 +27,18 @@ public class Crosshair : MonoBehaviour {
         time += Time.unscaledDeltaTime;
 
         if(destroyAfterDuration && time > duration) Destroy(gameObject);
-        if(fillOverTime && crosshair.fillAmount < 1) crosshair.fillAmount += Time.unscaledDeltaTime; 
+        if(fillOverTime && crosshair.fillAmount < 1) crosshair.fillAmount += Time.unscaledDeltaTime * fillSpeed; 
     }
 
     public void SetAlpha(float a) {
         crosshair.color = new Color(crosshair.color.r, crosshair.color.g, crosshair.color.b, a);
+    }
+
+    void OnDestroy() {
+        if(updateCrosshairOnDestroy) LockOnSystem.RemoveScreenTarget(this);
+    }
+
+    public void EnableRender(bool i) {
+        crosshair.enabled = label.enabled = i;
     }
 }

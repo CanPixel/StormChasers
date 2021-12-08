@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class DialogChar : MonoBehaviour {
     public string characterName;
-    public UIFloat talkAnimation;
+    public UIFloat talkAnimation, hypeAnimation;
 }

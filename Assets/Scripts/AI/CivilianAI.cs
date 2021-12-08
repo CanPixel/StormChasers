@@ -51,8 +51,8 @@ public class CivilianAI : MonoBehaviour {
         flipped = Mathf.Abs(transform.rotation.z) > 0.25f;
         photoItem.OverwriteTag(photoItem.staticTags + (flipped ? " flippedcar " : ""));
         
-        onScreen = LockOnSystem.OnScreen(transform.position);
-        if(time > randomDuration && !onScreen) {
+        //onScreen = LockOnSystem.OnScreen(transform.position);
+        if(time > randomDuration /* && !onScreen */&& navigation.destination == null) {
             SetTarget(RandomLocation());
             time = 0;
         }

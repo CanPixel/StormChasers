@@ -48,6 +48,8 @@ public class SharkAI : MonoBehaviour {
     public NavMeshAgent navigation; 
     public Animator huntingSharkAnim;
     public MMFeedbacks feedback;
+    public FollowTargetFromTop markerFollow;
+    public MeshRenderer marker;
     public Transform chompingPosition;
 
     private float wait = 0;
@@ -129,10 +131,14 @@ public class SharkAI : MonoBehaviour {
     protected void HuntingUpdate() {
         if(huntDelay > 0) huntDelay -= Time.deltaTime;
 
+        marker.enabled = (!isChomping);
+
         if(!isHunting) huntTimer += Time.deltaTime;
         if(huntTimer > huntInterval) {
             isHunting = true;
-            SetTarget(huntingPoints[Random.Range(0, huntingPoints.Count)].transform);
+            var atP = huntingPoints[Random.Range(0, huntingPoints.Count)];
+            markerFollow.target = atP.transform;
+            SetTarget(atP.transform);
             huntTimer = 0;
         }
 
@@ -148,6 +154,7 @@ public class SharkAI : MonoBehaviour {
                 drain.transform.localPosition = Vector3.zero;
                 drain.transform.localRotation = Quaternion.Euler(-90, 0, 0);
                 feedback.enabled = false;
+                isHunting = false;
                 lastDrain.Detrigger();
                 
                 // Respawning cars is essential !!!!!!!!!!!!!!!!!1
@@ -237,7 +244,7 @@ public class SharkAI : MonoBehaviour {
                         chompTimer = 0;
                         civilianCasualty = sap.drain.target.GetComponent<CivilianAI>();
                         if(civilianCasualty != null) {
-                            civilianCasualty.photoItem.AddTag("sharkvictim");
+                            civilianCasualty.photoItem.OverwriteTag("sharkvictim");
                             civilianCasualty.Chomp(chompingPosition);
                             sap.drain.TriggerShark();
                             feedback.enabled = true;

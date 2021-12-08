@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using PicturedObject = CameraControl.Screenshot.PicturedObject;
 
 [System.Serializable]
-public struct LockedObjects {
-    public GameObject target;
+public struct LockedObject {
+    public PhotoBase target;
     public Crosshair crosshair;
 }
 
@@ -13,18 +14,22 @@ public class LockOnSystem : MonoBehaviour {
     public Transform player;
     public CameraCanvas cameraCanvas;
     public Animator animator;
-    public GameObject crossHair;
-    public GameObject canvas;
+    public GameObject crossHair, circle;
+    public GameObject canvas, canvas3D;
     public Camera cam;
+
+    public float a = 2, b = 400, c = 100;
+    public float circleSizeReduction = 25;
 
     public bool occlusion = true, focus = true, physicalDistance = true;
 
     [Space(10)]
-    public Dictionary<PhotoBase, LockedObjects> onScreenTargets = new Dictionary<PhotoBase, LockedObjects>();
+    public Dictionary<PhotoBase, LockedObject> onScreenTargets = new Dictionary<PhotoBase, LockedObject>();
     [HideInInspector] public List<PhotoBase> sortedScreenObjects = new List<PhotoBase>();
 
+    public Dictionary<Crosshair, LockedObject> pictureObjects = new Dictionary<Crosshair, LockedObject>();
+
     [SerializeField, ReadOnly] private List<PhotoItem> allTargets = new List<PhotoItem>();
-    private Transform target;
 
     private static LockOnSystem self;
 
@@ -51,11 +56,23 @@ public class LockOnSystem : MonoBehaviour {
             else PhotoLogic(allTargets[i]);
         }
 
-        foreach(KeyValuePair<PhotoBase, LockedObjects> k in onScreenTargets) {
+        foreach(KeyValuePair<PhotoBase, LockedObject> k in onScreenTargets) {
             if(onScreenTargets[k.Key].target == null || k.Key == null) continue;
-            target = onScreenTargets[k.Key].target.transform;
+            var target = onScreenTargets[k.Key].target.transform;
             onScreenTargets[k.Key].crosshair.transform.position = cam.WorldToScreenPoint(target.position);
         }
+
+        //3d object highlighting after picture taken
+        foreach(KeyValuePair<Crosshair, LockedObject> i in pictureObjects) {
+            if(pictureObjects[i.Key].target == null || pictureObjects[i.Key].target.gameObject == null) {
+                pictureObjects.Remove(i.Key);
+                break;
+            }
+            var cross = pictureObjects[i.Key].crosshair;
+            cross.transform.position = cam.WorldToScreenPoint(pictureObjects[i.Key].target.transform.position);
+            cross.EnableRender(IsOnScreen(pictureObjects[i.Key].target.transform.position));
+        }
+
 
         PhotoBase tar;
         tar = cameraCanvas.RaycastFromReticle();
@@ -159,20 +176,62 @@ public class LockOnSystem : MonoBehaviour {
         if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;         //Is in FOV
         
         RaycastHit hit;
-        if (Physics.Linecast(point, cam.transform.position, out hit)) {
+        if (Physics.Linecast(cam.transform.position, point, out hit)) {
             if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform)) && hit.transform.tag != "Player") return false;
         }
         return true;
     }
+
+    public void VisualizePictureItems(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+        if(screen.containedObjectTags == null || screen.containedObjectTags.Length < 1) return;
+
+        foreach(var i in pictureObjects) Destroy(i.Key.gameObject);
+        pictureObjects.Clear();
+
+        foreach(var sub in screen.picturedObjects) {
+            if(sub == null /* || sub.item == null*/) continue;
+            AddPictureItemCircle(sub);
+            //extraItems.Add(new CrosshairObject(sub.item, camControl.lockOnSystem.GetScreenCrosshair(sub.item).transform.position));
+        }
+        
+/*         var actMission = MissionManager.missionManager.activeMission;
+        if(actMission != null && !actMission.delivered) {
+            if(actMission.objectiveType == MissionManager.Mission.MissionType.CHAOS_STACK) chaosMeter.CalculateChaos(pic, screen, actMission);
+        } */
+    }
+
+    public static void RemoveScreenTarget(Crosshair crosshair) {
+        if(crosshair.target != null && self.pictureObjects.ContainsKey(crosshair)) self.pictureObjects.Remove(crosshair);
+    }
+
+    protected void AddPictureItemCircle(PicturedObject pi) {
+        if(pi == null || pi.tag == null || pi.objectReference == null || pi.tag.Length <= 1) return;
+        var createImage = Instantiate(circle) as GameObject;
+        createImage.transform.SetParent(canvas3D.transform, true);
+        createImage.SetActive(true);
+        var lockedObject = new LockedObject();
+        lockedObject.crosshair = createImage.GetComponent<Crosshair>();
+        
+        var distanceScaling = ((cameraCanvas.maxDistance - pi.score.physicalDistance) * a - b) / c;
+        lockedObject.crosshair.label.text = pi.tag.ToString();
+        lockedObject.crosshair.crosshair.color = Random.ColorHSV();
+
+        lockedObject.crosshair.transform.localScale = Vector3.one * Mathf.Clamp(distanceScaling - circleSizeReduction, 0, 1);
+
+        lockedObject.crosshair.target = pi.objectReference;
+        lockedObject.target = pi.objectReference;
+        pictureObjects.Add(lockedObject.crosshair, lockedObject);
+    }
+
 
     protected void AddCrosshair(PhotoBase pi) {
         if(pi == null || pi.tag == null || pi.baseTag == null || pi.tag.Length <= 2 || pi.baseTag.Length <= 2) return;
         var createImage = Instantiate(crossHair) as GameObject;
         createImage.transform.SetParent(canvas.transform, true);
         createImage.SetActive(true);
-        var lockedObject = new LockedObjects();
+        var lockedObject = new LockedObject();
         lockedObject.crosshair = createImage.GetComponent<Crosshair>();
-        lockedObject.target = pi.gameObject;
+        lockedObject.target = pi;
         onScreenTargets.Add(pi, lockedObject);
     }
     protected void RemoveCrosshair(PhotoBase pi) {

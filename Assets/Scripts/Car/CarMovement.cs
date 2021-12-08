@@ -152,7 +152,7 @@ public class CarMovement : MonoBehaviour
 
     public void OnLooking(InputValue val)
     {
-        if (camControl.ratingSystem.HasTakenPicture() && !camControl.ratingSystem.IsFading()) return;
+        //if (camControl.ratingSystem.HasTakenPicture() && !camControl.ratingSystem.IsFading()) return;
         rotationInput = val.Get<Vector2>();
         //camCanvas.SynchLook();
     }
