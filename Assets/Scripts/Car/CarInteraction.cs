@@ -4,59 +4,36 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class CarInteraction : MonoBehaviour {
-    public bool engageMission = false;
-    [ConditionalHide("engageMission", true)] public int missionIndex = 0;
-    [ConditionalHide("engageMission", true)] public string missionName;
-    [ConditionalHide("engageMission", true)] public MeshRenderer missionMarker;
-    [ConditionalHide("engageMission", true)] public GameObject[] destroyOnMissionComplete;
-    [ReadOnly] public MissionManager.Mission mission;
-
-    private MissionManager missionManager;
+    public MeshRenderer missionMarker;
 
     void Start() {
-        if(missionManager == null) missionManager = MissionManager.missionManager;
-
-        SetMissionMarkerColor(missionManager.missionMarkerColor);
-    }
-
-    void OnValidate() {
-        if(missionManager == null) {
-            var miss = GameObject.FindGameObjectWithTag("MissionManager");
-            if(miss != null) missionManager = miss.GetComponent<MissionManager>();
-        }
-        var missions = missionManager.missions;
-        missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
-        mission = missions[missionIndex];
-        missionName = mission.name;
+       //if(missionMarker != null) SetMissionMarkerColor(missionManager.missionMarkerColor);
     }
 
     public UnityEvent onEnter;
 
     void OnTriggerEnter(Collider col) {
-        if(col.tag == "Player") {
+/*         if(col.tag == "Player") {
             onEnter.Invoke();
-            if(engageMission) {
-                if(missionManager.activeMission == mission) missionManager.ScanMissionCompletion(transform);
-                missionManager.StartMission(mission);
-            }
-        }
+            if(missionManager.activeMission == mission) MissionManager.missionManager.ScanMissionCompletion(transform);
+            MissionManager.missionManager.StartMission(mission);
+        } */
     }
 
-    protected void SetMissionMarkerColor(Color col) {
+/*     protected void SetMissionMarkerColor(Color col) {
         if(mission != null && missionMarker != null) {
             missionMarker.material.SetColor("_Color", col);
             missionMarker.material.SetColor("_EmissionColor", col);
         }
-    }
+    } */
 
-    public void SetDeliveryStage(bool i) {
+    /* public void SetDeliveryStage(bool i) {
         if(missionMarker == null || missionMarker.gameObject == null) return;
-        if(i) SetMissionMarkerColor(missionManager.deliverMarkerColor);   
-        else SetMissionMarkerColor(missionManager.missionMarkerColor);   
-    }
+        if(i) SetMissionMarkerColor(MissionManager.missionManager.deliverMarkerColor);   
+        else SetMissionMarkerColor(MissionManager.missionManager.missionMarkerColor);   
+    } */
 
     public void CompleteMission() {
-        foreach(var i in destroyOnMissionComplete) Destroy(i.gameObject);
         if(missionMarker != null && missionMarker.gameObject != null) Destroy(missionMarker.gameObject);
     }
 }

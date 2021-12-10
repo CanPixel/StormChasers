@@ -6,14 +6,12 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class MissionManager : MonoBehaviour {
-    [ReadOnly] public Mission activeMission; 
+    [HideInInspector] public Mission activeMission;
+    [ReadOnly] public string currentMissionName; 
     private ObjectiveCriteria[] activeCriteria;
     [Space(10)]
     public List<Mission> missions = new List<Mission>();
     private Dictionary<string, Mission> missionsByName = new Dictionary<string, Mission>();
-    public bool startOnStart = false, activateAllPhotoItems = false;
-    public int missionIndex = 0;
-    [ConditionalHide("startOnStart", true), ReadOnly] public string missionOnStart;
 
     public static MissionManager missionManager;
 
@@ -112,39 +110,18 @@ public class MissionManager : MonoBehaviour {
     public class Mission {
         public string name, description;
         public Sprite icon;
+        public DialogChar missionGiver;
 
         public ObjectiveCriteria[] objectives;
         [HideInInspector] public bool active = false;
         [ReadOnly] public bool cleared = false, hasMarkedPicture = false, delivered = false;
 
         public bool oneShot = false;
-        public bool bypassDelivery = false;
 
-        //public string manuallyEnabledItemKeys;
-        [System.Serializable]
-        public enum MissionType {
-            REGULAR, CHAOS_STACK
-        }
-        public MissionType objectiveType = MissionType.REGULAR;
-        [ConditionalHide("objectiveType", 1)] public StackedTags stackedTags;
-        
-        [System.Serializable]
-        public class StackedTags {
-            public StackedTag[] tagDictionary;
-
-            [System.Serializable]
-            public class StackedTag {
-                public string tag;
-                public int value;
-            }
-        }
-
-        [Space(5)]
-        public CarInteraction[] triggerLocations;
+        [HideInInspector] public CarInteraction triggerLocation;
 
         [Space(5)]
         public UnityEvent OnMissionStarted;
-        public UnityEvent OnMissionFinished;
         public UnityEvent OnMissionDelivered;
 
         public void Enable(bool a) {
@@ -161,7 +138,6 @@ public class MissionManager : MonoBehaviour {
     }
 
     private float finishTime = 0;
-    private bool afterFinishInvoked = false;
 
     public void Deliver() {
         if(currentObjective == null) return;
@@ -177,7 +153,7 @@ public class MissionManager : MonoBehaviour {
     public void MarkForCurrentMission(bool mark) {
         if(currentObjective == null) return;
         currentObjective.hasMarkedPicture = mark;
-        if(currentObjective.triggerLocations != null && currentObjective.triggerLocations.Length > 0) foreach(var i in currentObjective.triggerLocations) if(i != null) i.SetDeliveryStage(mark);
+        //if(currentObjective.triggerLocations != null && currentObjective.triggerLocations.Length > 0) foreach(var i in currentObjective.triggerLocations) if(i != null) i.SetDeliveryStage(mark);
     }
 
     public void DiscardMissionPicture() {
@@ -185,7 +161,7 @@ public class MissionManager : MonoBehaviour {
         for(int m = 0; m < currentObjective.objectives.Length; m++) MarkCurrentObjective(m, false);
         currentObjective.hasMarkedPicture = false;
         readyForMark.gameObject.SetActive(false);
-        foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(false);
+       // foreach(var i in currentObjective.triggerLocations) i.SetDeliveryStage(false);
         currentObjective.cleared = false;
     }
 
@@ -197,7 +173,7 @@ public class MissionManager : MonoBehaviour {
     public void ScanMissionCompletion(Transform suckToPos) {
         if(currentObjective == null || !currentObjective.cleared || !currentObjective.hasMarkedPicture || camControl.missionPicture == null) return;
         camControl.DeliverPicture(suckToPos);
-        foreach(var i in currentObjective.triggerLocations) i.CompleteMission();
+        currentObjective.triggerLocation.CompleteMission();
         readyForMark.gameObject.SetActive(false);
     }
 
@@ -293,7 +269,6 @@ public class MissionManager : MonoBehaviour {
         }
 
         if(completed) {
-            currentObjective.OnMissionFinished.Invoke();
             screen.missionReference = currentObjective;
             screen.forMission = true;
             readyForMark.gameObject.SetActive(true);
@@ -301,7 +276,6 @@ public class MissionManager : MonoBehaviour {
                 currentObjective.cleared = true;
                 journalSelectControl.Bob();
             }
-            if(currentObjective.bypassDelivery) CompleteMission(currentObjective);
         }
         return completed;
     }
@@ -411,9 +385,9 @@ public class MissionManager : MonoBehaviour {
 
      */
 
-    public bool IsCurrentMissionBypassDelivery() {
+/*     public bool IsCurrentMissionBypassDelivery() {
         return currentObjective != null && currentObjective.bypassDelivery;
-    }
+    } */
 
     public void MarkCurrentObjectives() {
         for(int i = 0; i < activeCriteria.Length; i++) MarkCurrentObjective(i, true);
@@ -514,36 +488,21 @@ public class MissionManager : MonoBehaviour {
         camControl.ForceSelect(i);
     }
 
-    void OnValidate() {
-        missionIndex = Mathf.Clamp(missionIndex, 0, missions.Count - 1);
-        missionOnStart = missions[missionIndex].name;
-    }
-
     void Start() {
         missionManager = this;
         missionParent.transform.localScale = Vector3.zero;
         currentObjective = null;
         readyForMark.gameObject.SetActive(false);
 
-        if(startOnStart) {
-            StartMission(missions[missionIndex], false);
-            startedMission = true;
+        ActivateAll(true);
 
-            if(activateAllPhotoItems) ActivateAll(true);
-        } else {
-            if(activateAllPhotoItems) ActivateAll(true);
-            else ActivateAll(false);
-        }
+       // StartMission(missions[missionIndex], false);
+       // startedMission = true;
     }
 
     void Update() {
+        currentMissionName = activeMission.name;
         if(finishTime > 0) finishTime -= Time.deltaTime;
-        else if(currentObjective != null) {
-            if(!afterFinishInvoked) {
-                //currentObjective.AfterMissionDelivered.Invoke();
-                afterFinishInvoked = true;
-            }
-        }
 
         if(startedMission) {
             startSequence += Time.unscaledDeltaTime * sequenceSpeed;
@@ -574,7 +533,6 @@ public class MissionManager : MonoBehaviour {
         startSequence = 0;
         activeMission = null;
         startedMission = false;
-        afterFinishInvoked = false;
         finishTime = 0;
     }
 }

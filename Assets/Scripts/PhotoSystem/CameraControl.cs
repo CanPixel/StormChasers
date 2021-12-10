@@ -285,7 +285,7 @@ public class CameraControl : MonoBehaviour {
 
         if(isLookingBack) RecenterY();
 
-        if(deliverTo != null && deliverPicture != null && !missionManager.IsCurrentMissionBypassDelivery()) {
+        if(deliverTo != null && deliverPicture != null /* && !missionManager.IsCurrentMissionBypassDelivery()*/) {
             deliverTime += Time.deltaTime;
 
             deliverPicture.transform.localScale = Vector3.Lerp(deliverPicture.transform.localScale, Vector3.zero, Time.deltaTime * 1f);

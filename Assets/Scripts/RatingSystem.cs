@@ -254,9 +254,7 @@ public class RatingSystem : MonoBehaviour {
        // totalScoreValue.text = "<color='#" + ColorUtility.ToHtmlStringRGB(scoreGradient.Evaluate((int)totalScore / 100f)) + "'>" + screen.score.ToString() + "</color>";
         
         var actMission = MissionManager.missionManager.activeMission;
-        if(actMission != null && !actMission.delivered) {
-            if(actMission.objectiveType == MissionManager.Mission.MissionType.CHAOS_STACK) chaosMeter.CalculateChaos(pic, screen, actMission);
-        }
+        if(actMission != null && !actMission.delivered) chaosMeter.CalculateChaos(pic, screen, actMission);
     }
 
 /*     public void Skip() {
