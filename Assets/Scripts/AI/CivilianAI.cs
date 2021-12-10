@@ -7,7 +7,6 @@ public class CivilianAI : MonoBehaviour {
     public GameObject roadPathsObject;
     private Transform[] roadPaths;
     private Vector3 targetPos;
-    public GameObject parentObj;
 
     [ReadOnly] public bool flipped = false;
 
@@ -32,7 +31,7 @@ public class CivilianAI : MonoBehaviour {
     }
 
     public Vector3 RandomLocation() {
-        return roadPaths[Random.Range(0, roadPaths.Length)].position;
+        return roadPaths[Random.Range(0, roadPaths.Length - 1)].position;
     }
 
     public void Chomp(Transform shark) {

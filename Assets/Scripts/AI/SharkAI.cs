@@ -158,10 +158,7 @@ public class SharkAI : MonoBehaviour {
                 lastDrain.Detrigger();
                 
                 // Respawning cars is essential !!!!!!!!!!!!!!!!!1
-                if(civilianCasualty != null) {
-                    if(civilianCasualty.parentObj != null) Destroy(civilianCasualty.parentObj);
-                    Destroy(civilianCasualty.gameObject);
-                }
+                if(civilianCasualty != null) Destroy(civilianCasualty.gameObject);
                 //
 
 

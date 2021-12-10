@@ -81,8 +81,8 @@ public class DialogSystem : MonoBehaviour {
         cameraCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
         dialogChars.Clear();
-        dialogCharacters = GameObject.FindObjectsOfType(typeof(DialogChar)) as DialogChar[];
-        foreach(var i in dialogCharacters) dialogChars.Add(i.characterName.ToLower().Trim(), i);
+/*         dialogCharacters = GameObject.FindObjectsOfType(typeof(DialogChar)) as DialogChar[]; */
+        //foreach(var i in dialogCharacters) dialogChars.Add(i.characterName.ToLower().Trim(), i);
 
         triggered = false;
         baseY = transform.localPosition.y;
