@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Mission = MissionManager.Mission;
 
 public class CarInteraction : MonoBehaviour {
+    public DialogChar character;
     public MeshRenderer missionMarker;
+    public Mission mission;
 
     void Start() {
        //if(missionMarker != null) SetMissionMarkerColor(missionManager.missionMarkerColor);
@@ -13,11 +16,11 @@ public class CarInteraction : MonoBehaviour {
     public UnityEvent onEnter;
 
     void OnTriggerEnter(Collider col) {
-/*         if(col.tag == "Player") {
+        if(col.tag == "Player") {
             onEnter.Invoke();
-            if(missionManager.activeMission == mission) MissionManager.missionManager.ScanMissionCompletion(transform);
+           // if(MissionManager.missionManager.activeMission == mission) MissionManager.missionManager.ScanMissionCompletion(transform);
             MissionManager.missionManager.StartMission(mission);
-        } */
+        } 
     }
 
 /*     protected void SetMissionMarkerColor(Color col) {
