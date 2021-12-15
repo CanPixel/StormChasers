@@ -5,6 +5,7 @@ using UnityEngine;
 public class JobSpawner : MonoBehaviour {
     public int maxJobsToSpawn = 14;
 
+    public MissionManager missionManager;
     public Transform jobLocationsObject, clientLocationsObject;
 
     [ReadOnly] public List<Transform> jobLocations = new List<Transform>();
@@ -19,7 +20,6 @@ public class JobSpawner : MonoBehaviour {
 
     void OnValidate() {
         InitLocations();
-        maxJobsToSpawn = Mathf.Clamp(maxJobsToSpawn, 0, jobLocations.Count - 1);
     }
 
     protected void InitChars() {
@@ -36,12 +36,14 @@ public class JobSpawner : MonoBehaviour {
         var temp = new List<Transform>(jobLocations);
 
         for(int i = 0; i < maxJobsToSpawn; i++) {
+            if(temp.Count <= 0) break;
             var job = temp[Random.Range(0, temp.Count)];
-            var obj = Instantiate(triggerPrefab);
+            var obj = Instantiate(triggerPrefab).GetComponent<CarInteraction>();
             obj.transform.SetParent(job);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
             obj.transform.localRotation = Quaternion.identity;
+            obj.mission = MissionManager.CreateMission(obj);
             temp.Remove(job);
         }
     }

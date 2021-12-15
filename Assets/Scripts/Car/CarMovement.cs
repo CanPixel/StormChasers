@@ -11,6 +11,8 @@ public class CarMovement : MonoBehaviour
     public Light[] brakeLights;
     public Material brakeMaterial;
 
+    public float maxSpeedCap = 100;
+
     public Transform carMesh;
     public DialogSystem dialogSystem;
     public CameraControl camControl;
@@ -43,23 +45,27 @@ public class CarMovement : MonoBehaviour
 
     private float baseAirborneReorient;
 
-    void Start()
-    {
+    void Start() {
         baseAirborneReorient = kart.AirborneReorientationCoefficient;
         baseSuspension = kart.SuspensionHeight;
         gamepad = Gamepad.current;
         controls = new Controls();
     }
 
-    public void OnEnable()
-    {
+    public void OnEnable() {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         SetBrakeLights(false);
     }
 
-    void Update()
-    {
+    void Update() {
+        //Max speed cap
+        if(Mathf.Abs(rb.velocity.magnitude) > maxSpeedCap) {
+            var finSpeed = rb.velocity.normalized * maxSpeedCap; 
+            finSpeed.y = rb.velocity.y;
+            rb.velocity = finSpeed;
+        }
+
         kart.AirborneReorientationCoefficient = baseAirborneReorient * kart.AirPercent;
 
         if (steering == 0 && drift >= 0.5f)
@@ -168,10 +174,10 @@ public class CarMovement : MonoBehaviour
             camControl.RecenterY();
         }
     }
+
     public void OnCameraShoot(InputValue val) {
         if (camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
-
         if (camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
     }
 

@@ -371,7 +371,7 @@ public class CameraControl : MonoBehaviour {
             journalPictureDeliveredPanel.SetActive(mission.delivered);
             yInfoButton.SetActive(!mission.delivered);
 
-            missionDescription.text = mission.description;
+            missionDescription.text = mission.name;
             foreach(var i in missionRequirement) i.Disable();
             for(int i = 0; i < missionRequirement.Length; i++) {
                 if(mission.objectives.Length <= i) continue;
@@ -614,6 +614,7 @@ public class CameraControl : MonoBehaviour {
         reticleBob.Bob();
     }
 
+    private bool canTakePicture = true;
     protected void FirstPersonLook() {
         if(cinemachineBrain.IsLive(firstPersonLook)) {
             if(!cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
@@ -631,7 +632,8 @@ public class CameraControl : MonoBehaviour {
 
         SynchTransposer();
 
-        if(camSystem.shoot >= 0.5f) TakePicture();
+        if(camSystem.shoot < 0.4f) canTakePicture = true;
+        if(camSystem.shoot >= 0.5f && canTakePicture) TakePicture();
     }
     protected void ThirdPersonLook() {
         cam.cullingMask = thirdPersonCull;
@@ -682,8 +684,9 @@ public class CameraControl : MonoBehaviour {
     }
 
     protected void TakePicture() {
-        if(takePictureDelay > 0) return;
+        if(takePictureDelay > 0 || !canTakePicture) return;
 
+        canTakePicture = false;
         pictureShotTimer = 0;
         HapticManager.Haptics("TakePicture");
 

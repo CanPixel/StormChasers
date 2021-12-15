@@ -81,9 +81,6 @@ public class DialogSystem : MonoBehaviour {
         cameraCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
         dialogChars.Clear();
-/*         dialogCharacters = GameObject.FindObjectsOfType(typeof(DialogChar)) as DialogChar[]; */
-        //foreach(var i in dialogCharacters) dialogChars.Add(i.characterName.ToLower().Trim(), i);
-
         triggered = false;
         baseY = transform.localPosition.y;
         baseScale = transform.localScale.x;
@@ -195,6 +192,11 @@ public class DialogSystem : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public static Dialog CreateDialog() {
+        var d = new Dialog();
+        d.dialogName = "Dialog "
     }
 
     public bool IsHostTalking() {
