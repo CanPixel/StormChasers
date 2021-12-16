@@ -38,7 +38,7 @@ TagManager:
   - DIALOG
   - IGNOREMINIMAP
   - SHARKWAYPOINT
-  - 
+  - IgnoreRaycastButDoCollide
   - 
   - 
   - 

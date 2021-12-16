@@ -7,11 +7,12 @@ public class JumpPad : MonoBehaviour
     public float padJumpHeight = 50;
     private float defaultJumpHeight;
     private bool hasBeenLaunched = false;
-    public CarMovement carMovementScript;
+    private CarMovement carMovementScript;
     public bool AutoTrigger;
 
     void Start()
     {
+        carMovementScript = FindObjectOfType<CarMovement>();
         defaultJumpHeight = carMovementScript.jumpHeight;
     }
 

@@ -25,20 +25,20 @@ public class boostpad : MonoBehaviour
 
 
     public boostEffectTrigger boostTrigger;
-    public Boost boostScript;
+    private Boost boostScript;
 
-    // Start is called before the first frame update
     void Start()
     {
         boostTimer = boostDuration;
         usingBoostPad = false;
         startingScale = transform.localScale;
 
+        boostScript = FindObjectOfType<Boost>();//GameObject.FindGameObjectWithTag("Player").Get
         defaultBoostForce = boostScript.boostForce;
         defaultImpulseForce = boostScript.impulseBoostForce;
+
     }
 
-    // Update is called once per frame
     void Update()
     {
         CheckForTrigger();
@@ -48,20 +48,14 @@ public class boostpad : MonoBehaviour
             BoostTimer();
             //BoostCircleEffect();
         }
-
-
     }
 
     void CheckForTrigger()
     {
-
-
         if (boostTrigger.hasTriggered && boostTriggerCount < 1)
         {
             //if (boostScript.isBoosting) boostScript.EndBoostState();
-
             boostTriggerCount++;
-            Debug.Log("BoostColCheck");
             boostScript.usingBoostPad = usingBoostPad = true;
             boostScript.boostForce = boostForce;
             boostScript.impulseBoostForce = impulseBoostForce;

@@ -189,9 +189,13 @@ public class MissionManager : MonoBehaviour {
         mission.end = DialogSystem.Create(inter, inter.end);
         mission.missionGiver = inter;
         mission.name = "for " + inter.characterName;
-        missionManager.dialogSystem.Initialize(mission.begin);
-        missionManager.dialogSystem.Initialize(mission.end);
-        mission.OnMissionStarted.AddListener(delegate {missionManager.dialogSystem.TriggerDialog(mission.begin.dialogName);});
+        mission.OnMissionStarted = new UnityEvent();
+        mission.OnMissionDelivered = new UnityEvent();
+        if(mission.begin != null) {
+            missionManager.dialogSystem.Initialize(mission.begin);
+            mission.OnMissionStarted.AddListener(delegate {missionManager.dialogSystem.TriggerDialog(mission.begin.dialogName);});
+        }
+        if(mission.end != null) missionManager.dialogSystem.Initialize(mission.end);
         return mission;
     }
 

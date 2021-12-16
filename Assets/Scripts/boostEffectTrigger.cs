@@ -2,30 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class boostEffectTrigger : MonoBehaviour
-{
-    public bool hasTriggered = false;
+public class boostEffectTrigger : MonoBehaviour {
+    [ReadOnly] public bool hasTriggered = false;
 
-    void Start()
-    {
+    void Start() {
         hasTriggered = false;
     }
-    void OnTriggerEnter(Collider other)
-    {
-
-        if (other.gameObject.CompareTag("Player"))
-        {
-            hasTriggered = true;
-            Debug.Log("TriggerCount");
-        }
+    void OnTriggerEnter(Collider other) {
+        if (other.gameObject.CompareTag("Player")) hasTriggered = true;
     }
 
-    void OnTriggerExit(Collider other)
-    {
-
-        if (other.gameObject.CompareTag("Player"))
-        {
-            hasTriggered = false;
-        }
+    void OnTriggerExit(Collider other) {
+        if (other.gameObject.CompareTag("Player")) hasTriggered = false; 
     }
 }
