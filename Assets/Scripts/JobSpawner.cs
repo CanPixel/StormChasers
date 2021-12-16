@@ -10,8 +10,9 @@ public class JobSpawner : MonoBehaviour {
 
     [ReadOnly] public List<Transform> jobLocations = new List<Transform>();
     [ReadOnly] public Region[] clientLocations;
-    public DialogChar[] dialogChars;
-    public GameObject triggerPrefab;
+    
+    [Space(5)]
+    public GameObject[] characters;
 
     void Start() {
         InitLocations();
@@ -20,10 +21,6 @@ public class JobSpawner : MonoBehaviour {
 
     void OnValidate() {
         InitLocations();
-    }
-
-    protected void InitChars() {
-        dialogChars = GameObject.FindObjectsOfType<DialogChar>();
     }
 
     protected void InitLocations() {
@@ -38,12 +35,13 @@ public class JobSpawner : MonoBehaviour {
         for(int i = 0; i < maxJobsToSpawn; i++) {
             if(temp.Count <= 0) break;
             var job = temp[Random.Range(0, temp.Count)];
-            var obj = Instantiate(triggerPrefab).GetComponent<CarInteraction>();
+            var obj = Instantiate(characters[Random.Range(0, characters.Length)]).GetComponent<DialogChar>();
             obj.transform.SetParent(job);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
             obj.transform.localRotation = Quaternion.identity;
-            obj.mission = MissionManager.CreateMission(obj);
+            obj.location.mission = MissionManager.CreateMission(obj);
+            MissionManager.Initialize(obj.location.mission);
             temp.Remove(job);
         }
     }

@@ -173,7 +173,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1181694202524767080}
-  - component: {fileID: 1958476711671679443}
   - component: {fileID: 1958476711671679440}
   m_Layer: 0
   m_Name: JOB CHARACTER
@@ -197,21 +196,6 @@ Transform:
   m_Father: {fileID: 7863408979839263128}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1958476711671679443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958476711671679442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14cfe8709d953264db58254e90940f8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterName: Hilda
-  talkAnimation: {fileID: 7052946115279849617}
-  hypeAnimation: {fileID: 1958476711671679440}
 --- !u!114 &1958476711671679440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,6 +414,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionMarker: {fileID: 0}
+  mission:
+    name: 
+    missionGiver: {fileID: 0}
+    triggerLocation: {fileID: 0}
+    beginDialog:
+      dialogName: 
+      host: {fileID: 0}
+      orientation: 0
+      content: []
+      displayed: 0
+    endDialog:
+      dialogName: 
+      host: {fileID: 0}
+      orientation: 0
+      content: []
+      displayed: 0
+    objectives: []
+    active: 0
+    cleared: 0
+    hasMarkedPicture: 0
+    delivered: 0
+    oneShot: 0
+    OnMissionStarted:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMissionDelivered:
+      m_PersistentCalls:
+        m_Calls: []
   onEnter:
     m_PersistentCalls:
       m_Calls: []
@@ -639,8 +651,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7863408979839263128}
+  - component: {fileID: 5110873427969189344}
   m_Layer: 0
-  m_Name: CAR INTERACTION
+  m_Name: HILDA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -662,6 +675,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5110873427969189344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863408979839263129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14cfe8709d953264db58254e90940f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: Hilda
+  talkAnimation: {fileID: 7052946115279849617}
+  hypeAnimation: {fileID: 1958476711671679440}
+  characterInfo: {fileID: 11400000, guid: 1f616001556f3594d8c469ab3f4d831c, type: 2}
+  location: {fileID: 7528421219231671183}
+  begin: {fileID: 11400000, guid: 253cc345c7188c04b888eef52ed1c298, type: 2}
+  end: {fileID: 11400000, guid: f20c375915f8e8648aad7c9ac7c96cbe, type: 2}
 --- !u!1 &8019864428235179620
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ public class CarMovement : MonoBehaviour
     public Rigidbody rb;
 
     private bool move = false;
-    private float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
+    [HideInInspector] public float brake = 0, gas = 0, steering = 0, drift = 0, jump = 0;
 
     private Vector2 rotationInput;
 
@@ -208,7 +208,7 @@ public class CarMovement : MonoBehaviour
         if (val.Get<float>() >= 0.5f) camControl.DiscardPicture();
     }
 
-    protected void Jump() {
+    public void Jump() {
         var front = (kart.FrontLeftWheel.transform.position.y + kart.FrontRightWheel.transform.position.y) / 2f;
         var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
         kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));

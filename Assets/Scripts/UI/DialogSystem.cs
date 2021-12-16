@@ -25,7 +25,7 @@ public class DialogSystem : MonoBehaviour {
     private string targetText = "";
 
     private Dialog currentDialog;
-    public Dialog[] dialogs;
+    public List<Dialog> dialogs = new List<Dialog>();
     private Dictionary<string, Dialog> dialogByName = new Dictionary<string, Dialog>();
 
     [System.Serializable]
@@ -194,9 +194,17 @@ public class DialogSystem : MonoBehaviour {
         }
     }
 
-    public static Dialog CreateDialog() {
+    public static Dialog Create(DialogChar chara, DialogLine lines) {
         var d = new Dialog();
-        d.dialogName = "Dialog "
+        d.dialogName = chara.characterName + " Dialog " + Time.time.ToString();
+        d.host = chara.characterInfo;
+        d.orientation = Dialog.Orientation.DOWN;
+        d.content = lines.content;
+        return d;
+    }
+
+    public void Initialize(Dialog d) {
+        dialogs.Add(d);
     }
 
     public bool IsHostTalking() {

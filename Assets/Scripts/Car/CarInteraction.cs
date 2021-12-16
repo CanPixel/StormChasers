@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using Mission = MissionManager.Mission;
 
 public class CarInteraction : MonoBehaviour {
-    public DialogChar character;
     public MeshRenderer missionMarker;
     public Mission mission;
 

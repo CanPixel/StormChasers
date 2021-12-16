@@ -12,7 +12,6 @@ public class MissionManager : MonoBehaviour {
     [Space(10)]
     public List<Mission> missions = new List<Mission>();
     private Dictionary<string, Mission> missionsByName = new Dictionary<string, Mission>();
-    public JobSpawner jobSpawner;
 
     public static MissionManager missionManager;
 
@@ -63,6 +62,7 @@ public class MissionManager : MonoBehaviour {
     public Transform missionPhotoFinishDisplay;
     public Image missionIcon, missionCross;
     public RatingSystem ratingSystem;
+    public DialogSystem dialogSystem;
     public UIBob journalSelectControl;
     [SerializeField] private InputActionReference portfolioButton;
     public LockOnSystem lockOnSystem;
@@ -112,6 +112,8 @@ public class MissionManager : MonoBehaviour {
         public string name;
         [ReadOnly] public DialogChar missionGiver;
         [ReadOnly] public CarInteraction triggerLocation;
+
+        [HideInInspector] public DialogSystem.Dialog begin, end;
 
         public ObjectiveCriteria[] objectives;
         [HideInInspector] public bool active = false;
@@ -176,14 +178,21 @@ public class MissionManager : MonoBehaviour {
         readyForMark.gameObject.SetActive(false);
     }
 
-    public static Mission CreateMission(CarInteraction inter) {
+    public static void Initialize(Mission mission) {
+        missionManager.missions.Add(mission);
+    }
+
+    public static Mission CreateMission(DialogChar inter) {
         Mission mission = new Mission();
-        mission.triggerLocation = inter;
-        mission.missionGiver = inter.character;
-
-        mission.OnMissionStarted += DialogSystem.TriggerDialog(mission.missionGiver);
-
-        return null;
+        mission.triggerLocation = inter.location;
+        mission.begin = DialogSystem.Create(inter, inter.begin);
+        mission.end = DialogSystem.Create(inter, inter.end);
+        mission.missionGiver = inter;
+        mission.name = "for " + inter.characterName;
+        missionManager.dialogSystem.Initialize(mission.begin);
+        missionManager.dialogSystem.Initialize(mission.end);
+        mission.OnMissionStarted.AddListener(delegate {missionManager.dialogSystem.TriggerDialog(mission.begin.dialogName);});
+        return mission;
     }
 
     public bool CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
