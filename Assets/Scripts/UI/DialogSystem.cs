@@ -79,7 +79,8 @@ public class DialogSystem : MonoBehaviour {
 
     void Start() {
         cameraCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
+        
+        dialogByName.Clear();
         dialogChars.Clear();
         triggered = false;
         baseY = transform.localPosition.y;
@@ -194,12 +195,14 @@ public class DialogSystem : MonoBehaviour {
         }
     }
 
+    private static int generatedDialogCount = 0;
     public static Dialog Create(DialogChar chara, DialogLine lines) {
         var d = new Dialog();
-        d.dialogName = chara.characterName + " Dialog " + Time.time.ToString();
+        d.dialogName = chara.characterName + " Dialog " + generatedDialogCount.ToString();
         d.host = chara.characterInfo;
         d.orientation = Dialog.Orientation.DOWN;
         d.content = lines.content;
+        generatedDialogCount++;
         return d;
     }
 
