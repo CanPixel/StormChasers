@@ -202,12 +202,14 @@ public class DialogSystem : MonoBehaviour {
         d.host = chara.characterInfo;
         d.orientation = Dialog.Orientation.DOWN;
         d.content = lines.content;
+        DialogSystem.dialogChars.Add(chara.characterName.ToLower().Trim(), chara);
         generatedDialogCount++;
         return d;
     }
 
     public void Initialize(Dialog d) {
         dialogs.Add(d);
+        dialogByName.Add(d.dialogName.ToLower().Trim(), d);
     }
 
     public bool IsHostTalking() {
@@ -248,6 +250,7 @@ public class DialogSystem : MonoBehaviour {
         targetText = content;
         characterNameText.text = character.name;
         virtualCamera.m_Follow = virtualCamera.m_LookAt = character.target;
+        Debug.Log(virtualCamera.m_Follow + " | " + character.target);
         triggered = true;
     }
     public void DisplayCurrentDialogIndex() {
@@ -261,10 +264,10 @@ public class DialogSystem : MonoBehaviour {
 
             var em = DialogCharacter.Emotion.NEUTRAL;
             emotion = currentSentence.emotion;
-            if(currentDialog.host != null && currentDialog.host.voiceByEmotion.ContainsKey(currentSentence.emotion)) emotion = currentDialog.host.voiceByEmotion[currentSentence.emotion].emotion;
+            if(currentDialog.host != null && currentDialog.host.voiceByEmotion != null && currentDialog.host.voiceByEmotion.ContainsKey(currentSentence.emotion)) emotion = currentDialog.host.voiceByEmotion[currentSentence.emotion].emotion;
 
             var host = currentDialog.host;
-            if(host.voiceByEmotion.ContainsKey(em)) {
+            if(host.voiceByEmotion != null && host.voiceByEmotion.ContainsKey(em)) {
                 var voice = host.voiceByEmotion[em];
                 if(voice != null && voice.sample != null) {
                     src.volume = narrationVolume;

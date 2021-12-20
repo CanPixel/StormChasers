@@ -183,7 +183,6 @@ public class CarMovement : MonoBehaviour
 
     /* PhotoBook / Portfoio */
     public void OnPhotoBook(InputValue val) {
-        return;
         if (camControl == null || camControl.camSystem.aim >= 0.4f) {
             camControl.journal = camControl.photobook = false;
             return;

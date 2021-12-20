@@ -8,17 +8,20 @@ public class CarInteraction : MonoBehaviour {
     public MeshRenderer missionMarker;
     public Mission mission;
 
+    private bool triggered = false;
+
     void Start() {
        //if(missionMarker != null) SetMissionMarkerColor(missionManager.missionMarkerColor);
     }
 
-    public UnityEvent onEnter;
+    [HideInInspector] public UnityEvent onEnter;
 
     void OnTriggerEnter(Collider col) {
-        if(col.tag == "Player") {
+        if(col.tag == "Player" && !triggered) {
             onEnter.Invoke();
            // if(MissionManager.missionManager.activeMission == mission) MissionManager.missionManager.ScanMissionCompletion(transform);
-            MissionManager.missionManager.StartMission(mission);
+            MissionManager.missionManager.StartMission(mission.name);
+            triggered = true;
         } 
     }
 

@@ -8,9 +8,11 @@ public class JobSpawner : MonoBehaviour {
     public MissionManager missionManager;
     public Transform jobLocationsObject, clientLocationsObject;
 
+    public List<string> availableNames;
+
     [ReadOnly] public List<Transform> jobLocations = new List<Transform>();
     [ReadOnly] public Region[] clientLocations;
-    
+
     [Space(5)]
     public GameObject[] characters;
 
@@ -29,13 +31,22 @@ public class JobSpawner : MonoBehaviour {
         clientLocations = GameObject.FindObjectsOfType<Region>();
     }
 
+    protected string FindRandomName() {
+        int index = Random.Range(0, availableNames.Count);
+        string name = availableNames[index];
+        availableNames.RemoveAt(index);
+        return name;
+    }
+
     protected void SpawnJobs() {
         var temp = new List<Transform>(jobLocations);
 
         for(int i = 0; i < maxJobsToSpawn; i++) {
             if(temp.Count <= 0) break;
+            var chara = characters[Random.Range(0, characters.Length)];
             var job = temp[Random.Range(0, temp.Count)];
-            var obj = Instantiate(characters[Random.Range(0, characters.Length)]).GetComponent<DialogChar>();
+            var obj = Instantiate(chara).GetComponent<DialogChar>();
+            obj.characterName = FindRandomName();
             obj.transform.SetParent(job);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
