@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 7561941024274014384}
   - component: {fileID: 711295052515537993}
   - component: {fileID: 7528421219231671183}
-  m_Layer: 2
+  m_Layer: 15
   m_Name: CAR INTERACTION
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,8 +333,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4660322207299343591}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.0199344, y: 1.78, z: 13.529068}
-  m_LocalScale: {x: 17.8, y: 3.4, z: 18.2}
+  m_LocalPosition: {x: 1.0199344, y: 0.7683, z: 13.529068}
+  m_LocalScale: {x: 17.8, y: 1.376477, z: 18.2}
   m_Children: []
   m_Father: {fileID: 7863408979839263128}
   m_RootOrder: 0
@@ -399,8 +399,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 2.404493, z: 1}
+  m_Center: {x: 0, y: 0.7022464, z: 0}
 --- !u!114 &7528421219231671183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,13 +418,13 @@ MonoBehaviour:
     name: 
     missionGiver: {fileID: 0}
     triggerLocation: {fileID: 0}
-    beginDialog:
+    begin:
       dialogName: 
       host: {fileID: 0}
       orientation: 0
       content: []
       displayed: 0
-    endDialog:
+    end:
       dialogName: 
       host: {fileID: 0}
       orientation: 0
@@ -622,7 +622,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7052946115279849619}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9af50247816b1284da027294d0eabbf3, type: 3}
   m_Name: 

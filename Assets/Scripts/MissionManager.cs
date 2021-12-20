@@ -121,9 +121,7 @@ public class MissionManager : MonoBehaviour {
 
         public bool oneShot = false;
 
-        [Space(5)]
-        public UnityEvent OnMissionStarted;
-        public UnityEvent OnMissionDelivered;
+        [HideInInspector] public UnityEvent OnMissionStarted, OnMissionDelivered;
 
         public void Enable(bool a) {
             foreach(var obj in objectives) {
@@ -182,20 +180,24 @@ public class MissionManager : MonoBehaviour {
         missionManager.missions.Add(mission);
     }
 
+    private static int missionNumber = 1;
     public static Mission CreateMission(DialogChar inter) {
         Mission mission = new Mission();
         mission.triggerLocation = inter.location;
         mission.begin = DialogSystem.Create(inter, inter.begin);
         mission.end = DialogSystem.Create(inter, inter.end);
+        missionManager.dialogSystem.Initialize(mission.begin);
+        missionManager.dialogSystem.Initialize(mission.end);
         mission.missionGiver = inter;
-        mission.name = "for " + inter.characterName;
+        mission.name = "for " + inter.characterName + " " + missionNumber.ToString();
+
+        mission.objectives = new ObjectiveCriteria[1]; //////////For now 1 object
+        mission.objectives[0] = new ObjectiveCriteria();
+
         mission.OnMissionStarted = new UnityEvent();
         mission.OnMissionDelivered = new UnityEvent();
-        if(mission.begin != null) {
-            missionManager.dialogSystem.Initialize(mission.begin);
-            mission.OnMissionStarted.AddListener(delegate {missionManager.dialogSystem.TriggerDialog(mission.begin.dialogName);});
-        }
-        if(mission.end != null) missionManager.dialogSystem.Initialize(mission.end);
+        mission.OnMissionStarted.AddListener(delegate {missionManager.dialogSystem.TriggerDialog(mission.begin.dialogName);});
+        missionNumber++;
         return mission;
     }
 
@@ -342,7 +344,7 @@ public class MissionManager : MonoBehaviour {
         missionCross.fillAmount = 0;
 
         foreach(var i in criteriaSplashes) i.Disable();
-        for(int i = 0; i < miss.objectives.Length; i++) if(miss.objectives[i].show) criteriaSplashes[i].Load(miss.objectives[i]);
+        if(miss.objectives != null) for(int i = 0; i < miss.objectives.Length; i++) if(miss.objectives[i].show) criteriaSplashes[i].Load(miss.objectives[i]);
 
         activeCriteria = miss.objectives;
         

@@ -273,8 +273,6 @@ public class CameraControl : MonoBehaviour {
     private float distTarget = 1f;
 
     void Update() {
-        //journalControl.SetActive(journalMissions.Count > 0);
-
         if(takePictureDelay > 0) takePictureDelay -= Time.unscaledDeltaTime;
 
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
@@ -353,6 +351,7 @@ public class CameraControl : MonoBehaviour {
         cycleFilterYButton.SetActive(!journal && camSystem.aim >= 0.5f);
         shaders.SetActive(camSystem.aim >= 0.5f);
         journalSelection.SetActive(journalMissions.Count > 0);
+        journalControl.SetActive(journalMissions.Count > 0);
         markPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null && screenshots[currentSelectedPortfolioPhoto].forMission);
         discardPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null);
         yInfoButton.SetActive(screenshots.Count > 0);
@@ -374,6 +373,7 @@ public class CameraControl : MonoBehaviour {
             missionDescription.text = mission.name;
             foreach(var i in missionRequirement) i.Disable();
             for(int i = 0; i < missionRequirement.Length; i++) {
+                if(mission.objectives == null) break;
                 if(mission.objectives.Length <= i) continue;
                 if(mission.objectives[i].show) missionRequirement[i].Load(mission.objectives[i]);
                 if(mission.objectives[i].finished) missionRequirement[i].Clear();
@@ -405,7 +405,7 @@ public class CameraControl : MonoBehaviour {
             if(i == journalMissions[journalSelectedMission]) i.active = true;
         }
         missionManager.SetCurrentMission(journalMissions[journalSelectedMission].mission, true);
-        for(int i = 0; i < journalMissions[journalSelectedMission].mission.objectives.Length; i++) missionManager.MarkCurrentObjective(i, journalMissions[journalSelectedMission].mission.objectives[i].finished);
+        if(journalMissions[journalSelectedMission].mission.objectives != null) for(int i = 0; i < journalMissions[journalSelectedMission].mission.objectives.Length; i++) missionManager.MarkCurrentObjective(i, journalMissions[journalSelectedMission].mission.objectives[i].finished);
     }
     public void ShowJournalInfo() {
         if(!journal || journalMissions.Count <= 0 || journalMissions[journalSelectedMission].mission.delivered || screenshots.Count <= 0) return;

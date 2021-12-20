@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class boostpad : MonoBehaviour
+public class BoostPad : MonoBehaviour
 {
 
     public float boostDuration;
@@ -24,7 +24,7 @@ public class boostpad : MonoBehaviour
     private float effectTimer = 0;
 
 
-    public boostEffectTrigger boostTrigger;
+    public BoostEffectTrigger boostTrigger;
     private Boost boostScript;
 
     void Start()
