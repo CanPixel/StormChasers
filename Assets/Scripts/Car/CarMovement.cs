@@ -266,7 +266,7 @@ public class CarMovement : MonoBehaviour
             right *= 2f;
             left *= 2f;
         }
-        HapticFeedback(left, right, gas / 3f);
+        //HapticFeedback(left, right, gas / 3f);
     }
 
     //private void ChangeBinding() {

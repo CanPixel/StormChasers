@@ -12,7 +12,8 @@ public class WaterGeyser : MonoBehaviour {
     public com.zibra.liquid.Solver.ZibraLiquid zibra;
     public GameObject triggerObject;
     public PhotoItem photoObject;
-    [ReadOnly] public bool gushing = false;
+    public bool gushing = false;
+    public bool freeFlow; 
     
     void Start() {
         zibra.gameObject.SetActive(false);
@@ -36,8 +37,10 @@ public class WaterGeyser : MonoBehaviour {
         if(reorientTimer > 0) {
             reorientTimer += Time.deltaTime;
             triggerObject.transform.rotation = Quaternion.Lerp(triggerObject.transform.rotation, Quaternion.identity, Time.deltaTime * 7f);
-            if(reorientTimer > 1.5f) reorientTimer = 0;
+            if(reorientTimer > 1.5f && !freeFlow) reorientTimer = 0;
         }
+
+        if (freeFlow) TriggerGeyser();  
     }
 
     public void TriggerGeyser() {
@@ -54,4 +57,6 @@ public class WaterGeyser : MonoBehaviour {
             col.GetComponent<PhotoItem>().OverwriteTag("launchedcar");
         }
     }
+
+   
 }
