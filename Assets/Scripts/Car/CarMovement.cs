@@ -27,6 +27,7 @@ public class CarMovement : MonoBehaviour
     private float baseAirbornReorient;
 
     private float baseSuspension;
+    public bool isGrounded; 
 
 
     protected Vector2 moveVec = Vector2.zero;
@@ -122,7 +123,12 @@ public class CarMovement : MonoBehaviour
         }
         jump = val.Get<float>();
         //if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
-        if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
+        if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight))
+        {
+            
+            Jump();
+        }
+       
     }
     public void OnBoost(InputValue val)
     {
@@ -210,7 +216,11 @@ public class CarMovement : MonoBehaviour
     public void Jump() {
         var front = (kart.FrontLeftWheel.transform.position.y + kart.FrontRightWheel.transform.position.y) / 2f;
         var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
-        kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
+        // kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
+        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
+        rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
+        Debug.Log("Jump"); 
+       
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");
     }

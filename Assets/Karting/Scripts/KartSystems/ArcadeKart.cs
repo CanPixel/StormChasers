@@ -7,6 +7,7 @@ namespace KartGame.KartSystems
 {
     public class ArcadeKart : MonoBehaviour
     {
+        
         [System.Serializable]
         public class StatPowerup
         {
@@ -51,6 +52,7 @@ namespace KartGame.KartSystems
 
             [Tooltip("Additional gravity for when the kart is in the air.")]
             public float AddedGravity;
+           
 
             // allow for stat adding for powerups.
             public static Stats operator +(Stats a, Stats b)
@@ -75,8 +77,11 @@ namespace KartGame.KartSystems
         public InputData Input     { get; private set; }
         public float AirPercent    { get; private set; }
         public float GroundPercent { get; private set; }
+
+        public bool isGrounded { get; private set; }
         
         public Cinemachine.CinemachineVirtualCamera look;
+
 
         public ArcadeKart.Stats baseStats = new ArcadeKart.Stats
         {
@@ -190,7 +195,7 @@ namespace KartGame.KartSystems
         Vector3 m_LastCollisionNormal;
         bool m_HasCollision;
         bool m_InAir = false;
-
+     
         public void AddPowerup(StatPowerup statPowerup) => m_ActivePowerupList.Add(statPowerup);
         public void SetCanMove(bool move) => m_CanMove = move;
         public float GetMaxSpeed() => Mathf.Max(m_FinalStats.TopSpeed, m_FinalStats.ReverseSpeed);
@@ -620,10 +625,17 @@ namespace KartGame.KartSystems
 
             validPosition = GroundPercent > 0.7f && !m_HasCollision && Vector3.Dot(m_VerticalReference, Vector3.up) > 0.9f;
 
+            //Check for ground height 
+            //if (Physics.Raycast(transform.position, -transform.up, 3))
+            //    isGrounded = true;
+            //else isGrounded = false;
+
             // Airborne / Half on ground management
             if (GroundPercent < 0.7f)
-            {
+            {            
+                //if(!isGrounded) Rigidbody.angularVelocity = new Vector3(0.0f, Rigidbody.angularVelocity.y * 0.98f, 0.0f);
                 Rigidbody.angularVelocity = new Vector3(0.0f, Rigidbody.angularVelocity.y * 0.98f, 0.0f);
+
                 Vector3 finalOrientationDirection = Vector3.ProjectOnPlane(transform.forward, m_VerticalReference);
                 finalOrientationDirection.Normalize();
                 if (finalOrientationDirection.sqrMagnitude > 0.0f)
