@@ -626,15 +626,23 @@ namespace KartGame.KartSystems
             validPosition = GroundPercent > 0.7f && !m_HasCollision && Vector3.Dot(m_VerticalReference, Vector3.up) > 0.9f;
 
             //Check for ground height 
-            //if (Physics.Raycast(transform.position, -transform.up, 3))
-            //    isGrounded = true;
-            //else isGrounded = false;
+             if(Physics.Raycast(transform.position, -transform.up, 3))
+                isGrounded = true;
+             else isGrounded = false;
 
             // Airborne / Half on ground management
+           // if (!isGrounded)
+           // {
+                //Rigidbody.angularVelocity = new Vector3(0f, Rigidbody.angularVelocity.y * 0.98f, 0f);
+               // Debug.Log("Groundpercantge IS LOW");
+           // }
+
             if (GroundPercent < 0.7f)
-            {            
+            {
                 //if(!isGrounded) Rigidbody.angularVelocity = new Vector3(0.0f, Rigidbody.angularVelocity.y * 0.98f, 0.0f);
-                Rigidbody.angularVelocity = new Vector3(0.0f, Rigidbody.angularVelocity.y * 0.98f, 0.0f);
+                //Rigidbody.angularVelocity = new Vector3(0f, Rigidbody.angularVelocity.y * 0.98f, Rigidbody.angularVelocity.z);
+                Rigidbody.angularVelocity = new Vector3(0f, Rigidbody.angularVelocity.y * 0.98f, 0f);
+               // Debug.Log("Groundpercantge IS LOW"); 
 
                 Vector3 finalOrientationDirection = Vector3.ProjectOnPlane(transform.forward, m_VerticalReference);
                 finalOrientationDirection.Normalize();

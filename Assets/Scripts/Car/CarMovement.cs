@@ -60,8 +60,14 @@ public class CarMovement : MonoBehaviour
     }
 
     void Update() {
+
+        //Debug.Log(rb.velocity);
+        Vector3 currentVelocity = rb.velocity;
+        currentVelocity.y = 0; 
+
         //Max speed cap
-        if(Mathf.Abs(rb.velocity.magnitude) > maxSpeedCap) {
+
+        if(Mathf.Abs(currentVelocity.magnitude) > maxSpeedCap) {
             var finSpeed = rb.velocity.normalized * maxSpeedCap; 
             finSpeed.y = rb.velocity.y;
             rb.velocity = finSpeed;

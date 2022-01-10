@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Boost : MonoBehaviour
 {
     [Header("FOV")]
-    public Vector2 fovChange = new Vector2(40, 75);
+    public Vector2 fovChange = new Vector2(40, 90);
     public float fovChangeSpeed = 5f;
     private float fovTarget;
 
@@ -140,6 +140,7 @@ public class Boost : MonoBehaviour
 
     public void ApplyBoost()
     {
+        Debug.Log(carRb.transform.forward); 
         carRb.AddForce(carRb.transform.forward * boostForce, ForceMode.Acceleration);
         HapticManager.Haptics("Boost");
     }
