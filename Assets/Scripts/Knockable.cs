@@ -8,24 +8,34 @@ public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
     public bool addKnockedTag = true;
     private PhotoItem photoItem;
+    private bool isStanding = true;
+    public Rigidbody rb; 
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
     void Start() {
         gameObject.tag = "Knockable";
+        rb = this.gameObject.GetComponent<Rigidbody>(); 
         photoItem = GetComponent<PhotoItem>();
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        rb.useGravity = false;
+        rb.isKinematic = false;
     }
 
     void OnCollisionEnter(Collision col) {
-        if(col.gameObject.tag == "Player" || col.gameObject.tag == "Shark") {
-            var rb = GetComponent<Rigidbody>();
+        if(col.gameObject.tag == "Player" || col.gameObject.tag == "Knockable" || col.gameObject.tag == "Shark") {
+            rb.constraints = RigidbodyConstraints.None;
+            isStanding = false;
             rb.useGravity = true;
-            rb.isKinematic = false;
             onKnockPlayer.Invoke();
             onKnock.Invoke();
-            rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 100f);
 
-            if(addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
+
+            if(col.gameObject.tag == "Player")rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 25f);
+            //else if(col.gameObject.tag == "Player" && !isStanding) rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 5f);
+            if (col.gameObject.tag == "Knockable" && isStanding) rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 5f);
+
+            if (addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
         }
     }
 
@@ -39,5 +49,16 @@ public class Knockable : MonoBehaviour {
             rb.AddForce(new Vector3(0.05f, 1f, 0) * 15000f);
             rb.AddTorque(new Vector3(10, 50, 5), ForceMode.Impulse);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        //if (isStanding) rb.velocity = new Vector3(0, 0, 0);
+        //if(isStanding) rb.velocity = new Vector3(0, 0, 0);
+    }
+
+    void StayStatic()
+    {
+           
     }
 }
