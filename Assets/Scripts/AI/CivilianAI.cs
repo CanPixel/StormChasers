@@ -7,6 +7,7 @@ public class CivilianAI : MonoBehaviour {
     public GameObject roadPathsObject;
     private Transform[] roadPaths;
     private Vector3 targetPos;
+    private GameObject collidedObj; 
 
     [ReadOnly] public bool flipped = false;
 
@@ -88,12 +89,19 @@ public class CivilianAI : MonoBehaviour {
 
     void OnCollisionEnter(Collision col) {
         if(col.gameObject.tag == "Player") {
-            var rb = GetComponent<Rigidbody>();
-            navigation.enabled = false;
-            reorientTime = reorientAfter;
-            rb.useGravity = true;
-            rb.isKinematic = false;
-            rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 400f);
+            collidedObj = col.gameObject; 
+            LaunchCivilian(); 
         }
+    }
+
+    public void LaunchCivilian()
+    {
+        var rb = GetComponent<Rigidbody>();
+        navigation.enabled = false;
+        reorientTime = reorientAfter;
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        if(collidedObj != null)rb.AddForce(collidedObj.gameObject.GetComponent<Rigidbody>().velocity * 300f);
+        collidedObj = null; 
     }
 }

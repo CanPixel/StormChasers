@@ -729,6 +729,16 @@ public class CameraControl : MonoBehaviour {
             bool isOnScreen = true;
             objectTags += rest.tags + " ";
 
+            Debug.Log(rest.name);
+
+            if (rest.CompareTag("ActivationExplosive"))
+            {
+                TriggerExplosion explosive = rest.gameObject.GetComponent<TriggerExplosion>();
+                explosive.hasBeenActivated = true;
+                explosive.explosionDelayDuration = 0f;
+                Debug.Log("ExplosionMustbetriggered");
+            }
+
             scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tags, rest);  /////// THEME APPEND HERE
 
             PictureScore sub = new PictureScore();
@@ -748,6 +758,9 @@ public class CameraControl : MonoBehaviour {
 
             scren.picturedObjects[index].score = sub;
             index++;
+
+          
+            
         }
 
         scren.containedObjectTags = objectTags;

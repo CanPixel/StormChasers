@@ -15,6 +15,7 @@ TagManager:
   - CarCivilian
   - SplashSound
   - Knockable
+  - ActivationExplosive
   layers:
   - Default
   - TransparentFX

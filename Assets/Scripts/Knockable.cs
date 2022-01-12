@@ -7,8 +7,10 @@ using UnityEngine.Events;
 public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
     public bool addKnockedTag = true;
+    public bool canbeExploded = true; 
     private PhotoItem photoItem;
     private bool isStanding = true;
+    private GameObject collidedObject; 
     public Rigidbody rb; 
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
@@ -22,20 +24,16 @@ public class Knockable : MonoBehaviour {
         rb.isKinematic = false;
     }
 
+    private void FixedUpdate()
+    {
+        ExtrGravity(); 
+    }
+
     void OnCollisionEnter(Collision col) {
         if(col.gameObject.tag == "Player" || col.gameObject.tag == "Knockable" || col.gameObject.tag == "Shark") {
-            rb.constraints = RigidbodyConstraints.None;
-            isStanding = false;
-            rb.useGravity = true;
-            onKnockPlayer.Invoke();
-            onKnock.Invoke();
 
-
-            if(col.gameObject.tag == "Player")rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 25f);
-            //else if(col.gameObject.tag == "Player" && !isStanding) rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 5f);
-            if (col.gameObject.tag == "Knockable" && isStanding) rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 5f);
-
-            if (addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
+            collidedObject = col.gameObject; 
+            LaunchKnockAble(); 
         }
     }
 
@@ -51,11 +49,33 @@ public class Knockable : MonoBehaviour {
         }
     }
 
-    private void FixedUpdate()
+    void ExtrGravity()
     {
-        //if (isStanding) rb.velocity = new Vector3(0, 0, 0);
-        //if(isStanding) rb.velocity = new Vector3(0, 0, 0);
+        if(rb.velocity.y < 0) rb.velocity -= Vector3.down * Physics.gravity.y * (4 - 1) * Time.fixedDeltaTime;
+       // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
+    
     }
+
+    public void LaunchKnockAble()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+        isStanding = false;
+        rb.useGravity = true;
+        onKnockPlayer.Invoke();
+        onKnock.Invoke();
+
+        if (collidedObject != null)
+        {
+            if (collidedObject.gameObject.tag == "Player") rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 25f);
+            if (collidedObject.gameObject.tag == "Knockable" && isStanding) rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 5f);
+        }
+
+        if (addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
+
+        collidedObject = null; 
+    }
+
+    
 
     void StayStatic()
     {
