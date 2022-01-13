@@ -7,20 +7,27 @@ public class PadJump : MonoBehaviour
     public float padJumpHeight = 50;
     private float defaultJumpHeight;
     private bool hasBeenLaunched = false;
+    private bool canLaunch = true; 
     private CarMovement carMovementScript;
     public bool AutoTrigger;
+
 
     void Start()
     {
         carMovementScript = FindObjectOfType<CarMovement>();
         defaultJumpHeight = carMovementScript.jumpHeight;
+        canLaunch = true; 
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (AutoTrigger) LaunchPlayer();
+            if (AutoTrigger && canLaunch)
+            {
+                canLaunch = false; 
+                LaunchPlayer();
+            }
         }
     }
 
@@ -36,12 +43,27 @@ public class PadJump : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            if (!canLaunch)
+                canLaunch = true; 
+        }
+    }
+
 
     void LaunchPlayer()
     {
         carMovementScript.jumpHeight = padJumpHeight;
+       // carMovementScript.rb.velocity = new Vector3(carMovementScript.rb.velocity.x, 0, carMovementScript.rb.velocity.z); 
         carMovementScript.Jump();
         carMovementScript.jumpHeight = defaultJumpHeight;
         hasBeenLaunched = false;
+    }
+
+    void WaitForRecharge()
+    {
+
     }
 }
