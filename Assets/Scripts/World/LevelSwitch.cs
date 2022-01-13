@@ -18,11 +18,12 @@ public class LevelSwitch : MonoBehaviour {
     private static LevelSwitch processor;
 
     void Start() {
-        baseScale = levelTitle.transform.localScale;
+        //baseScale = levelTitle.transform.localScale;
         if(processor == null) processor = this;
         alpha = 4f;
     }
 
+/* 
     void Update() {
         if(processor == null) return;
 
@@ -36,9 +37,10 @@ public class LevelSwitch : MonoBehaviour {
 
         levelTitle.color = new Color(levelTitle.color.r, levelTitle.color.g, levelTitle.color.b, alpha);
         levelTitle.transform.localScale = Vector3.Lerp(levelTitle.transform.localScale, baseScale, Time.deltaTime * fadeSpeed * 2f);
-    }
+    }*/
 
     public static void SwitchLevel(Region region) {
+        if(processor.levelTitle == null) return;
         processor.levelTitle.text = region.name;
         processor.levelTitle.font = region.font;
         alpha = 4f;

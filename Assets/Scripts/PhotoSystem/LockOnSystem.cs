@@ -18,8 +18,9 @@ public class LockOnSystem : MonoBehaviour {
     public GameObject canvas, canvas3D;
     public Camera cam;
 
-    public float a = 2, b = 400, c = 100;
-    public float circleSizeReduction = 25;
+    public float objectInFocusThreshold = 70;
+    private float a = 2, b = 450, c = 125;
+    public float circleSizeReduction = 0.3f;
 
     public bool occlusion = true, focus = true, physicalDistance = true;
 
@@ -73,9 +74,6 @@ public class LockOnSystem : MonoBehaviour {
             cross.EnableRender(IsOnScreen(pictureObjects[i.Key].target.transform.position));
         }
 
-
-        PhotoBase tar;
-        tar = cameraCanvas.RaycastFromReticle();
         sortedScreenObjects = onScreenTargets.Keys.ToList().OrderBy(x => Vector3.Distance(cam.WorldToViewportPoint(FormatVector(x.transform.position)), new Vector3(0.5f, 0.5f, 0))).ToList();
 
         cameraCanvas.highlightedObjectText.text = "";
@@ -128,7 +126,7 @@ public class LockOnSystem : MonoBehaviour {
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
         var inFocus = GetObjectSharpness(target);
-        bool isInFocus = inFocus >= cameraCanvas.objectInFocusThreshold;
+        bool isInFocus = inFocus >= objectInFocusThreshold;
         bool isOnScreen = IsOnScreen(target.transform.position);
 
         if(!occlusion) isOccluded = false;
@@ -174,7 +172,14 @@ public class LockOnSystem : MonoBehaviour {
  
         if (pointOnScreen.z < 0) return false;         //Is in front
         if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) || (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height)) return false;         //Is in FOV
-        
+
+/*         PhotoBase photoItem = null;
+        RaycastHit hit;
+        if(Physics.SphereCast(cam.ScreenPointToRay(baseReticle.transform.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
+            var ph = hit.transform.gameObject.GetComponent<PhotoItem>();
+            if(ph != null) photoItem = ph;
+        } */
+
         RaycastHit hit;
         if (Physics.Linecast(cam.transform.position, point, out hit)) {
             if (hit.transform != toCheck.transform && (host == null || (host != null && hit.transform != host.transform)) && hit.transform.tag != "Player") return false;
@@ -182,16 +187,15 @@ public class LockOnSystem : MonoBehaviour {
         return true;
     }
 
-    public void VisualizePictureItems(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+    public void VisualizePictureItems(CameraControl.Screenshot screen) {
         if(screen.containedObjectTags == null || screen.containedObjectTags.Length < 1) return;
 
         foreach(var i in pictureObjects) Destroy(i.Key.gameObject);
         pictureObjects.Clear();
 
         foreach(var sub in screen.picturedObjects) {
-            if(sub == null /* || sub.item == null*/) continue;
+            if(sub == null) continue;
             AddPictureItemCircle(sub);
-            //extraItems.Add(new CrosshairObject(sub.item, camControl.lockOnSystem.GetScreenCrosshair(sub.item).transform.position));
         }
         
 /*         var actMission = MissionManager.missionManager.activeMission;
@@ -214,6 +218,7 @@ public class LockOnSystem : MonoBehaviour {
         
         var distanceScaling = ((cameraCanvas.maxDistance - pi.score.physicalDistance) * a - b) / c;
         lockedObject.crosshair.label.text = pi.tag.ToString();
+        lockedObject.crosshair.sensation.text = "Sensation: " + pi.sensation.ToString();
         lockedObject.crosshair.crosshair.color = Random.ColorHSV();
 
         lockedObject.crosshair.transform.localScale = Vector3.one * Mathf.Clamp(distanceScaling - circleSizeReduction, 0, 1);

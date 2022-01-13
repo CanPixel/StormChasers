@@ -60,13 +60,10 @@ public class CarMovement : MonoBehaviour
     }
 
     void Update() {
-
-        //Debug.Log(rb.velocity);
         Vector3 currentVelocity = rb.velocity;
         currentVelocity.y = 0; 
 
         //Max speed cap
-
         if(Mathf.Abs(currentVelocity.magnitude) > maxSpeedCap) {
             var finSpeed = rb.velocity.normalized * maxSpeedCap; 
             finSpeed.y = rb.velocity.y;
@@ -225,7 +222,6 @@ public class CarMovement : MonoBehaviour
         // kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
         rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
-        Debug.Log("Jump"); 
        
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");
@@ -234,7 +230,7 @@ public class CarMovement : MonoBehaviour
         if (camControl.camSystem.aim >= 0.5f)
         {
             boostScript.EndBoostState();
-            if (boost > 0.35f) camCanvas.ChangeSpeedToggle();
+            //if (boost > 0.35f) camCanvas.ChangeSpeedToggle();
             return;
         }
 

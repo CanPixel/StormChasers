@@ -65,11 +65,10 @@ public class CameraControl : MonoBehaviour {
     }
 
     [System.Serializable]
-    public class PictureScore {
+    public class ObjectProperties {
         public Screenshot screenshot;
 
-        public PhotoBase item;
-        public List<PictureScore> subScore = new List<PictureScore>();
+        public List<ObjectProperties> subScore = new List<ObjectProperties>();
         
         public string name;
         public bool onScreen;
@@ -102,7 +101,9 @@ public class CameraControl : MonoBehaviour {
             public PhotoBase objectReference;
             public Dictionary<Theme, int> themeScores = new Dictionary<Theme, int>();
 
-            public PictureScore score;
+            public int sensation;
+
+            public ObjectProperties score;
 
             public PicturedObject(string tag, PhotoBase reference) {
                 this.tag = tag;
@@ -714,30 +715,35 @@ public class CameraControl : MonoBehaviour {
         sf.icon.sprite = temp;
 
         //=============== [Photo Naming - Object Section]
-        string photoName = "", photoWithoutScore = "";
-        PictureScore score = new PictureScore();
+        string photoName = "";
 
         var allObjects = lockOnSystem.GetOnScreenObjects();
         string objectTags = "";
 
-        PhotoBase i = null;
         Vector3 targetPos = Vector3.zero;
-
         scren.picturedObjects = new Screenshot.PicturedObject[allObjects.Count];
         int index = 0;
+
+        string pluralName = "";
+        List<string> tagsOnPicture = new List<string>();
+        int sensationScore = 0;
         foreach(var rest in allObjects) {
             bool isOnScreen = true;
-            objectTags += rest.tags + " ";
+            string tag = rest.tags.ToUpper().Trim();
+            if(tagsOnPicture.Contains(tag)) pluralName = tag + "s";
+            tagsOnPicture.Add(tag);
+
+            objectTags += tag + " ";
+            sensationScore += rest.sensation;
 
             scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tags, rest);  /////// THEME APPEND HERE
 
-            PictureScore sub = new PictureScore();
+            ObjectProperties sub = new ObjectProperties();
             targetPos = cam.WorldToViewportPoint(rest.transform.position);
             isOnScreen = (targetPos.z > 0 && targetPos.x > 0 && targetPos.x < 1 && targetPos.y > 0 && targetPos.y < 1) ? true : false;
 
-            photoName = photoWithoutScore = (i != null) ? i.name : cameraCanvas.RaycastName(cameraCanvas.baseReticle.transform).Replace('(', ' ').Replace(')', ' ').Replace('_', ' ').Trim();
+            photoName = tag;
             sub.name = photoName;
-            sub.item = rest;
             sub.screenshot = scren;
             sub.physicalDistance = cameraCanvas.GetPhysicalDistance(rest);
             sub.onScreen = isOnScreen;
@@ -747,15 +753,18 @@ public class CameraControl : MonoBehaviour {
             sub.objectSharpness = lockOnSystem.GetObjectSharpness(rest);
 
             scren.picturedObjects[index].score = sub;
+            scren.picturedObjects[index].sensation = rest.sensation;
             index++;
         }
-
         scren.containedObjectTags = objectTags;
+        scren.score = sensationScore;
 
         //Visualize
-        lockOnSystem.VisualizePictureItems(score, scren);
-        ratingSystem.VisualizeScore(score, scren);
-        photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
+        lockOnSystem.VisualizePictureItems(scren);
+        ratingSystem.VisualizeScore(scren, ratingSystem.scoreGradient, sensationScore);
+        
+        photoName = (pluralName.Length > 1) ? ("''" + pluralName + "''") : ("''" + tagsOnPicture[0] + "''");
+        //photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
 
         //Portfolio
         if(screenshots.Count >= maxPhotosInPortfolio) DeletePicture(0);
@@ -764,13 +773,13 @@ public class CameraControl : MonoBehaviour {
         //Mission check
         scren.portfolioObj = pol;
         scren.polaroidFrame = pol.GetComponent<Image>();
-        var completed = missionManager.CheckCompletion(score, scren);
+        var completed = missionManager.CheckCompletion(scren);
 
         //Border Colors
         if(completed) scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;
 
-        ratingSystem.SetPolaroidTitle(photoWithoutScore);
-        sf.text.text = score.name = photoName;
+        ratingSystem.SetPolaroidTitle(photoName);
+        sf.text.text = photoName;
 
         takePictureDelay = 0.5f;
 

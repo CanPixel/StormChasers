@@ -9,7 +9,7 @@ public class Crosshair : MonoBehaviour {
 
     [HideInInspector] public PhotoBase target;
 
-    public Text label;
+    public Text label, sensation;
 
     public bool updateCrosshairOnDestroy = false;
 
@@ -39,6 +39,6 @@ public class Crosshair : MonoBehaviour {
     }
 
     public void EnableRender(bool i) {
-        crosshair.enabled = label.enabled = i;
+        crosshair.enabled = sensation.enabled = label.enabled = i;
     }
 }

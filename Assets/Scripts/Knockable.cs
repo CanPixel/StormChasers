@@ -11,29 +11,36 @@ public class Knockable : MonoBehaviour {
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
+    private Rigidbody rb;
+
     void Start() {
         gameObject.tag = "Knockable";
         photoItem = GetComponent<PhotoItem>();
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     void OnCollisionEnter(Collision col) {
-        if(col.gameObject.tag == "Player" || col.gameObject.tag == "Shark") {
-            var rb = GetComponent<Rigidbody>();
+        if(col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian") {
             rb.useGravity = true;
-            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.None;
+
             onKnockPlayer.Invoke();
             onKnock.Invoke();
-            rb.AddForce(col.gameObject.GetComponent<Rigidbody>().velocity * 100f);
+            rb.AddForce(col.rigidbody.velocity * 10f);
 
-            if(addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
+            if(addKnockedTag && photoItem != null) {
+                photoItem.OverwriteTag("knocked");
+                photoItem.sensation = 15;
+            }
         }
     }
 
     void OnTriggerEnter(Collider col) {
         if(col.gameObject.tag == "Shark" && knockableByShark) {
-            var rb = GetComponent<Rigidbody>();
             rb.useGravity = true;
-            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.None;
             onKnockShark.Invoke();
             onKnock.Invoke();
             rb.AddForce(new Vector3(0.05f, 1f, 0) * 15000f);
