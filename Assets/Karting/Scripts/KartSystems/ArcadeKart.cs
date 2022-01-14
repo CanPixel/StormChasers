@@ -73,13 +73,14 @@ namespace KartGame.KartSystems
             }
         }
 
-        public Rigidbody Rigidbody { get; private set; }
+        public Rigidbody rigid { get; private set; }
         public InputData Input     { get; private set; }
         public float AirPercent    { get; private set; }
         public float GroundPercent { get; private set; }
 
         public bool isGrounded { get; private set; }
-        
+        public bool isInAir { get; private set; }
+
         public Cinemachine.CinemachineVirtualCamera look;
 
 
@@ -248,7 +249,7 @@ namespace KartGame.KartSystems
 
         void Awake()
         {
-            Rigidbody = GetComponent<Rigidbody>();
+            rigid = GetComponent<Rigidbody>();
             m_Inputs = GetComponents<IInput>();
 
             if(FrontLeftWheel != null) UpdateSuspensionParams(FrontLeftWheel);
@@ -297,6 +298,7 @@ namespace KartGame.KartSystems
 
         void FixedUpdate()
         {
+           
             if(FrontLeftWheel != null) UpdateSuspensionParams(FrontLeftWheel);
             if(FrontRightWheel != null) UpdateSuspensionParams(FrontRightWheel);
             if(RearLeftWheel != null) UpdateSuspensionParams(RearLeftWheel);
@@ -308,7 +310,7 @@ namespace KartGame.KartSystems
             TickPowerups();
 
             // apply our physics properties
-            Rigidbody.centerOfMass = transform.InverseTransformPoint(CenterOfMass.position);
+            rigid.centerOfMass = transform.InverseTransformPoint(CenterOfMass.position);
 
             int groundedCount = 0;
             if (FrontLeftWheel != null && FrontLeftWheel.isGrounded && FrontLeftWheel.GetGroundHit(out WheelHit hit)) groundedCount++;
@@ -327,6 +329,8 @@ namespace KartGame.KartSystems
             m_PreviousGroundPercent = GroundPercent;
 
             UpdateDriftVFXOrientation();
+
+            CheckForLanding();
         }
 
         void GatherInputs()
@@ -339,7 +343,7 @@ namespace KartGame.KartSystems
             for (int i = 0; i < m_Inputs.Length; i++)
             {
                 Input = m_Inputs[i].GenerateInput();
-                WantsToDrift = Input.Drift && Vector3.Dot(Rigidbody.velocity, transform.forward) > 0.0f;
+                WantsToDrift = Input.Drift && Vector3.Dot(rigid.velocity, transform.forward) > 0.0f;
             }
         }
 
@@ -375,7 +379,7 @@ namespace KartGame.KartSystems
             // while in the air, fall faster
             if (AirPercent >= 1)
             {
-                Rigidbody.velocity += Physics.gravity * Time.fixedDeltaTime * m_FinalStats.AddedGravity;
+                rigid.velocity += Physics.gravity * Time.fixedDeltaTime * m_FinalStats.AddedGravity;
             }
         }
 
@@ -390,10 +394,10 @@ namespace KartGame.KartSystems
         {
             if (m_CanMove)
             {
-                float dot = Vector3.Dot(transform.forward, Rigidbody.velocity);
+                float dot = Vector3.Dot(transform.forward, rigid.velocity);
                 if (Mathf.Abs(dot) > 0.1f)
                 {
-                    float speed = Rigidbody.velocity.magnitude;
+                    float speed = rigid.velocity.magnitude;
                     return dot < 0 ? -(speed / m_FinalStats.ReverseSpeed) : (speed / m_FinalStats.TopSpeed);
                 }
                 return 0f;
@@ -448,7 +452,7 @@ namespace KartGame.KartSystems
 
             // manual acceleration curve coefficient scalar
             float accelerationCurveCoeff = 5;
-            Vector3 localVel = transform.InverseTransformVector(Rigidbody.velocity);
+            Vector3 localVel = transform.InverseTransformVector(rigid.velocity);
 
             bool accelDirectionIsFwd = accelInput >= 0;
             bool localVelDirectionIsFwd = localVel.z >= 0;
@@ -457,7 +461,7 @@ namespace KartGame.KartSystems
             float maxSpeed = localVelDirectionIsFwd ? m_FinalStats.TopSpeed : m_FinalStats.ReverseSpeed;
             float accelPower = accelDirectionIsFwd ? m_FinalStats.Acceleration : m_FinalStats.ReverseAcceleration;
 
-            float currentSpeed = Rigidbody.velocity.magnitude;
+            float currentSpeed = rigid.velocity.magnitude;
             float accelRampT = currentSpeed / maxSpeed;
             float multipliedAccelerationCurve = m_FinalStats.AccelerationCurve * accelerationCurveCoeff;
             float accelRamp = Mathf.Lerp(multipliedAccelerationCurve, 1, accelRampT * accelRampT);
@@ -483,8 +487,8 @@ namespace KartGame.KartSystems
             // if over max speed, cannot accelerate faster.
             if (wasOverMaxSpeed && !isBraking) movement *= 0.0f;
 
-            Vector3 newVelocity = Rigidbody.velocity + movement * Time.fixedDeltaTime;
-            newVelocity.y = Rigidbody.velocity.y;
+            Vector3 newVelocity = rigid.velocity + movement * Time.fixedDeltaTime;
+            newVelocity.y = rigid.velocity.y;
 
             //  clamp max speed if we are on ground
             if (GroundPercent > 0.0f && !wasOverMaxSpeed)
@@ -495,10 +499,10 @@ namespace KartGame.KartSystems
             // coasting is when we aren't touching accelerate
             if (Mathf.Abs(accelInput) < k_NullInput && GroundPercent > 0.0f)
             {
-                newVelocity = Vector3.MoveTowards(newVelocity, new Vector3(0, Rigidbody.velocity.y, 0), Time.fixedDeltaTime * m_FinalStats.CoastingDrag);
+                newVelocity = Vector3.MoveTowards(newVelocity, new Vector3(0, rigid.velocity.y, 0), Time.fixedDeltaTime * m_FinalStats.CoastingDrag);
             }
 
-            Rigidbody.velocity = newVelocity;
+            rigid.velocity = newVelocity;
 
             // Drift
   /*           if (GroundPercent > 0.0f)
@@ -517,13 +521,13 @@ namespace KartGame.KartSystems
                 if (!localVelDirectionIsFwd && !accelDirectionIsFwd) 
                     angularVelocitySteering *= -1.0f;
 
-                var angularVel = Rigidbody.angularVelocity;
+                var angularVel = rigid.angularVelocity;
 
                 // move the Y angular velocity towards our target
                 angularVel.y = Mathf.MoveTowards(angularVel.y, turningPower * angularVelocitySteering, Time.fixedDeltaTime * angularVelocitySmoothSpeed);
 
                 // apply the angular velocity
-                Rigidbody.angularVelocity = angularVel;
+                rigid.angularVelocity = angularVel;
 
                 // rotate rigidbody's velocity as well to generate immediate velocity redirection
                 // manual velocity steering coefficient
@@ -532,7 +536,7 @@ namespace KartGame.KartSystems
                 // If the karts lands with a forward not in the velocity direction, we start the drift
                 if (GroundPercent >= 0.0f && m_PreviousGroundPercent < 0.1f)
                 {
-                    Vector3 flattenVelocity = Vector3.ProjectOnPlane(Rigidbody.velocity, m_VerticalReference).normalized;
+                    Vector3 flattenVelocity = Vector3.ProjectOnPlane(rigid.velocity, m_VerticalReference).normalized;
                     if (Vector3.Dot(flattenVelocity, transform.forward * Mathf.Sign(accelInput)) < Mathf.Cos(MinAngleToFinishDrift * Mathf.Deg2Rad))
                     {
                         IsDrifting = true;
@@ -567,7 +571,7 @@ namespace KartGame.KartSystems
                     float driftMaxSteerValue = m_FinalStats.Steer + DriftAdditionalSteer;
                     m_DriftTurningPower = Mathf.Clamp(m_DriftTurningPower + (normalizedTurn * Mathf.Clamp01(DriftControl * Time.fixedDeltaTime)), -driftMaxSteerValue, driftMaxSteerValue);
 
-                    bool facingVelocity = Vector3.Dot(Rigidbody.velocity.normalized, transform.forward * Mathf.Sign(accelInput)) > Mathf.Cos(MinAngleToFinishDrift * Mathf.Deg2Rad);
+                    bool facingVelocity = Vector3.Dot(rigid.velocity.normalized, transform.forward * Mathf.Sign(accelInput)) > Mathf.Cos(MinAngleToFinishDrift * Mathf.Deg2Rad);
 
                     bool canEndDrift = true;
                     if (isBraking)
@@ -603,7 +607,7 @@ namespace KartGame.KartSystems
             } 
 
                 // rotate our velocity based on current steer value
-                Rigidbody.velocity = Quaternion.AngleAxis(turningPower * Mathf.Sign(localVel.z) * velocitySteering * m_CurrentGrip * Time.fixedDeltaTime, transform.up) * Rigidbody.velocity;
+                rigid.velocity = Quaternion.AngleAxis(turningPower * Mathf.Sign(localVel.z) * velocitySteering * m_CurrentGrip * Time.fixedDeltaTime, transform.up) * rigid.velocity;
 /*             }
             else
             {
@@ -641,14 +645,14 @@ namespace KartGame.KartSystems
             {
                 //if(!isGrounded) Rigidbody.angularVelocity = new Vector3(0.0f, Rigidbody.angularVelocity.y * 0.98f, 0.0f);
                 //Rigidbody.angularVelocity = new Vector3(0f, Rigidbody.angularVelocity.y * 0.98f, Rigidbody.angularVelocity.z);
-                Rigidbody.angularVelocity = new Vector3(0f, Rigidbody.angularVelocity.y * 0.98f, 0f);
+                rigid.angularVelocity = new Vector3(0f, rigid.angularVelocity.y * 0.98f, 0f);
                // Debug.Log("Groundpercantge IS LOW"); 
 
                 Vector3 finalOrientationDirection = Vector3.ProjectOnPlane(transform.forward, m_VerticalReference);
                 finalOrientationDirection.Normalize();
                 if (finalOrientationDirection.sqrMagnitude > 0.0f)
                 {
-                    Rigidbody.MoveRotation(Quaternion.Lerp(Rigidbody.rotation, Quaternion.LookRotation(finalOrientationDirection, m_VerticalReference), Mathf.Clamp01(AirborneReorientationCoefficient * Time.fixedDeltaTime)));
+                    rigid.MoveRotation(Quaternion.Lerp(rigid.rotation, Quaternion.LookRotation(finalOrientationDirection, m_VerticalReference), Mathf.Clamp01(AirborneReorientationCoefficient * Time.fixedDeltaTime)));
                 }
             }
             else if (validPosition)
@@ -658,6 +662,23 @@ namespace KartGame.KartSystems
             }
 
             ActivateDriftVFX(IsDrifting && GroundPercent > 0.0f);
+        }
+
+        void CheckForLanding()
+        {
+            if (!isGrounded)
+            {
+                isInAir = true; 
+            }
+            else if(isInAir && isGrounded)
+            {
+                Debug.Log("Player has landed");
+                // Rigidbody rb = gameObject.GetComponent<Rigidbody>(); 
+                // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0); 
+                rigid.constraints = RigidbodyConstraints.FreezeRotation;
+                rigid.constraints = RigidbodyConstraints.None; 
+                isInAir = false; 
+            }
         }
     }
 }

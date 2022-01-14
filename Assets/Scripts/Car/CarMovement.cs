@@ -12,6 +12,7 @@ public class CarMovement : MonoBehaviour
     public Material brakeMaterial;
 
     public float maxSpeedCap = 100;
+    public float momentumReduction = 2; 
 
     public Transform carMesh;
     public DialogSystem dialogSystem;
@@ -130,8 +131,7 @@ public class CarMovement : MonoBehaviour
         jump = val.Get<float>();
         //if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
         if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight))
-        {
-            
+        {            
             Jump();
         }
        
@@ -223,9 +223,12 @@ public class CarMovement : MonoBehaviour
         var front = (kart.FrontLeftWheel.transform.position.y + kart.FrontRightWheel.transform.position.y) / 2f;
         var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
         // kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
-        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
-        rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
-        Debug.Log("Jump"); 
+        //rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
+        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        var jumpDirection = transform.up + (rb.velocity.normalized / momentumReduction);
+        if(rb.velocity.magnitude < 10) rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange); //Only add forward velocity when moving 
+        else rb.AddForce(jumpDirection * jumpHeight, ForceMode.VelocityChange); 
        
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");
