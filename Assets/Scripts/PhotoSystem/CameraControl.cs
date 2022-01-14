@@ -736,14 +736,12 @@ public class CameraControl : MonoBehaviour {
             objectTags += tag + " ";
             sensationScore += rest.sensation;
 
-            Debug.Log(rest.name);
-
+            //Debug.Log(rest.name);
             if (rest.CompareTag("ActivationExplosive"))
             {
                 TriggerExplosion explosive = rest.gameObject.GetComponent<TriggerExplosion>();
                 explosive.hasBeenActivated = true;
                 explosive.explosionDelayDuration = 0f;
-                Debug.Log("ExplosionMustbetriggered");
             }
 
             scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tags, rest);  /////// THEME APPEND HERE
@@ -765,9 +763,6 @@ public class CameraControl : MonoBehaviour {
             scren.picturedObjects[index].score = sub;
             scren.picturedObjects[index].sensation = rest.sensation;
             index++;
-
-          
-            
         }
         scren.containedObjectTags = objectTags;
         scren.score = sensationScore;

@@ -11,6 +11,7 @@ public class CarMovement : MonoBehaviour
     public Light[] brakeLights;
     public Material brakeMaterial;
 
+    public float momentumReduction = 2f;
     public float maxSpeedCap = 100;
 
     public Transform carMesh;
@@ -221,7 +222,9 @@ public class CarMovement : MonoBehaviour
         var back = (kart.RearLeftWheel.transform.position.y + kart.RearRightWheel.transform.position.y) / 2f;
         // kart.SuspensionHeight = baseSuspension * (jumpHeight * Mathf.Clamp01(1f - (front - back)));
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
-        rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
+
+        var jumpDirection = transform.up + rb.velocity.normalized / momentumReduction;
+        rb.AddForce(jumpDirection * jumpHeight, ForceMode.VelocityChange);
        
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");

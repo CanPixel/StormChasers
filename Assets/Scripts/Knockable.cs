@@ -15,7 +15,7 @@ public class Knockable : MonoBehaviour {
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     void Start() {
         gameObject.tag = "Knockable";
@@ -31,7 +31,7 @@ public class Knockable : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision col) {
-        if(col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian") {
+        if(col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian" || col.gameObject.tag == "Knockable") {
             collidedObject = col.gameObject;
             LaunchKnockAble();
         }
