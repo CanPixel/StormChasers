@@ -5,15 +5,27 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
-<<<<<<< HEAD
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c6f11041c2b292926237e38271427fb
       flags: 0
     RecentlyUsedScenePath-1:
+      value: 22424703114646680e0b0227036c6f3c372e2c0f1f1c68252320092a
+      flags: 0
+    RecentlyUsedScenePath-2:
+      value: 224247031146467e0c1d15111e224f5f330f19273c24237f1e281023eee5073be7e933a7f234362820
+      flags: 0
+    RecentlyUsedScenePath-3:
+      value: 224247031146467702191c2d1c3a1f23020e142f63092a2024271873d5ef3b3ceee638eda81e3a313631ec390a3b4e1efe1a0005f33c05041502fc0015db151e1e8b0dcb13dc06
+      flags: 0
+    RecentlyUsedScenePath-4:
+      value: 224247031146467702191c2d1c3a1f23020e142f630e2922283a0903e3e33f77c6e23be6d4393a323c4dc933163b122bbc1f0702e212
+      flags: 0
+    RecentlyUsedScenePath-5:
+      value: 224247031146467702191c2d1c3a1f23020e142f631c343f3d201e32eea01d2beee638edf4751b39340ddc3f01300470c618061bff080b07381df10f1ffb032c35c015ca54dd1115df00
+      flags: 0
+    RecentlyUsedScenePath-6:
       value: 22424703114646680e0b0227036c7b1500241b2f222d68252320092a
       flags: 0
-=======
->>>>>>> SimchaFuckedUP
     vcSharedLogLevel:
       value: 0d5e400f0650
       flags: 0

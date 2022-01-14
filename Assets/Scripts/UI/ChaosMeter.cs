@@ -19,14 +19,14 @@ public class ChaosMeter : MonoBehaviour {
         slider.fillAmount = Mathf.Lerp(slider.fillAmount, target, Time.deltaTime * 3f);
         showText.text = "Sensation: <color='#" + ColorUtility.ToHtmlStringRGB(gradient.Evaluate(totalSens / 100f)) + "'>" + totalSens.ToString() + "</color>";
         
-        current = Mathf.Lerp(current, target + 0.01f, Time.deltaTime * 4f);
-        percentage.text = current.ToString("0.0") + "%";
+        current = Mathf.Lerp(current, target, Time.deltaTime * 2f);
+        percentage.text = current.ToString("0.0");
     }
 
     public void CalculateChaos(CameraControl.Screenshot screen, Gradient scoring, int totalSensation) {
         gradient = scoring;
         current = slider.fillAmount = 0;
         totalSens = totalSensation;
-        target = (totalSensation / 100f);
+        target = totalSensation;
     }
 }

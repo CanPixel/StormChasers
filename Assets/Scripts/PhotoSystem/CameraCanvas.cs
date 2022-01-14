@@ -16,22 +16,22 @@ public class CameraCanvas : MonoBehaviour {
     private float focusInput;
     private float sensitivityValue = 1;
 
-    [Header("Motion Blur Reticle")]
-    public float movementDamping = 2f;
+   // [Header("Motion Blur Reticle")]
+/*     public float movementDamping = 2f;
     public float movementRange = 400f, movementSensitivityThreshold = 0.2f;
     public Vector2 motionBlurRange = new Vector2(180, 360);
-    public float motionReticleSensitivity = 1.5f;
+    public float motionReticleSensitivity = 1.5f; */
 
     [Header("Focus")]
-    public float focalLength = 90;
-    public float minFocusRange = 10;
-    public float maxFocusRange = 300;
-    public float focusSensitivity = 0.5f;
+    private float focalLength = 110;
+    private float minFocusRange = 3, maxFocusRange = 65;
+    private float focusSensitivity = 0.7f;
     private float sensitivityChangeSensitivity;
-    public AnimationCurve apertureSensitivity, sweepingRange; 
-    public float sweepFactor = 1f, sweepBaseValue = 80;
-    public float apertureFactor = 1f;
-    public float focusSensitivityHigh = 0.9f, focusSensitivityLow = 0.4f;
+    public AnimationCurve apertureSensitivity;
+    public AnimationCurve sweepingRange; 
+    private float sweepFactor = 1f, sweepBaseValue = 80;
+    private float apertureFactor = 2.5f;
+    private float focusSensitivityHigh = 1.5f, focusSensitivityLow = 0.4f;
 
     [Space(10)]
     public Camera cam;

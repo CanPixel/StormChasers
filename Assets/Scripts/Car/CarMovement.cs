@@ -30,7 +30,6 @@ public class CarMovement : MonoBehaviour
     private float baseSuspension;
     public bool isGrounded; 
 
-
     protected Vector2 moveVec = Vector2.zero;
 
     public PlayerInput playerInput;
@@ -126,13 +125,7 @@ public class CarMovement : MonoBehaviour
             return;
         }
         jump = val.Get<float>();
-        //if(jump >= 0.5f && kart.GroundPercent > 0.0f ) Jump();
-        if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight))
-        {
-            
-            Jump();
-        }
-       
+        if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
     }
     public void OnBoost(InputValue val)
     {
@@ -149,7 +142,7 @@ public class CarMovement : MonoBehaviour
     public void OnBacklook(InputValue val)
     {
         bool pressed = val.Get<float>() >= 0.4f;
-        if (pressed && camControl.camSystem.aim <= 0.5f) camControl.BackLook(true);
+        if (pressed && camControl.camSystem.aim <= 0.4f) camControl.BackLook(true);
         else camControl.BackLook(false);
     }
     public void OnCycleFilter(InputValue val) {
@@ -164,9 +157,7 @@ public class CarMovement : MonoBehaviour
     }
 
     public void OnLooking(InputValue val) {
-        //if (camControl.ratingSystem.HasTakenPicture() && !camControl.ratingSystem.IsFading()) return;
         rotationInput = val.Get<Vector2>();
-        //camCanvas.SynchLook();
     }
 
     public void OnCameraAim(InputValue val) {
@@ -180,7 +171,7 @@ public class CarMovement : MonoBehaviour
             SoundManager.PlayUnscaledSound("CamMode", 2f);
             InputSystem.ResetHaptics();
         } else {
-            if (camControl.HasTakenPicture()) camControl.Recenter();
+            //if (camControl.HasTakenPicture()) camControl.Recenter();
             camControl.RecenterY();
         }
     }
@@ -224,19 +215,13 @@ public class CarMovement : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
 
         var jumpDirection = transform.up + rb.velocity.normalized / momentumReduction;
+        if(rb.velocity.magnitude < 10) rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
         rb.AddForce(jumpDirection * jumpHeight, ForceMode.VelocityChange);
        
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");
     }
     protected void Boost(float boost) {
-        if (camControl.camSystem.aim >= 0.5f)
-        {
-            boostScript.EndBoostState();
-            //if (boost > 0.35f) camCanvas.ChangeSpeedToggle();
-            return;
-        }
-
         if (boost > 0.3f && gas > 0 && brake < 0.5f && !boostScript.isBoosting) boostScript.StartBoostState();
         else if (boost < 0.3f) boostScript.EndBoostState();
     }
@@ -253,15 +238,13 @@ public class CarMovement : MonoBehaviour
         hapticDuration = duration;
     } 
 
-    protected void SetBrakeLights(bool on)
-    {
+    protected void SetBrakeLights(bool on) {
         foreach (var i in brakeLights) i.enabled = on;
         brakeMaterial.SetColor("_EmissionColor", on ? new Color(1, 0, 0) : new Color(0, 0, 0));
         brakeMaterial.SetColor("_Color", on ? new Color(1, 0, 0) : new Color(0, 0, 0));
     }
 
-    protected void MoveCalc()
-    {
+    protected void MoveCalc() {
         float driftStop = 1;
         if (steering == 0 && drift >= 0.5f) driftStop = 0;
         float baseVel = gas * driftStop - brake * (1 - driftStop);
@@ -283,31 +266,19 @@ public class CarMovement : MonoBehaviour
         //HapticFeedback(left, right, gas / 3f);
     }
 
-    //private void ChangeBinding() {
-    //InputBinding binding = triggerAction.action.bindings[0];
-    //binding.overridePath = "<Keyboard>/#(g)";
-    //triggerAction.action.ApplyBindingOverride(0, binding);
-    //}
-
-    public float IsGassing()
-    {
+    public float IsGassing() {
         return moveVec.y;
     }
-    public float IsSteering()
-    {
+    public float IsSteering() {
         return moveVec.x;
     }
-    public bool IsBraking()
-    {
+    public bool IsBraking() {
         return brake > 0;
     }
-    public bool IsDrifting()
-    {
+    public bool IsDrifting() {
         return drift > 0;
     }
-
-    public Vector2 GetLooking()
-    {
+    public Vector2 GetLooking() {
         return rotationInput;
     }
 }

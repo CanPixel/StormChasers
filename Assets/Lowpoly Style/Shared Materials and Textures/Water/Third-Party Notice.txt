@@ -1,0 +1,1 @@
+This asset uses the texture WaterNormal.png under CC0 license (https://creativecommons.org/publicdomain/zero/1.0/) for demonstration purposes in the demoscenes; original source is: https://3dtextures.me/2018/11/29/water-002/ by Joao Paulo.
