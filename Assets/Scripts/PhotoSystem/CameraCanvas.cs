@@ -24,15 +24,13 @@ public class CameraCanvas : MonoBehaviour {
 
     [Header("Focus")]
     public float focalLength = 90;
-  //  public float focalLengthDistanceFactor = 5;
     public float minFocusRange = 10;
     public float maxFocusRange = 300;
     public float focusSensitivity = 0.5f;
-    public float objectInFocusThreshold = 75;
     private float sensitivityChangeSensitivity;
-    public AnimationCurve apertureSensitivity; 
+    public AnimationCurve apertureSensitivity, sweepingRange; 
+    public float sweepFactor = 1f, sweepBaseValue = 80;
     public float apertureFactor = 1f;
-    //public float physicalDistanceFactor = 0.5f;
     public float focusSensitivityHigh = 0.9f, focusSensitivityLow = 0.4f;
 
     [Space(10)]
@@ -43,32 +41,13 @@ public class CameraCanvas : MonoBehaviour {
     public Slider focusMeter;
     public Text highlightedObjectText;
     public Image baseReticle, movementReticle;
-    public Slider speedToggle;
-    public Image speedToggleIcon;
-    public Sprite lowSpeedIcon, highSpeedIcon;
     public Outline focusMeterOutline;
     public Outline focusMeterImg;
 
     private float motion;
 
-    public void ChangeSpeedToggle() {
-        if(speedToggle.value == 1) {
-            speedToggle.value = 0;
-            speedToggleIcon.sprite = lowSpeedIcon;   
-            sensitivityChangeSensitivity = focusSensitivityLow;
-        }
-        else {
-            speedToggle.value = 1;
-            speedToggleIcon.sprite = highSpeedIcon;
-            sensitivityChangeSensitivity = focusSensitivityHigh;
-        }
-        SoundManager.PlayUnscaledSound("ShaderSwitch", 0.7f);
-    }
-
     void Start() {
         sensitivityChangeSensitivity = focusSensitivityHigh;
-        speedToggle.value = 1;
-        speedToggleIcon.sprite = highSpeedIcon;
         ReloadFX();
     }
 
@@ -78,6 +57,9 @@ public class CameraCanvas : MonoBehaviour {
         
         var ding = apertureSensitivity.Evaluate(focusMeter.value) * apertureFactor;
         dof.aperture.value = ding;
+
+        var sweep = sweepingRange.Evaluate(1f - focusMeter.value) * sweepFactor;
+        dof.focalLength.value = sweep * sweepBaseValue;
 
         sensitivityValue = sensitivityChangeSensitivity;
         focusMeterImg.effectDistance = Vector2.Lerp(focusMeterImg.effectDistance, (Vector2.one * Mathf.Clamp(focusSensitivityHigh - sensitivityValue, 1, -2) * 2), Time.unscaledDeltaTime * 5f);
@@ -89,34 +71,10 @@ public class CameraCanvas : MonoBehaviour {
         var focalLn = dof.focalLength.value;
         dof = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.DepthOfField>();
         var focusAperture = dof.aperture.value;
-        //motionBlur = postProcessVolume.sharedProfile.GetSetting<UnityEngine.Rendering.PostProcessing.MotionBlur>();
         
         dof.focusDistance.value = focusMeter.value = focusDist;
         dof.aperture.value = focusAperture;
         dof.focalLength.value = focalLn;
-    }
-
-    public PhotoBase RaycastFromReticle() {
-        PhotoBase photoItem = null;
-        RaycastHit hit;
-        if(Physics.SphereCast(cam.ScreenPointToRay(baseReticle.transform.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
-            var ph = hit.transform.gameObject.GetComponent<PhotoItem>();
-            if(ph != null) photoItem = ph;
-        }
-        return photoItem;
-    }
-    public float RaycastDistance() {
-        RaycastHit hit;
-        float dist = -1f;
-        if(Physics.SphereCast(cam.ScreenPointToRay(baseReticle.transform.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) dist = Vector3.Distance(hit.point, player.transform.position);
-        return dist;
-    }
-    public string RaycastName(Transform trans) {
-        RaycastHit hit;
-        if(Physics.SphereCast(cam.ScreenPointToRay(trans.position), raycastRadius, out hit, maxDistance, raycastLayerMask)) {
-            return hit.transform.gameObject.name;
-        }
-        return "";
     }
 
     public float GetMotion() {

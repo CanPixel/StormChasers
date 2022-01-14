@@ -13,6 +13,9 @@ public class MissionManager : MonoBehaviour {
     public List<Mission> missions = new List<Mission>();
     private Dictionary<string, Mission> missionsByName = new Dictionary<string, Mission>();
 
+    public bool startOnStart = false;
+    [ConditionalHide("startOnStart", true)] public int missionOnStartIndex = 0;
+
     public static MissionManager missionManager;
 
     [System.Serializable]
@@ -59,7 +62,6 @@ public class MissionManager : MonoBehaviour {
     public GameObject missionParent;
     public float missionParentScale = 1.2f;
     public Text missionTitle, readyForMark;
-    public Transform missionPhotoFinishDisplay;
     public Image missionIcon, missionCross;
     public RatingSystem ratingSystem;
     public DialogSystem dialogSystem;
@@ -201,7 +203,7 @@ public class MissionManager : MonoBehaviour {
         return mission;
     }
 
-    public bool CheckCompletion(CameraControl.PictureScore pic, CameraControl.Screenshot screen) {
+    public bool CheckCompletion(CameraControl.Screenshot screen) {
         if(activeCriteria == null || currentObjective == null || activeCriteria.Length < 1) return false;
 
         //Reset
@@ -394,7 +396,7 @@ public class MissionManager : MonoBehaviour {
 
         ActivateAll(true);
 
-       // StartMission(missions[missionIndex], false);
+        if(startOnStart) StartMission(missions[missionOnStartIndex], false);
        // startedMission = true;
     }
 

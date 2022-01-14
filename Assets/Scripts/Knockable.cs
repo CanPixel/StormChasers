@@ -7,41 +7,40 @@ using UnityEngine.Events;
 public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
     public bool addKnockedTag = true;
-    public bool canbeExploded = true; 
     private PhotoItem photoItem;
+    
+    public bool canbeExploded = true; 
     private bool isStanding = true;
-    private GameObject collidedObject; 
-    public Rigidbody rb; 
+    private GameObject collidedObject;
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
+    private Rigidbody rb;
+
     void Start() {
         gameObject.tag = "Knockable";
-        rb = this.gameObject.GetComponent<Rigidbody>(); 
         photoItem = GetComponent<PhotoItem>();
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        rb.useGravity = false;
+        rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
+	    rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
-    private void FixedUpdate()
-    {
-        ExtrGravity(); 
+    private void FixedUpdate() {
+	    ExtrGravity();
     }
 
     void OnCollisionEnter(Collision col) {
-        if(col.gameObject.tag == "Player" || col.gameObject.tag == "Knockable" || col.gameObject.tag == "Shark") {
-
-            collidedObject = col.gameObject; 
-            LaunchKnockAble(); 
+        if(col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian") {
+            collidedObject = col.gameObject;
+            LaunchKnockAble();
         }
     }
 
     void OnTriggerEnter(Collider col) {
         if(col.gameObject.tag == "Shark" && knockableByShark) {
-            var rb = GetComponent<Rigidbody>();
             rb.useGravity = true;
-            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.None;
             onKnockShark.Invoke();
             onKnock.Invoke();
             rb.AddForce(new Vector3(0.05f, 1f, 0) * 15000f);
@@ -49,36 +48,28 @@ public class Knockable : MonoBehaviour {
         }
     }
 
-    void ExtrGravity()
-    {
+    private void ExtrGravity() {
         if(rb.velocity.y < 0) rb.velocity -= Vector3.down * Physics.gravity.y * (4 - 1) * Time.fixedDeltaTime;
        // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
-    
     }
 
-    public void LaunchKnockAble()
-    {
+    public void LaunchKnockAble() {
         rb.constraints = RigidbodyConstraints.None;
         isStanding = false;
         rb.useGravity = true;
         onKnockPlayer.Invoke();
         onKnock.Invoke();
 
-        if (collidedObject != null)
-        {
+        if (collidedObject != null) {
             if (collidedObject.gameObject.tag == "Player") rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 25f);
             if (collidedObject.gameObject.tag == "Knockable" && isStanding) rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 5f);
         }
 
-        if (addKnockedTag && photoItem != null) photoItem.OverwriteTag("knocked");
+        if(addKnockedTag && photoItem != null) {
+            photoItem.OverwriteTag("knocked");
+            photoItem.sensation = 15;
+        }
 
         collidedObject = null; 
-    }
-
-    
-
-    void StayStatic()
-    {
-           
     }
 }

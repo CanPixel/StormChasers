@@ -51,6 +51,7 @@ public abstract class PhotoBase : MonoBehaviour {
     public string tags {
         get; private set;
     }
+    public int sensation = 0;
 
     [ConditionalHide("specificOrientation", true)] public Vector3 axisOffset = new Vector3(0, 0, 0);
     [ConditionalHide("specificOrientation", true)] public float orientationViewCone = 70f;

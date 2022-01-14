@@ -202,7 +202,8 @@ public class DialogSystem : MonoBehaviour {
         d.host = chara.characterInfo;
         d.orientation = Dialog.Orientation.DOWN;
         d.content = lines.content;
-        DialogSystem.dialogChars.Add(chara.characterName.ToLower().Trim(), chara);
+        string name = chara.characterName.ToLower().Trim();
+        if(!DialogSystem.dialogChars.ContainsKey(name)) DialogSystem.dialogChars.Add(name, chara);
         generatedDialogCount++;
         return d;
     }

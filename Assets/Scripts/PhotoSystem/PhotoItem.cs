@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhotoItem : PhotoBase {
     public MeshRenderer render;
     public bool isComposite = false;
-    public bool fetchMeshRendererAutomatically = false;
+    public bool fetchMeshRendererAutomatically = false, fetchMeshRendererInValidate = false;
 
     [System.Serializable]
     public class KeyPointList {
@@ -13,7 +13,7 @@ public class PhotoItem : PhotoBase {
     }
 
     [ConditionalHide("isComposite", true)] [SerializeField] private KeyPointList keyPoints;
-    public float gizmosScale = 1.0f;
+    public float gizmosScale = 0.2f;
 
     public new void Start() {
         base.Start();
@@ -35,6 +35,8 @@ public class PhotoItem : PhotoBase {
         if(isComposite) keyPoints.list = GetComponentsInChildren<PhotoKeyPoint>();
 
         orientationViewCone = Mathf.Clamp(orientationViewCone, 0, 180);
+
+        if(fetchMeshRendererInValidate) render = GetComponent<MeshRenderer>();
     }
 
     void OnDrawGizmosSelected() {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HapticManager : MonoBehaviour {
     public static HapticManager self;
@@ -27,6 +28,10 @@ public class HapticManager : MonoBehaviour {
             this.duration = duration;
             return this;
         }
+    }
+
+    void OnApplicationQuit() {
+        InputSystem.ResetHaptics();
     }
 
     void Start() {
