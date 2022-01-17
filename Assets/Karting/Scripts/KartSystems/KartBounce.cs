@@ -71,9 +71,9 @@ namespace KartGame.KartSystems
                     reflectionVector = incidentVector - 2 * Vector3.Dot(incidentVector, hitNormal) * hitNormal;
                     reflectionVector.y = 0;
 
-                    kart.Rigidbody.velocity /= 2;
+                    kart.rigid.velocity /= 2;
                     // Apply the bounce impulse with the reflectionVector
-                    kart.Rigidbody.AddForce(reflectionVector.normalized * BounceFactor, ForceMode.Impulse);
+                    kart.rigid.AddForce(reflectionVector.normalized * BounceFactor, ForceMode.Impulse);
 
                     // Mark that the vehicle has collided and the reset time.
                     kart.SetCanMove(false);
