@@ -216,7 +216,7 @@ public class CarMovement : MonoBehaviour
 
         var jumpDirection = transform.up + rb.velocity.normalized / momentumReduction;
         if(rb.velocity.magnitude < 10) rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
-        rb.AddForce(jumpDirection * jumpHeight, ForceMode.VelocityChange);
+        else rb.AddForce(jumpDirection * jumpHeight, ForceMode.VelocityChange);
        
         SoundManager.PlaySound("Jump", 0.15f);
         HapticManager.Haptics("Jump");
