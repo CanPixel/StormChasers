@@ -16,7 +16,7 @@ TagManager:
   - SplashSound
   - Knockable
   - ActivationExplosive
-  - Tornado
+  - Water
   - NodePath
   layers:
   - Default

@@ -9,18 +9,14 @@ public class TornadoScript : MonoBehaviour
     public NodePath path;
     public int nodePoint;
 
-    public Vector3 rotOffs;
+    //public Vector3 rotOffs;
     public Vector3 posOffs; 
-    public float speed = 100f, turnSpeed = 1f;
+    public float speed = 100f;//, turnSpeed = 1f;
 
     [Header("PHYSICS")]
     public float pullStrength;
     public float upForce;
     public float centerRotationSpeed;
-
-    public Collider colli; 
-
-  
 
     private Transform currentNodeTarget;
     //public float downForce; 
@@ -57,30 +53,23 @@ public class TornadoScript : MonoBehaviour
         ROAM,
         PULL,
         LAUNCH, 
-
     }
 
-    private void Start()
-    {
+    private void Start() {
         tornadoState = (int)CurrentState.IDLE;
         SetPos();
-
     }
 
-    private void FixedUpdate()
-    {
-        switch (tornadoState)
-        {
+    private void FixedUpdate() {
+        switch (tornadoState) {
             case (int)CurrentState.IDLE:
-                CheckForObjects();
+                CheckPath();
                 //PullObjects();
                 RotateCenter(); 
                 break;
             case (int)CurrentState.ROAM:
 
                 break; 
-             
-
         }
 
         if (currentNodeTarget == null) return;
@@ -88,60 +77,33 @@ public class TornadoScript : MonoBehaviour
         var dir = (transform.position - currentNodeTarget.position);
         dir.y = 0;
         transform.position -= dir.normalized * speed * Time.deltaTime;
-        transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
     }
 
-    protected void SetPos()
-    {
+    protected void SetPos() {
         if (path == null) return;
 
         transform.position = path.pathNodes[nodePoint].position + posOffs;
         var next = nodePoint + 1;
         if (next >= path.pathNodes.Count) next = 0;
         currentNodeTarget = path.pathNodes[next];
-        transform.rotation = GetAngleTo(currentNodeTarget);
+        //transform.rotation = GetAngleTo(currentNodeTarget);
     }
 
-    public Quaternion GetAngleTo(Transform targetPos)
-    {
+    /* public Quaternion GetAngleTo(Transform targetPos) {
         var dir = (transform.position - targetPos.position);
         dir.y = 0;
         return Quaternion.LookRotation(dir) * Quaternion.Euler(rotOffs);
-    }
+    } */
 
-    void CheckForObjects()
-    {
+    void CheckPath() {
         currentInnerObjects = pulledRbList.Count - 70;
 
         float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position); 
-
         if(nextObjDistance < 25) SetNextNode(path.pathNodes[nodePoint]);
-
-        Debug.Log(nextObjDistance); 
-
-
-        //Debug.Log(pulledRbList.Count); 
-
-
     }
 
-    /*
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.CompareTag("NodePath"))
-        {
-            Debug.Log(col.gameObject.name);
-            SetNextNode(col.transform);
-        }
-       
-    }
-    */
-
-
-
-    protected void SetNextNode(Transform coll)
-    {
+    protected void SetNextNode(Transform coll) {
         for (int i = 0; i < path.pathNodes.Count; i++) if (path.pathNodes[i] == coll)
             {
                 var next = i + 1;
