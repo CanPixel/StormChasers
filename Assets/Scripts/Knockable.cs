@@ -15,7 +15,7 @@ public class Knockable : MonoBehaviour {
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
-    public Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
 
     void Start() {
         gameObject.tag = "Knockable";

@@ -6,7 +6,7 @@ public class BoatAI : MonoBehaviour {
     public NodePath boatPath;
     public int nodePoint;
 
-    public Vector3 rotOffs;
+    public Vector3 rotOffs, posOffs;
     public float speed = 100f, turnSpeed = 1f;
 
     private Transform currentNodeTarget;
@@ -36,7 +36,7 @@ public class BoatAI : MonoBehaviour {
     protected void SetPos() {
         if(boatPath == null) return;
 
-        transform.position = boatPath.pathNodes[nodePoint].position;
+        transform.position = boatPath.pathNodes[nodePoint].position + posOffs;
         var next = nodePoint + 1;
         if(next >= boatPath.pathNodes.Count) next = 0;
         currentNodeTarget = boatPath.pathNodes[next];
