@@ -16,7 +16,8 @@ public class TriggerExplosion : MonoBehaviour
 
     public GameObject explosionEffect;
     public GameObject player; 
-    private GameObject explosion; 
+    private GameObject explosion;
+    public TornadoScript tornadoScript; 
     //public Collider col;
 
     public bool canExplode;
@@ -121,37 +122,75 @@ public class TriggerExplosion : MonoBehaviour
 
             if (rb != null)
             {
+                //Launch a knockable 
                 if (hit.gameObject.CompareTag("Knockable"))
                 {
                     Knockable knockScript = hit.gameObject.GetComponent<Knockable>();
+                 
                     if (knockScript.canbeExploded)
                     {
-                        knockScript.LaunchKnockAble();
-                        rb.velocity = new Vector3(0, 0, 0);
-                        rb.AddExplosionForce(knockAbleExplosionForce, explosionPos, explosionRadius, 22);
+                        //Release an object from the tornado
+                        if (knockScript.isInTornado)
+                        {
+                            hit.gameObject.GetComponent<PulledByTornado>().ReleaseObject();
+                            //PulledByTornado script = hit.gameObject.GetComponent<PulledByTornado>();
+                          //  script.ReleaseObject(); 
+                            knockScript.isInTornado = false; 
+                        }
+
+                        //Add physics to object
+                        knockScript.LaunchKnockAble(); 
+                        rb.velocity = new Vector3(0, 0, 0); 
+                       // rb.AddExplosionForce(knockAbleExplosionForce, explosionPos, explosionRadius, 22);
                     }               
                 }
+
+                //Launch a civilian car
                 else if (hit.gameObject.CompareTag("CarCivilian"))
                 {
-                    hit.gameObject.GetComponent<CivilianAI>().LaunchCivilian();
+                    CivilianAI civilianScript = hit.gameObject.GetComponent<CivilianAI>();
+
+                    //Release an object from the tornado
+                    if (civilianScript.isInTornado)
+                    {
+                        hit.gameObject.GetComponent<PulledByTornado>().ReleaseObject();
+                        civilianScript.isInTornado = false;
+                    }
+
+                    //Add physics to object
+                    civilianScript.LaunchCivilian();
                     rb.velocity = new Vector3(0, 0, 0);
-                    rb.AddExplosionForce(carExplosionForce, explosionPos, explosionRadius, 90);
+                   // rb.AddExplosionForce(carExplosionForce, explosionPos, explosionRadius, 90);
                 }
 
-                
+                Vector3 dir = rb.transform.position - transform.position;
+                float explosionForce = 50f;
+                float upForce = 700f; 
+                float distanceModifier = Vector3.Distance(rb.transform.position, transform.position);
+
+                //rb.AddTorque(Vector3.)
+                rb.AddForce(dir * (explosionForce / distanceModifier), ForceMode.VelocityChange);
+                rb.AddForce(Vector3.up * (upForce / distanceModifier), ForceMode.VelocityChange);
+
+
+                // Debug.Log(hit.gameObject.name +" | " + distanceModifier);
+                //Debug.Log(rb.velocity.magnitude + " | " + distanceModifier);
+                Debug.Log(dir * (explosionForce / distanceModifier)); 
+
+
+
             }
         }
 
         if (canRetrigger)
         {
-    
             waitForResetTimer = waitForResetDuration;
             explosiveState = (int)CurrentState.RESET;
         }
         else Destroy(this.gameObject); 
     }
 
-
+    
     private void ResetExplosive()
     {
         waitForResetTimer -= Time.deltaTime;

@@ -16,6 +16,8 @@ TagManager:
   - SplashSound
   - Knockable
   - ActivationExplosive
+  - Tornado
+  - NodePath
   layers:
   - Default
   - TransparentFX
@@ -41,7 +43,7 @@ TagManager:
   - SHARKWAYPOINT
   - IgnoreRaycastButDoCollide
   - InTornado
-  - 
+  - NodePath
   - 
   - 
   - 

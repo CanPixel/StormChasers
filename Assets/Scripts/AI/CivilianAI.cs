@@ -7,7 +7,8 @@ public class CivilianAI : MonoBehaviour {
     public GameObject roadPathsObject;
     private Transform[] roadPaths;
     private Vector3 targetPos;
-    private GameObject collidedObj; 
+    private GameObject collidedObj;
+    [HideInInspector] public bool isInTornado = false; 
 
     [ReadOnly] public bool flipped = false;
 
@@ -44,7 +45,7 @@ public class CivilianAI : MonoBehaviour {
     }
 
     void Update() {
-        if(chomped) return;
+        if(chomped || isInTornado) return;
 
         time += Time.deltaTime;
 

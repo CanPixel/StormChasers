@@ -672,7 +672,7 @@ namespace KartGame.KartSystems
             }
             else if(isInAir && isGrounded)
             {
-                Debug.Log("Player has landed");
+               // Debug.Log("Player has landed");
                 // Rigidbody rb = gameObject.GetComponent<Rigidbody>(); 
                 // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0); 
                 rigid.constraints = RigidbodyConstraints.FreezeRotation;
