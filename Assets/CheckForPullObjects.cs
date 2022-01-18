@@ -16,22 +16,28 @@ public class CheckForPullObjects : MonoBehaviour
     //check for and add pullable objects to the tornado's pull list
     private void OnTriggerEnter(Collider other)
     {
-        if (mainScript.canPull && !mainScript.pulledRbList.Contains(other.attachedRigidbody))
+        // if (mainScript.canPull && !mainScript.pulledRbList.Contains(other.attachedRigidbody))
+        if (mainScript.canPull && !other.gameObject.GetComponent<PulledByTornado>())
         {
+       
             if (other.gameObject.CompareTag("Knockable") || other.gameObject.CompareTag("CarCivilian"))
             {
+
                 if (mainScript.currentInnerObjects < mainScript.maxInnerObjects)
                 {
+                 
                     //Tornado graps knockable object
                     if (other.gameObject.CompareTag("Knockable"))
                     {
                         Knockable knockScript = other.gameObject.GetComponent<Knockable>();
 
                         if (knockScript != null)
-                        {
+                        {                         
                             knockScript.LaunchKnockAble();
-                            knockScript.rb.useGravity = false;
-                            knockScript.enabled = false;
+                            knockScript.isInTornado = true;
+                            
+                            //knockScript.rb.useGravity = false;
+                            //knockScript.enabled = false;
                         }
                     }
 
@@ -42,18 +48,35 @@ public class CheckForPullObjects : MonoBehaviour
 
                         if(civilianScript != null)
                         {
-                            Debug.Log("Got a car"); 
                             civilianScript.LaunchCivilian();
-                            civilianScript.rb.useGravity = false;
-                            civilianScript.enabled = false; 
+                            civilianScript.isInTornado = true; 
+                            //civilianScript.rb.useGravity = false;
+                            //civilianScript.enabled = false; 
                         }
-                    }                  
-                    TrailRenderer trailObj = Instantiate(trailPrefab, other.transform.position, other.transform.rotation);
-                    trailObj.gameObject.transform.SetParent(other.gameObject.transform, true);
-                    other.gameObject.transform.SetParent(mainScript.centerPoint, true);
+                    }
+
+                    //Add trail render 
+                    if (other.gameObject.GetComponentInChildren<Light>())
+                    {
+                        Light l = other.gameObject.GetComponentInChildren<Light>(); 
+                        TrailRenderer trailObj = Instantiate(trailPrefab, l.transform.position, other.transform.rotation);
+                        trailObj.gameObject.transform.SetParent(other.gameObject.transform, true);
+
+                        trailObj.startColor = l.color;
+                        trailObj.endColor = l.color;
+
+                        l.range *= 1.5f; //Up lights a bit for that spotlight effect
+       
+                        //trailObj.material.color = l.color; 
+                    }
+
+
+                   
+                    //Add pull script to object
+                    other.gameObject.AddComponent<PulledByTornado>();
+                    other.gameObject.GetComponent<PulledByTornado>().tornadoScript = mainScript;
                     mainScript.pulledRbList.Add(other.attachedRigidbody);
-               
-                    //if (other.gameObject.GetComponent<TrailRenderer>() != null) other.gameObject.GetComponent<TrailRenderer>().enabled = true;
+                    other.gameObject.transform.SetParent(mainScript.centerPoint, true);
                 }
             }
             

@@ -760,7 +760,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -770,6 +770,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &96180831
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,12 +811,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 96180837}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -832,6 +835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -868,7 +872,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96180831}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1004,7 +1008,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -1014,6 +1018,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &100822420
 TrailRenderer:
   serializedVersion: 2
@@ -1236,12 +1241,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -1260,7 +1267,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -1270,6 +1277,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!54 &104221980
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1323,7 +1331,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -1333,6 +1341,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &106559700
 TrailRenderer:
   serializedVersion: 2
@@ -2055,7 +2064,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -2065,6 +2074,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &166954678
 TrailRenderer:
   serializedVersion: 2
@@ -2396,7 +2406,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -2406,6 +2416,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &181478241
 TrailRenderer:
   serializedVersion: 2
@@ -2642,7 +2653,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -2652,6 +2663,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &204752121
 TrailRenderer:
   serializedVersion: 2
@@ -3356,7 +3368,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -3366,6 +3378,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &305777480
 TrailRenderer:
   serializedVersion: 2
@@ -3602,7 +3615,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -3612,6 +3625,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &315740053
 TrailRenderer:
   serializedVersion: 2
@@ -3862,7 +3876,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -3872,6 +3886,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &318300272
 TrailRenderer:
   serializedVersion: 2
@@ -4097,12 +4112,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 332871815}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -4119,6 +4136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -4453,7 +4471,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -4463,6 +4481,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &369372023
 TrailRenderer:
   serializedVersion: 2
@@ -4861,7 +4880,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -4871,6 +4890,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &397401307
 TrailRenderer:
   serializedVersion: 2
@@ -5107,7 +5127,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -5117,6 +5137,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &401501594
 TrailRenderer:
   serializedVersion: 2
@@ -5356,12 +5377,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 416416019}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -5378,6 +5401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -5553,12 +5577,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 428106738}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -5575,6 +5601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -6148,7 +6175,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -6158,6 +6185,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &492906855
 TrailRenderer:
   serializedVersion: 2
@@ -6570,7 +6598,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -6580,6 +6608,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &508556278
 TrailRenderer:
   serializedVersion: 2
@@ -7126,7 +7155,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -7136,6 +7165,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &541550947
 TrailRenderer:
   serializedVersion: 2
@@ -7422,7 +7452,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -7432,6 +7462,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!114 &545014075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7449,12 +7480,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -8007,7 +8040,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -8017,6 +8050,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &587488511
 TrailRenderer:
   serializedVersion: 2
@@ -8336,7 +8370,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -8346,6 +8380,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &597444676
 TrailRenderer:
   serializedVersion: 2
@@ -9068,7 +9103,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -9078,6 +9113,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &658266336
 TrailRenderer:
   serializedVersion: 2
@@ -9661,7 +9697,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -9671,6 +9707,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &694157477
 GameObject:
   m_ObjectHideFlags: 0
@@ -9965,7 +10002,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -9975,6 +10012,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &709315023
 TrailRenderer:
   serializedVersion: 2
@@ -10292,7 +10330,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -10302,6 +10340,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &732042219
 TrailRenderer:
   serializedVersion: 2
@@ -10508,7 +10547,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -10518,6 +10557,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!114 &734619157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10535,12 +10575,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -10692,7 +10734,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -10702,6 +10744,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &753325775
 TrailRenderer:
   serializedVersion: 2
@@ -10938,7 +10981,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -10948,6 +10991,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &753690238
 TrailRenderer:
   serializedVersion: 2
@@ -11332,7 +11376,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -11342,6 +11386,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &788434986
 TrailRenderer:
   serializedVersion: 2
@@ -11578,7 +11623,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -11588,6 +11633,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &798152954
 TrailRenderer:
   serializedVersion: 2
@@ -11996,7 +12042,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -12006,6 +12052,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &816368635
 TrailRenderer:
   serializedVersion: 2
@@ -12214,12 +12261,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -12238,7 +12287,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -12248,6 +12297,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!54 &821271629
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12396,7 +12446,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -12406,6 +12456,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &832960540
 TrailRenderer:
   serializedVersion: 2
@@ -12800,7 +12851,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -12810,6 +12861,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &844749515
 TrailRenderer:
   serializedVersion: 2
@@ -13046,7 +13098,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -13056,6 +13108,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &848970149
 TrailRenderer:
   serializedVersion: 2
@@ -13278,7 +13331,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -13288,6 +13341,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &849251646
 TrailRenderer:
   serializedVersion: 2
@@ -13860,7 +13914,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -13870,6 +13924,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &875807558
 TrailRenderer:
   serializedVersion: 2
@@ -14120,7 +14175,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -14130,6 +14185,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &887132391
 TrailRenderer:
   serializedVersion: 2
@@ -14595,7 +14651,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -14605,6 +14661,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &909322937
 TrailRenderer:
   serializedVersion: 2
@@ -15006,12 +15063,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 935190062}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -15028,6 +15087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -15295,7 +15355,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -15305,6 +15365,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &948207440
 TrailRenderer:
   serializedVersion: 2
@@ -15608,7 +15669,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -15618,6 +15679,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &950152424
 TrailRenderer:
   serializedVersion: 2
@@ -16030,7 +16092,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -16040,6 +16102,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &988264626
 TrailRenderer:
   serializedVersion: 2
@@ -16276,7 +16339,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -16286,6 +16349,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &994240243
 TrailRenderer:
   serializedVersion: 2
@@ -16522,7 +16586,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -16532,6 +16596,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1031497752
 TrailRenderer:
   serializedVersion: 2
@@ -16754,7 +16819,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -16764,6 +16829,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1033121129
 TrailRenderer:
   serializedVersion: 2
@@ -17323,12 +17389,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 1071017783}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -17345,6 +17413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -17963,7 +18032,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -17973,6 +18042,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!114 &1117055663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17990,12 +18060,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -18390,7 +18462,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -18400,6 +18472,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1145018854
 TrailRenderer:
   serializedVersion: 2
@@ -18798,7 +18871,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -18808,6 +18881,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1195392983
 TrailRenderer:
   serializedVersion: 2
@@ -19310,7 +19384,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -19320,6 +19394,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &1203957020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 136274, guid: bfdde53371ba3b349b61d5bafef700d7,
@@ -19343,12 +19418,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -19367,7 +19444,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -19377,6 +19454,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!54 &1203957023
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19444,7 +19522,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -19454,6 +19532,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1210932740
 TrailRenderer:
   serializedVersion: 2
@@ -19690,7 +19769,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -19700,6 +19779,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1226924583
 TrailRenderer:
   serializedVersion: 2
@@ -20098,7 +20178,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -20108,6 +20188,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1234193698
 TrailRenderer:
   serializedVersion: 2
@@ -20425,7 +20506,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -20435,6 +20516,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1255887698
 TrailRenderer:
   serializedVersion: 2
@@ -20657,7 +20739,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -20667,6 +20749,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1260499310
 TrailRenderer:
   serializedVersion: 2
@@ -21264,7 +21347,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -21274,6 +21357,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &1333650912
 GameObject:
   m_ObjectHideFlags: 0
@@ -21539,7 +21623,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -21549,6 +21633,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1365538143
 TrailRenderer:
   serializedVersion: 2
@@ -21799,7 +21884,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -21809,6 +21894,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1394367668
 TrailRenderer:
   serializedVersion: 2
@@ -22031,7 +22117,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -22041,6 +22127,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1397722129
 TrailRenderer:
   serializedVersion: 2
@@ -22361,12 +22448,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 1410148834}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -22383,6 +22472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -22419,7 +22509,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410148828}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -23041,7 +23131,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -23051,6 +23141,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1498823993
 TrailRenderer:
   serializedVersion: 2
@@ -23354,12 +23445,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -23378,7 +23471,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -23388,6 +23481,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!54 &1504863823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23441,7 +23535,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -23451,6 +23545,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1505587430
 TrailRenderer:
   serializedVersion: 2
@@ -23782,7 +23877,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -23792,6 +23887,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1514891670
 TrailRenderer:
   serializedVersion: 2
@@ -24294,7 +24390,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -24304,6 +24400,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &1553328708 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 136274, guid: bfdde53371ba3b349b61d5bafef700d7,
@@ -24327,12 +24424,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -24351,7 +24450,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -24361,6 +24460,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!54 &1553328711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24657,7 +24757,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -24667,6 +24767,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1568728347
 TrailRenderer:
   serializedVersion: 2
@@ -24906,12 +25007,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 1592374336}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -24928,6 +25031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -24964,7 +25068,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592374330}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -25100,7 +25204,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -25110,6 +25214,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1599774652
 TrailRenderer:
   serializedVersion: 2
@@ -25441,7 +25546,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -25451,6 +25556,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1612192393
 TrailRenderer:
   serializedVersion: 2
@@ -25673,7 +25779,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -25683,6 +25789,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1615295246
 TrailRenderer:
   serializedVersion: 2
@@ -26017,12 +26124,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 1626804348}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -26039,6 +26148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -26075,7 +26185,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626804342}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -26531,7 +26641,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -26541,6 +26651,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1673710573
 TrailRenderer:
   serializedVersion: 2
@@ -26777,7 +26888,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -26787,6 +26898,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1674060070
 TrailRenderer:
   serializedVersion: 2
@@ -27118,7 +27230,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -27128,6 +27240,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1711964737
 TrailRenderer:
   serializedVersion: 2
@@ -27512,7 +27625,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -27522,6 +27635,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1738966392
 TrailRenderer:
   serializedVersion: 2
@@ -28344,7 +28458,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -28354,6 +28468,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1801025724
 TrailRenderer:
   serializedVersion: 2
@@ -28685,7 +28800,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -28695,6 +28810,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1809554451
 TrailRenderer:
   serializedVersion: 2
@@ -28982,7 +29098,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -28992,6 +29108,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!114 &1824444884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29009,12 +29126,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -29085,7 +29204,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -29095,6 +29214,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1827443850
 TrailRenderer:
   serializedVersion: 2
@@ -29655,7 +29775,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -29665,6 +29785,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1859272511
 TrailRenderer:
   serializedVersion: 2
@@ -29952,7 +30073,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -29962,6 +30083,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!114 &1864462143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29979,12 +30101,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: tree
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
@@ -30203,7 +30327,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -30213,6 +30337,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1895899037
 TrailRenderer:
   serializedVersion: 2
@@ -30607,7 +30732,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -30617,6 +30742,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1922540467
 TrailRenderer:
   serializedVersion: 2
@@ -30934,7 +31060,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -30944,6 +31070,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &1936237048
 TrailRenderer:
   serializedVersion: 2
@@ -31828,7 +31955,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -31838,6 +31965,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2012294602
 TrailRenderer:
   serializedVersion: 2
@@ -32088,7 +32216,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -32098,6 +32226,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2012773431
 TrailRenderer:
   serializedVersion: 2
@@ -32724,7 +32853,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -32734,6 +32863,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2083581341
 TrailRenderer:
   serializedVersion: 2
@@ -33146,7 +33276,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -33156,6 +33286,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2101166606
 TrailRenderer:
   serializedVersion: 2
@@ -33753,7 +33884,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -33763,6 +33894,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!1 &2117590464
 GameObject:
   m_ObjectHideFlags: 0
@@ -33881,7 +34013,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -33891,6 +34023,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2119100110
 TrailRenderer:
   serializedVersion: 2
@@ -34141,7 +34274,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -34151,6 +34284,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2122088147
 TrailRenderer:
   serializedVersion: 2
@@ -34454,7 +34588,7 @@ MonoBehaviour:
   knockableByShark: 0
   addKnockedTag: 1
   canbeExploded: 1
-  rb: {fileID: 0}
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
       m_Calls: []
@@ -34464,6 +34598,7 @@ MonoBehaviour:
   onKnock:
     m_PersistentCalls:
       m_Calls: []
+  rb: {fileID: 0}
 --- !u!96 &2131897100
 TrailRenderer:
   serializedVersion: 2
@@ -34784,12 +34919,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: 
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 2137478202}
   isComposite: 0
   fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 0.3
@@ -34806,6 +34943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadPathsObject: {fileID: 0}
+  isInTornado: 0
   flipped: 0
   retargetDuration: {x: 5, y: 12}
   reorientAfter: 10
@@ -34842,7 +34980,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137478196}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -35017,6 +35155,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7198556102206450630, guid: 2735746962ed4df408d3872902d95572,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.335
+      objectReference: {fileID: 0}
     - target: {fileID: 7198556103048315877, guid: 2735746962ed4df408d3872902d95572,
         type: 3}
       propertyPath: m_IsActive
@@ -35026,6 +35169,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tornado
+      objectReference: {fileID: 0}
+    - target: {fileID: 7198556103139920952, guid: 2735746962ed4df408d3872902d95572,
+        type: 3}
+      propertyPath: upForce
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 7198556103139920952, guid: 2735746962ed4df408d3872902d95572,
+        type: 3}
+      propertyPath: pullStrength
+      value: 1100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7198556103139920952, guid: 2735746962ed4df408d3872902d95572,
+        type: 3}
+      propertyPath: maxInnerObjects
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7198556103139920952, guid: 2735746962ed4df408d3872902d95572,
+        type: 3}
+      propertyPath: maxCenterDistance
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7198556103139920953, guid: 2735746962ed4df408d3872902d95572,
         type: 3}
@@ -35040,7 +35203,7 @@ PrefabInstance:
     - target: {fileID: 7198556103139920953, guid: 2735746962ed4df408d3872902d95572,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.47
+      value: 20.23
       objectReference: {fileID: 0}
     - target: {fileID: 7198556103139920953, guid: 2735746962ed4df408d3872902d95572,
         type: 3}

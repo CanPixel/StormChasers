@@ -9,13 +9,16 @@ public class Knockable : MonoBehaviour {
     public bool addKnockedTag = true;
     private PhotoItem photoItem;
     
-    public bool canbeExploded = true; 
+    public bool canbeExploded = true;
+    public bool isInTornado = false; 
     private bool isStanding = true;
     private GameObject collidedObject;
 
     public UnityEvent onKnockShark, onKnockPlayer, onKnock;
 
     [HideInInspector] public Rigidbody rb;
+
+    
 
     void Start() {
         gameObject.tag = "Knockable";
@@ -24,6 +27,7 @@ public class Knockable : MonoBehaviour {
         rb.isKinematic = false;
 	    rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
+        isInTornado = false; 
     }
 
     private void FixedUpdate() {
@@ -31,14 +35,21 @@ public class Knockable : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision col) {
-        if(col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian" || col.gameObject.tag == "Knockable") {
-            collidedObject = col.gameObject;
-            LaunchKnockAble();
+        if (!isInTornado)
+        {
+            if (col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian" || col.gameObject.tag == "Knockable")
+            {
+                if (col.gameObject.GetComponent<Rigidbody>().velocity.magnitude > 5f)
+                {
+                    collidedObject = col.gameObject;
+                    LaunchKnockAble();
+                }
+            }
         }
     }
 
     void OnTriggerEnter(Collider col) {
-        if(col.gameObject.tag == "Shark" && knockableByShark) {
+        if(col.gameObject.tag == "Shark" && knockableByShark && !isInTornado) {
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.None;
             onKnockShark.Invoke();
@@ -48,9 +59,10 @@ public class Knockable : MonoBehaviour {
         }
     }
 
-    private void ExtrGravity() {
-        if(rb.velocity.y < 0) rb.velocity -= Vector3.down * Physics.gravity.y * (4 - 1) * Time.fixedDeltaTime;
-       // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
+    private void ExtrGravity()
+    {
+        if (!isStanding && rb.velocity.y < 3) rb.velocity -= Vector3.down * Physics.gravity.y * (4 - 1) * Time.fixedDeltaTime;
+        // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
     }
 
     public void LaunchKnockAble() {
