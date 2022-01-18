@@ -22,7 +22,7 @@ public class NodePath : MonoBehaviour {
         Gizmos.color = Color.red;
         foreach(var i in pathNodes) Gizmos.DrawSphere(i.position, gizmoRadius);
     
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.green;
         for(int i = 1; i < pathNodes.Count; i++) Gizmos.DrawLine(pathNodes[i].position, pathNodes[i - 1].position);
     
         Gizmos.DrawLine(pathNodes[0].position, pathNodes[pathNodes.Count - 1].position);
