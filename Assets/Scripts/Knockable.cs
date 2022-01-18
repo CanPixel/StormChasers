@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Knockable : MonoBehaviour {
+public class Knockable : MonoBehaviour
+{
     public bool knockableByShark = false;
     public bool addKnockedTag = true;
     private PhotoItem photoItem;
@@ -25,13 +26,14 @@ public class Knockable : MonoBehaviour {
         photoItem = GetComponent<PhotoItem>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
-	    rb.useGravity = false;
+        rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         isInTornado = false; 
     }
 
-    private void FixedUpdate() {
-	    ExtrGravity();
+    private void FixedUpdate()
+    {
+        ExtrGravity();
     }
 
     void OnCollisionEnter(Collision col) {
@@ -65,23 +67,26 @@ public class Knockable : MonoBehaviour {
         // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
     }
 
-    public void LaunchKnockAble() {
+    public void LaunchKnockAble()
+    {
         rb.constraints = RigidbodyConstraints.None;
         isStanding = false;
         rb.useGravity = true;
         onKnockPlayer.Invoke();
         onKnock.Invoke();
 
-        if (collidedObject != null) {
+        if (collidedObject != null)
+        {
             if (collidedObject.gameObject.tag == "Player") rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 25f);
             if (collidedObject.gameObject.tag == "Knockable" && isStanding) rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 5f);
         }
 
-        if(addKnockedTag && photoItem != null) {
+        if (addKnockedTag && photoItem != null)
+        {
             photoItem.OverwriteTag("knocked");
             photoItem.sensation = 15;
         }
 
-        collidedObject = null; 
+        collidedObject = null;
     }
 }
