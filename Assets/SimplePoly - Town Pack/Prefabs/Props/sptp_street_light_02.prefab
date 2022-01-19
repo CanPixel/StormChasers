@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1299584197}
   - component: {fileID: 769479078}
   - component: {fileID: 2632066347581814662}
-  - component: {fileID: 1637338726}
+  - component: {fileID: 1692498687}
   m_Layer: 0
   m_Name: sptp_street_light_02
   m_TagString: Knockable
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d11d725b9a3ff154eb3a209613e3b973, type: 2}
+  - {fileID: 2100000, guid: 5307c7b4afb860040915e594e1439e65, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
   greenLight: {fileID: 107942327}
   lampLight: {fileID: 1327793040}
   lampBolbMat: {fileID: 2100000, guid: d11d725b9a3ff154eb3a209613e3b973, type: 2}
---- !u!54 &1637338726
+--- !u!54 &1692498687
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
