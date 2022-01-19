@@ -4,7 +4,7 @@
 		_Color ("Tint", Color) = (1,1,1,1)
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Transparant" }
 		LOD 200
 		
 		CGPROGRAM
