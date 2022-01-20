@@ -69,11 +69,15 @@ public class PulledByTornado : MonoBehaviour
 
     public void ReleaseObject()
     {
-        Debug.Log("ReleaseObject"); 
+       
+        //IMPORTANT ADD SOMETHING HERE THAT MAKES THE THROWED OBJECTS PICKABLE BY THE TORNADO AGAIN 
+
+
         objState = (int)CurrentState.RELEASED; 
         rb.useGravity = true;
         gameObject.transform.parent = null;
         tornadoScript.pulledRbList.Remove(rb);
+     
     }
 
     public void DestroySelf()

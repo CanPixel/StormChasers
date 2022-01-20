@@ -18,6 +18,8 @@ TagManager:
   - ActivationExplosive
   - Water
   - NodePath
+  - Tornado
+  - Buildings
   layers:
   - Default
   - TransparentFX

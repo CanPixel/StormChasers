@@ -20,7 +20,7 @@ public class CheckForPullObjects : MonoBehaviour
         if (mainScript.canPull && !other.gameObject.GetComponent<PulledByTornado>())
         {
        
-            if (other.gameObject.CompareTag("Knockable") || other.gameObject.CompareTag("CarCivilian"))
+            if (other.gameObject.CompareTag("Knockable") || other.gameObject.CompareTag("CarCivilian") || other.gameObject.CompareTag("Buildings"))
             {
 
                 if (mainScript.currentInnerObjects < mainScript.maxInnerObjects)
@@ -55,15 +55,25 @@ public class CheckForPullObjects : MonoBehaviour
                         }
                     }
 
+                    if (other.gameObject.CompareTag("Buildings"))
+                    {
+                        Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+                        rb.useGravity = true ;
+                        rb.isKinematic = false; 
+                    }
+
                     //Add trail render 
                     if (other.gameObject.GetComponentInChildren<Light>())
                     {
                         Light l = other.gameObject.GetComponentInChildren<Light>(); 
                         TrailRenderer trailObj = Instantiate(trailPrefab, l.transform.position, other.transform.rotation);
-                        trailObj.gameObject.transform.SetParent(other.gameObject.transform, true);
 
-                        trailObj.startColor = l.color;
-                        trailObj.endColor = l.color;
+                        //MeshRenderer lampMesh = trailObj.GetComponent<MeshRenderer>();
+                        trailObj.material.SetColor("_EmissionColor", l.color * 2f);
+                        trailObj.gameObject.transform.SetParent(other.gameObject.transform, true);
+                       
+
+
 
                         l.range *= 1.5f; //Up lights a bit for that spotlight effect
        
@@ -76,6 +86,7 @@ public class CheckForPullObjects : MonoBehaviour
                     other.gameObject.AddComponent<PulledByTornado>();
                     other.gameObject.GetComponent<PulledByTornado>().tornadoScript = mainScript;
                     mainScript.pulledRbList.Add(other.attachedRigidbody);
+                    //Debug.Log(other.gameObject.name); 
                     other.gameObject.transform.SetParent(mainScript.centerPoint, true);
                 }
             }

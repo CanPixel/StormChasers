@@ -20,10 +20,18 @@ public class TornadoScript : MonoBehaviour
     public float centerRotationSpeed;
 
     [Header("THROWING")]
-    public float throwStrength;
-    private float target;
+    public float throwForce;
+    //public float throwCooldown;
+    private Transform throwTarget; 
+    public Rigidbody pickedThrowTarget;
+
     public bool canThrow;
-    public float throwCooldown; 
+    public bool isThrowing;
+    public bool targetedThrow;
+    public bool targetIsPlayer;
+    public float maxThrowAmount;
+    private float currentObjectsThrown; 
+
 
 
     [Header("CONSTRAINTS")]
@@ -32,11 +40,13 @@ public class TornadoScript : MonoBehaviour
     public float minCenterDistance = 5f; //pulled object can't come closer then this 
     public float maxCenterDistance = 10f; //pulled object can't go further aw
     public int maxInnerObjects;
+    public int currentInnerObjects;
     public bool canPull = true;
 
     [Header("COMPONENTS")]
+    public Transform playerTarget; 
     public Transform centerPoint;
-    public int currentInnerObjects;
+   
     [HideInInspector] public List<Rigidbody> pulledRbList = new List<Rigidbody>(); 
     [HideInInspector] public List<Rigidbody> releasedRbList = new List<Rigidbody>();
 
@@ -54,8 +64,10 @@ public class TornadoScript : MonoBehaviour
     }
 
     private void Start() {
+
         tornadoState = (int)CurrentState.ROAM;
         SetPos();
+        pulledRbList.Clear();
     }
 
     private void FixedUpdate() {
@@ -69,8 +81,14 @@ public class TornadoScript : MonoBehaviour
                 MoveTornado();
                 RotateCenter();
                 CheckPath();
+                CheckForThrow();
                 break; 
         }
+    }
+
+    private void Update()
+    {
+        
     }
 
     protected void SetPos() {
@@ -90,7 +108,7 @@ public class TornadoScript : MonoBehaviour
     } */
 
     void CheckPath() {
-        currentInnerObjects = pulledRbList.Count - 70;
+        currentInnerObjects = pulledRbList.Count;
 
         float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position); 
         if(nextObjDistance < 25) SetNextNode(path.pathNodes[nodePoint]);
@@ -117,9 +135,61 @@ public class TornadoScript : MonoBehaviour
         //transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
     }
 
-
-    void Releaseobject()
+    void CheckForThrow()
     {
+        if (pulledRbList.Count <= 0)
+        {
+            canThrow = false; 
+            return;
+        }
+
+        if (canThrow)
+        {
+            canThrow = false; 
+            pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
+            
+            SetThrowTarget();
+            ThrowObject(throwTarget); 
+         
+        }
+    }
+
+    void SetThrowTarget()
+    {
+        if (targetedThrow)
+        {
+            if (playerTarget)
+                throwTarget = playerTarget;           
+        }
+        else throwTarget = null; 
+    }
+
+
+    void ThrowObject(Transform target)
+    {
+        pickedThrowTarget.GetComponent<PulledByTornado>().ReleaseObject();
+        Vector3 throwDir; 
+
+        if (target != null)
+        {
+            throwDir = target.position - pickedThrowTarget.position;
+            pickedThrowTarget.velocity = new Vector3(0, 0, 0);
+        }
+        else
+        {
+            throwDir = centerPoint.transform.forward;            
+        }
+
+        
+        pickedThrowTarget.AddForce(Vector3.up * throwForce / 2, ForceMode.VelocityChange);
+        pickedThrowTarget.AddForce(throwDir * throwForce, ForceMode.VelocityChange);
+  
+        currentObjectsThrown++;
+        if (currentObjectsThrown < maxThrowAmount) canThrow = true;
+        else currentObjectsThrown = 0; 
+
+
+
 
     }
 

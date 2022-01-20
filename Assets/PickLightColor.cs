@@ -13,7 +13,8 @@ public class PickLightColor : MonoBehaviour
     public Light pinkLight;
     public Light greenLight;
     public Light lampLight;
-    public Material lampBolbMat; 
+    public Material lampBolbMat;
+    public MeshRenderer lampMesh; 
 
     // Update is called once per frame
     void Update()
@@ -21,7 +22,6 @@ public class PickLightColor : MonoBehaviour
         if (!isPink && !isGreen)
         {
             lampLight.enabled = false;
-            //lampBolbMat.SetColor("_EmissionColor", Color.grey);
             lampBolbMat.DisableKeyword("_EMISSION");
         }
         else
@@ -30,27 +30,22 @@ public class PickLightColor : MonoBehaviour
             lampLight.enabled = true;
         }
 
-        if (isGreen)
-        {
-            //greenBolb.SetActive(true);
-            // greenLight.enabled = true;
-            lampLight.color = greenLight.color;
-            //lampBolb.material.color = greenLight.color; 
-            lampBolbMat.SetColor("_EmissionColor", greenLight.color); 
-           
-           // pinkBolb.SetActive(false);
-
-            //pinkLight.enabled = false;
-
-            isPink = false; 
-        }
-
         if (isPink)
         {
             lampLight.color = pinkLight.color;
-            lampBolbMat.SetColor("_EmissionColor", pinkLight.color * 2f);
+            lampMesh.material.SetColor("_EmissionColor", pinkLight.color * 2f);
             isGreen = false;
+    
         }
+
+        if (isGreen)
+        {
+            lampLight.color = greenLight.color;
+            lampMesh.material.SetColor("_EmissionColor", greenLight.color);
+            isPink = false; 
+        }
+
+   
 
       
 

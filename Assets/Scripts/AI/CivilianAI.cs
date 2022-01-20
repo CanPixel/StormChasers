@@ -99,6 +99,7 @@ public class CivilianAI : MonoBehaviour {
     {
         var rb = GetComponent<Rigidbody>();
         navigation.enabled = false;
+        isInTornado = false; 
         reorientTime = reorientAfter;
         rb.useGravity = true;
         rb.isKinematic = false;

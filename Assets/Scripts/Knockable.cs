@@ -34,6 +34,7 @@ public class Knockable : MonoBehaviour
     private void FixedUpdate()
     {
         ExtrGravity();
+        if (rb.useGravity) isInTornado = false; 
     }
 
     void OnCollisionEnter(Collision col) {
@@ -71,9 +72,11 @@ public class Knockable : MonoBehaviour
     {
         rb.constraints = RigidbodyConstraints.None;
         isStanding = false;
+        isInTornado = false; 
         rb.useGravity = true;
         onKnockPlayer.Invoke();
         onKnock.Invoke();
+        
 
         if (collidedObject != null)
         {

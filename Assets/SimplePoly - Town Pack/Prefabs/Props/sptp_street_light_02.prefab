@@ -176,6 +176,7 @@ MonoBehaviour:
   greenLight: {fileID: 107942327}
   lampLight: {fileID: 1327793040}
   lampBolbMat: {fileID: 2100000, guid: d11d725b9a3ff154eb3a209613e3b973, type: 2}
+  lampMesh: {fileID: 455376094}
 --- !u!54 &1692498687
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -345,7 +346,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d11d725b9a3ff154eb3a209613e3b973, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
