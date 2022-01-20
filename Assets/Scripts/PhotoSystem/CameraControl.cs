@@ -183,6 +183,7 @@ public class CameraControl : MonoBehaviour {
     public CarMovement carMovement;
     public CameraCanvas cameraCanvas;
     public LockOnSystem lockOnSystem;
+    public Camera3D cam3D;
     public RatingSystem ratingSystem;
     public MissionManager missionManager;
     [SerializeField] private InputActionReference cameraAimButton;
@@ -764,10 +765,11 @@ public class CameraControl : MonoBehaviour {
         scren.score = sensationScore;
 
         //Visualize
+        cam3D.DoPicture(scren, resWidth, resHeight);
         lockOnSystem.VisualizePictureItems(scren);
         ratingSystem.VisualizeScore(scren, ratingSystem.scoreGradient, sensationScore);
         
-        photoName = (pluralName.Length > 1) ? ("''" + pluralName + "''") : ("''" + tagsOnPicture[0] + "''");
+        photoName = (pluralName.Length > 1) ? ("''" + pluralName + "''") : ((tagsOnPicture.Count > 0) ? ("''" + tagsOnPicture[0] + "''") : (""));
         //photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
 
         //Portfolio

@@ -26,7 +26,7 @@ public class DiscardedPicture : MonoBehaviour {
             foreach(var i in materials) {
                 i.color = Color.Lerp(i.color, new Color(i.color.r, i.color.g, i.color.b, -0.1f), Time.deltaTime * 4f);
                 if(i.color.a <= 0) {
-                    Destroy(backside.sprite.texture);
+                    if(backside != null && backside.sprite != null) Destroy(backside.sprite.texture);
                     Destroy(gameObject);
                 }
             }
