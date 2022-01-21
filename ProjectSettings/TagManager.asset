@@ -18,6 +18,10 @@ TagManager:
   - ActivationExplosive
   - Water
   - NodePath
+  - Tornado
+  - Buildings
+  - EvilHead
+  - Ground
   layers:
   - Default
   - TransparentFX

@@ -30,8 +30,10 @@ public class Knockable : MonoBehaviour {
         isInTornado = false; 
     }
 
-    private void FixedUpdate() {
-	    ExtrGravity();
+    private void FixedUpdate()
+    {
+        ExtrGravity();
+        if (rb.useGravity) isInTornado = false; 
     }
 
     void OnCollisionEnter(Collision col) {
@@ -68,9 +70,11 @@ public class Knockable : MonoBehaviour {
     public void LaunchKnockAble() {
         rb.constraints = RigidbodyConstraints.None;
         isStanding = false;
+        isInTornado = false; 
         rb.useGravity = true;
         onKnockPlayer.Invoke();
         onKnock.Invoke();
+        
 
         if (collidedObject != null) {
             if (collidedObject.gameObject.tag == "Player") rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 25f);

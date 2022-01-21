@@ -6,8 +6,9 @@ public class TornadoScript : MonoBehaviour
 {
     [Header ("MOVEMENT")]
     public float currentMoveSpeed;
-    public NodePath path;
     public int nodePoint;
+    public NodePath path;
+    private Transform currentNodeTarget;
 
     //public Vector3 rotOffs;
     public Vector3 posOffs; 
@@ -18,15 +19,20 @@ public class TornadoScript : MonoBehaviour
     public float upForce;
     public float centerRotationSpeed;
 
-    private Transform currentNodeTarget;
-    //public float downForce; 
+    [Header("THROWING")]
+    public float throwForce;
+    //public float throwCooldown;
+    private Transform throwTarget; 
+    public Rigidbody pickedThrowTarget;
 
-    // public float throwStength;
-    //  public float pullRadius;
+    public bool canThrow;
+    public bool isThrowing;
+    public bool targetedThrow;
+    public bool targetIsPlayer;
+    public float maxThrowAmount;
+    private float currentObjectsThrown; 
 
-    // public float currentSize;
-    // public float maxSize;
-    // public float minSize; 
+
 
     [Header("CONSTRAINTS")]
     public float minHeight = -2f;
@@ -34,11 +40,13 @@ public class TornadoScript : MonoBehaviour
     public float minCenterDistance = 5f; //pulled object can't come closer then this 
     public float maxCenterDistance = 10f; //pulled object can't go further aw
     public int maxInnerObjects;
+    public int currentInnerObjects;
     public bool canPull = true;
 
     [Header("COMPONENTS")]
+    public Transform playerTarget; 
     public Transform centerPoint;
-    public int currentInnerObjects;
+   
     [HideInInspector] public List<Rigidbody> pulledRbList = new List<Rigidbody>(); 
     [HideInInspector] public List<Rigidbody> releasedRbList = new List<Rigidbody>();
 
@@ -56,28 +64,31 @@ public class TornadoScript : MonoBehaviour
     }
 
     private void Start() {
-        tornadoState = (int)CurrentState.IDLE;
+
+        tornadoState = (int)CurrentState.ROAM;
         SetPos();
+        pulledRbList.Clear();
     }
 
     private void FixedUpdate() {
         switch (tornadoState) {
             case (int)CurrentState.IDLE:
-                CheckPath();
+               // CheckPath();
                 //PullObjects();
-                RotateCenter(); 
+               // RotateCenter(); 
                 break;
             case (int)CurrentState.ROAM:
-
+                MoveTornado();
+                RotateCenter();
+                CheckPath();
+                CheckForThrow();
                 break; 
         }
+    }
 
-        if (currentNodeTarget == null) return;
-
-        var dir = (transform.position - currentNodeTarget.position);
-        dir.y = 0;
-        transform.position -= dir.normalized * speed * Time.deltaTime;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
+    private void Update()
+    {
+        
     }
 
     protected void SetPos() {
@@ -97,9 +108,9 @@ public class TornadoScript : MonoBehaviour
     } */
 
     void CheckPath() {
-        currentInnerObjects = pulledRbList.Count - 70;
+        currentInnerObjects = pulledRbList.Count;
 
-        float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position); 
+        float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position + posOffs); 
         if(nextObjDistance < 25) SetNextNode(path.pathNodes[nodePoint]);
     }
 
@@ -114,44 +125,71 @@ public class TornadoScript : MonoBehaviour
             }
     }
 
-    /*
-
-    public void PullObjects()
+    void MoveTornado()
     {
-       
+        if (currentNodeTarget == null) return;
 
+        var dir = (transform.position - currentNodeTarget.position);
+        dir.y = 0;
+        transform.position -= dir.normalized * speed * Time.deltaTime;
+        //transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
+    }
 
-        foreach (Rigidbody pulledRb in pulledRbList)
-        {         
-            float currentDistance = Vector3.Distance(pulledRb.transform.position, centerPoint.position); 
-            float currentHeight = pulledRb.transform.localPosition.y;
-            //Rigidbody pulledRb = pulledRb.GetComponent<Rigidbody>();
-            //rb.AddTorque(new Vector3(10, 50, 5), ForceMode.Impulse);
+    void CheckForThrow()
+    {
+        if (pulledRbList.Count <= 0)
+        {
+            canThrow = false; 
+            return;
+        }
 
-            Vector3 dir = centerPoint.position - pulledRb.transform.position;
-            if (currentDistance > minCenterDistance) pulledRb.AddForce(dir.normalized * pullStrength * Time.fixedDeltaTime, ForceMode.Acceleration); //Move object towards center 
-            else pulledRb.AddForce(-dir.normalized * pullStrength / 2 * Time.fixedDeltaTime, ForceMode.Acceleration); //Keep object away from center if to close 
-
-            if (currentHeight < minHeight) pulledRb.AddForce(Vector3.up * upForce * Time.fixedDeltaTime, ForceMode.Acceleration); //Add force if min height for object is reached  
-            if (currentHeight > maxHeight) pulledRb.velocity = new Vector3(pulledRb.velocity.x, pulledRb.velocity.y / 1.06f, pulledRb.velocity.z);  //Reduce velocity if max height for object is reached
-            if (currentDistance > maxCenterDistance) pulledRb.velocity = pulledRb.velocity / 1.02f;  //Reduce velocity if max distance from center has been reached 
-
-
-                    
+        if (canThrow)
+        {
+            canThrow = false; 
+            pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
             
+            SetThrowTarget();
+            ThrowObject(throwTarget); 
+         
         }
     }
-    */
 
-    void MoveAround()
+    void SetThrowTarget()
     {
-
+        if (targetedThrow)
+        {
+            if (playerTarget)
+                throwTarget = playerTarget;           
+        }
+        else throwTarget = null; 
     }
 
 
-
-    void Releaseobject()
+    void ThrowObject(Transform target)
     {
+        pickedThrowTarget.GetComponent<PulledByTornado>().ReleaseObject();
+        Vector3 throwDir; 
+
+        if (target != null)
+        {
+            throwDir = target.position - pickedThrowTarget.position;
+            pickedThrowTarget.velocity = new Vector3(0, 0, 0);
+        }
+        else
+        {
+            throwDir = centerPoint.transform.forward;            
+        }
+
+        
+        pickedThrowTarget.AddForce(Vector3.up * throwForce / 2, ForceMode.VelocityChange);
+        pickedThrowTarget.AddForce(throwDir * throwForce, ForceMode.VelocityChange);
+  
+        currentObjectsThrown++;
+        if (currentObjectsThrown < maxThrowAmount) canThrow = true;
+        else currentObjectsThrown = 0; 
+
+
+
 
     }
 
@@ -179,82 +217,3 @@ public class TornadoScript : MonoBehaviour
 
 
 }
-
-/*
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BoatAI : MonoBehaviour
-{
-    public NodePath path;
-    public int nodePoint;
-
-    public Vector3 rotOffs;
-    public float speed = 100f, turnSpeed = 1f;
-
-    private Transform currentNodeTarget;
-
-    void OnValidate()
-    {
-        if (Application.isPlaying) return;
-
-        if (path != null)
-        {
-            nodePoint = Mathf.Clamp(nodePoint, 0, path.pathNodes.Count - 1);
-            SetPos();
-        }
-    }
-
-    void Start()
-    {
-        SetPos();
-    }
-
-    void FixedUpdate()
-    {
-        if (currentNodeTarget == null) return;
-
-        var dir = (transform.position - currentNodeTarget.position);
-        dir.y = 0;
-        transform.position -= dir.normalized * speed * Time.deltaTime;
-        transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
-    }
-
-    protected void SetPos()
-    {
-        if (path == null) return;
-
-        transform.position = path.pathNodes[nodePoint].position;
-        var next = nodePoint + 1;
-        if (next >= path.pathNodes.Count) next = 0;
-        currentNodeTarget = path.pathNodes[next];
-        transform.rotation = GetAngleTo(currentNodeTarget);
-    }
-
-    public Quaternion GetAngleTo(Transform targetPos)
-    {
-        var dir = (transform.position - targetPos.position);
-        dir.y = 0;
-        return Quaternion.LookRotation(dir) * Quaternion.Euler(rotOffs);
-    }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "NodePath") SetNextNode(col.transform);
-    }
-
-    protected void SetNextNode(Transform coll)
-    {
-        for (int i = 0; i < path.pathNodes.Count; i++) if (path.pathNodes[i] == coll)
-            {
-                var next = i + 1;
-                if (next >= path.pathNodes.Count) next = 0;
-                currentNodeTarget = path.pathNodes[next];
-                nodePoint = next;
-                return;
-            }
-    }
-}
-*/

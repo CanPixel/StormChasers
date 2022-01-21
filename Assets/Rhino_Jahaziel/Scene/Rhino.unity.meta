@@ -1,7 +1,18 @@
 fileFormatVersion: 2
 guid: a38a82c2de169f34481cb9ae02f8bf14
+<<<<<<< HEAD
 DefaultImporter:
   externalObjects: {}
+=======
+<<<<<<< HEAD
+timeCreated: 1464196233
+licenseType: Store
+DefaultImporter:
+=======
+DefaultImporter:
+  externalObjects: {}
+>>>>>>> MartBranch
+>>>>>>> SimchaBranch
   userData: 
   assetBundleName: 
   assetBundleVariant: 

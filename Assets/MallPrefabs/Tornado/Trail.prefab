@@ -51,7 +51,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: d11d725b9a3ff154eb3a209613e3b973, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,15 +102,15 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 0.052033424, b: 1, a: 1}
-      key1: {r: 1, g: 0.8950029, b: 0, a: 1}
+      key0: {r: 0.8396226, g: 0.7156029, b: 0.10693307, a: 1}
+      key1: {r: 0.8396226, g: 0.7156029, b: 0.10693307, a: 1}
       key2: {r: 0.22352941, g: 0.45490196, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 31611
+      ctime0: 0
       ctime1: 65535
       ctime2: 42405
       ctime3: 0
@@ -119,7 +119,7 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
+      atime1: 30262
       atime2: 65535
       atime3: 65535
       atime4: 65535
@@ -137,4 +137,4 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
-  m_Emitting: 1
+  m_Emitting: 0
