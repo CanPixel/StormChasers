@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: c1cdf31ef5b0f7646a2635fde686bbcf
 folderAsset: yes
+<<<<<<< HEAD
 timeCreated: 1464196145
 licenseType: Store
 DefaultImporter:
+=======
+DefaultImporter:
+  externalObjects: {}
+>>>>>>> MartBranch
   userData: 
   assetBundleName: 
   assetBundleVariant: 

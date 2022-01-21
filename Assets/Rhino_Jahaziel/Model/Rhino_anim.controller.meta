@@ -1,8 +1,14 @@
 fileFormatVersion: 2
 guid: f6c5c7ef2a009f64d95353a55b0eaaec
+<<<<<<< HEAD
 timeCreated: 1464196165
 licenseType: Store
 NativeFormatImporter:
+=======
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>> MartBranch
   userData: 
   assetBundleName: 
   assetBundleVariant: 
