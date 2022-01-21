@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EvilDead : MonoBehaviour
-{
-
+public class EvilDead : MonoBehaviour {
     [Header("Looking")]
     public float LookDistance;
-    public float lerpTimer;
-    public float lerpDuration;
+    public float lerpDuration = 2;
     private float targetDistance;
     public Transform leftEyePoint;
     public Transform rightEyePoint;
-    private Vector3 defaultRotation; 
+    public Transform tilter;
 
     [Header("Laser")]
     public float laserDuration;
@@ -23,18 +20,17 @@ public class EvilDead : MonoBehaviour
     public bool canLaser;
 
     [Header("Rotation")]
-    public float headTilt;
+    public float headTilt = 22;
     public float headRotationSpeed = 5;
     private float headRotationTimer;
-    public Vector3 offset = new Vector3(0, 20, 0);
-    Vector3 targetRotPos; 
+    public Vector3 offset = new Vector3(0, 0, 0);
 
     [Header ("Components")]
     public LineRenderer leftLaser;
     public LineRenderer rightLaser;
     public Transform target;
     public Transform rotationPoint;
-    public Transform idleLookAtPoint;
+    //public Transform idleLookAtPoint;
     public Transform leftEye;
     public Transform rightEye;
     public MeshRenderer eyeMeshr;
@@ -43,11 +39,12 @@ public class EvilDead : MonoBehaviour
     public Light leftSpotlight;
     public Light rightSpotlight; 
 
-    private int headState;
+    private Vector3 lookPos;
+
+    private CurrentState headState;
 
     [HideInInspector]
-    private enum CurrentState
-    {
+    private enum CurrentState {
         DISABLED,
         SEARCH,
         LASER,
@@ -55,176 +52,134 @@ public class EvilDead : MonoBehaviour
         DESTROYED,
     }
 
-
-
-
-
-    private void Start()
-    {
+    private void Start() {
         headRotationTimer = Random.Range(1, 4);
-        headState = (int)CurrentState.IDLE;
+        headState = CurrentState.IDLE;
         leftLaser.positionCount = 2; 
         rightLaser.positionCount = 2;
        
-        //  lerpTimer = lerpDuration; 
-        defaultRotation = transform.eulerAngles; 
-        
         leftEyePoint.transform.position = leftEye.transform.position;
         leftEyePoint.transform.eulerAngles = leftEye.transform.eulerAngles;
 
         rightEyePoint.transform.position = rightEye.transform.position;
         rightEyePoint.transform.eulerAngles = rightEye.transform.eulerAngles;
 
-        //eyeMeshr = GetComponent<MeshRenderer>();
         eyeMeshr.material = searchingEyeMat;
 
-        //leftSpotlight = gameObject.GetComponentInChildren<Light>();
-       // rightSpotlight = gameObject.GetComponentInChildren<Light>();
-
         leftSpotlight.color = rightSpotlight.color = Color.yellow;
-        
-
     }
 
-    private void Update()
-    {
-       
-
-        switch (headState)
-        {
-            case (int)CurrentState.DISABLED:          
+    private void Update() {
+        switch (headState) {
+            case CurrentState.DISABLED:          
                 break;
-            case (int)CurrentState.IDLE:
+            case CurrentState.IDLE:
                 CheckForTarget(); 
+                lookPos.x = 0;
+                lookPos.y = 0;
+                lookPos.z += headRotationSpeed;
                 break;
-               
-            case (int)CurrentState.LASER:
+            case CurrentState.LASER:
                 CheckForTarget();
-                Vector3 lookPos;
-                lookPos = target.position - transform.position;
-                var angle = Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg; 
-                if(canLaser) LaserTarget(lookPos);
-
-
-                float targetRotation = -.3f * targetDistance + 62f;
-              //  lookPos.x -= targetRotation; 
-                // transform.LookAt(targetRotPos); 
-                //  transform.eulerAngles = new Vector3(targetRotation, transform.eulerAngles.y, transform.eulerAngles.z) + offset;
-
-
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(offset + new Vector3(0, angle, 0)), Time.deltaTime * lerpDuration);
-                
-                // LookAtTarget();
-
+                if(canLaser) LaserTarget(target.position);
                 break; 
         }
 
-     
+        var tiltDest = Quaternion.Euler(0, 0, 0);
+        if(headState == CurrentState.LASER) {
+            Vector3 direction = target.position - transform.position;
+            Quaternion toRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation * Quaternion.Euler(offset), lerpDuration * Time.deltaTime);
+        } else {
+            tiltDest = Quaternion.Euler(headTilt, 0, 0);
 
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, 
+            Quaternion.Euler(lookPos) 
+            , Time.deltaTime * lerpDuration);
+        }
 
+        tilter.localRotation = Quaternion.Lerp(tilter.localRotation, tiltDest, Time.deltaTime * lerpDuration);
     }
 
-
-    public void CheckForTarget()
-    {
-        
-
+    public void CheckForTarget() {
         //Left eye raycast
-        if (Physics.Raycast(leftEyePoint.position , leftEye.forward, out RaycastHit hitLeft, laserLength))
-        {
+        if (Physics.Raycast(leftEyePoint.position , leftEye.forward, out RaycastHit hitLeft, laserLength)) {
             if(hitLeft.collider.gameObject.CompareTag("Ground")) leftEyePoint.transform.position = hitLeft.point; 
         }
 
         //Right eye raycast
-        if (Physics.Raycast(rightEyePoint.position, rightEye.forward, out RaycastHit hitRight, laserLength))
-        {
+        if (Physics.Raycast(rightEyePoint.position, rightEye.forward, out RaycastHit hitRight, laserLength)) {
             if (hitRight.collider.gameObject.CompareTag("Ground")) rightEyePoint.transform.position = hitRight.point;         
         }
 
         //Check for targets
         Collider[] hitColliders = Physics.OverlapSphere(rightEyePoint.position, 15f);
-        foreach (Collider col in hitColliders)
-        {
-            if (col.CompareTag("Player"))
-            {
+        foreach (Collider col in hitColliders) {
+            if (col.CompareTag("Player")) {
                 target = col.gameObject.transform;
                 //canLaser = true;
                 eyeMeshr.material = angryEyeMat;
                 leftSpotlight.color = rightSpotlight.color = Color.red;
             }
-
+        }
+        Collider[] hit2Colliders = Physics.OverlapSphere(leftEyePoint.position, 15f);
+        foreach (Collider col in hit2Colliders) {
+            if (col.CompareTag("Player")) {
+                target = col.gameObject.transform;
+                //canLaser = true;
+                eyeMeshr.material = angryEyeMat;
+                leftSpotlight.color = rightSpotlight.color = Color.red;
+            }
         }
 
-       
         //If there isn't a target go into idle 
-        if (target == null && !canLaser)
-        {
+        if (target == null && !canLaser) {
             //Rotate head randomly
             headRotationTimer -= Time.deltaTime;
-            if (headRotationTimer <= 0)
-            {
+            if (headRotationTimer <= 0) {
                 headRotationSpeed *= -1;
                 headRotationTimer = Random.Range(4f, 10f);
             }
-
-            //Tilting
-            transform.localEulerAngles = new Vector3(headTilt, transform.localEulerAngles.y, transform.localEulerAngles.z);
-            rotationPoint.transform.localEulerAngles += new Vector3(0, 0, headRotationSpeed);
         }
         
-
         //If there is a target
         if (target == null) return;
-
         targetDistance = Vector3.Distance(target.position, transform.position);
 
         //Target is player
-        if (target.CompareTag("Player"))
-        {
+        if (target.CompareTag("Player")) {
             leftLaser.enabled = true;
             rightLaser.enabled = true;
             //targetRotPos = transform.forward;
 
             laserCooldownTimer += Time.deltaTime;
+            headState = CurrentState.LASER;
 
-            headState = (int)CurrentState.LASER;
-
-            if (laserCooldownTimer >= laserCooldownDuration)
-            {
-                canLaser = true; 
-            }
-            
+            if (laserCooldownTimer >= laserCooldownDuration) canLaser = true; 
         }
         
         //Target is out of sight 
-        if(target == null || targetDistance > LookDistance)
-        {
+        if(target == null || targetDistance > LookDistance) {
             target = null;
             canLaser = false;
             leftLaser.enabled = false;
             rightLaser.enabled = false;
-            transform.eulerAngles = defaultRotation;
+//            transform.eulerAngles = defaultRotation;
             eyeMeshr.material = searchingEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.yellow;
-            headState = (int)CurrentState.IDLE; 
-            Debug.Log("Return To idle");
+            headState = CurrentState.IDLE; 
+            //Debug.Log("Return To idle");
         }       
-        
     }
 
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(rightEyePoint.position, 15);
     }
 
-    public void LookAtTarget(Vector3 targetRotPos)
-    {
-        
-
+/*     public void LookAtTarget(Vector3 targetRotPos) {
         //Lerp target position???????
-        /*
         if (lerpTimer > lerpDuration && Vector3.Distance(targetRotPos, target.position) > 3)
         {
            
@@ -234,22 +189,15 @@ public class EvilDead : MonoBehaviour
         {
            
         }
-        */
-
-            
         
         //Rotate head towards player 
         float targetRotation;
         targetRotation = -.3f * targetDistance + 62f;
        // transform.LookAt(targetRotPos); 
       //  transform.eulerAngles = new Vector3(targetRotation, transform.eulerAngles.y, transform.eulerAngles.z) + offset;
+    } */
 
-        
-        
-    }
-
-    public void LaserTarget(Vector3 tar)
-    {
+    public void LaserTarget(Vector3 tar) {
         Vector3 offset = new Vector3(1, 0, 0);
 
         //Set eye rotation 
@@ -263,7 +211,6 @@ public class EvilDead : MonoBehaviour
      
         rightLaser.SetPosition(0, rightEye.position);
         rightLaser.SetPosition(1, tar + offset);        
- 
     }
 
     private void OnDrawGizmos()

@@ -13,7 +13,7 @@ public class PhotoItem : PhotoBase {
     }
 
     [ConditionalHide("isComposite", true)] [SerializeField] private KeyPointList keyPoints;
-    public float gizmosScale = 0.2f;
+    public float gizmosScale = 0.05f;
 
     public new void Start() {
         base.Start();
