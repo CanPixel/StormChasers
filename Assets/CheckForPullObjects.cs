@@ -58,7 +58,7 @@ public class CheckForPullObjects : MonoBehaviour
                     if (other.gameObject.CompareTag("Buildings"))
                     {
                         Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-                        rb.useGravity = true ;
+                        rb.useGravity = false;
                         rb.isKinematic = false; 
                     }
 

@@ -33,7 +33,7 @@ public class PickLightColor : MonoBehaviour
         if (isPink)
         {
             lampLight.color = pinkLight.color;
-            lampMesh.material.SetColor("_EmissionColor", pinkLight.color * 2f);
+            //lampMesh.material.SetColor("_EmissionColor", pinkLight.color * 2f);
             isGreen = false;
     
         }
@@ -41,7 +41,7 @@ public class PickLightColor : MonoBehaviour
         if (isGreen)
         {
             lampLight.color = greenLight.color;
-            lampMesh.material.SetColor("_EmissionColor", greenLight.color);
+          //  lampMesh.material.SetColor("_EmissionColor", greenLight.color);
             isPink = false; 
         }
 

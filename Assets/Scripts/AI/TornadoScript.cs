@@ -110,7 +110,7 @@ public class TornadoScript : MonoBehaviour
     void CheckPath() {
         currentInnerObjects = pulledRbList.Count;
 
-        float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position); 
+        float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position + posOffs); 
         if(nextObjDistance < 25) SetNextNode(path.pathNodes[nodePoint]);
     }
 
