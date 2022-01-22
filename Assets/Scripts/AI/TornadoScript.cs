@@ -26,6 +26,7 @@ public class TornadoScript : MonoBehaviour
     public Rigidbody pickedThrowTarget;
 
     public bool canThrow;
+    public bool canEatBuilding; 
     public bool isThrowing;
     public bool targetedThrow;
     public bool targetIsPlayer;

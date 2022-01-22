@@ -55,7 +55,7 @@ public class CheckForPullObjects : MonoBehaviour
                         }
                     }
 
-                    if (other.gameObject.CompareTag("Buildings"))
+                    if (other.gameObject.CompareTag("Buildings") && mainScript.canEatBuilding)
                     {
                         Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
                         rb.useGravity = false;
