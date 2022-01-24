@@ -20,7 +20,7 @@ public class CheckForPullObjects : MonoBehaviour
         if (mainScript.canPull && !other.gameObject.GetComponent<PulledByTornado>())
         {
        
-            if (other.gameObject.CompareTag("Knockable") || other.gameObject.CompareTag("CarCivilian") || other.gameObject.CompareTag("Buildings"))
+            if (other.gameObject.CompareTag("Knockable") || other.gameObject.CompareTag("CarCivilian") || other.gameObject.CompareTag("Buildings") && mainScript.canEatBuilding)
             {
 
                 if (mainScript.currentInnerObjects < mainScript.maxInnerObjects)
@@ -35,6 +35,7 @@ public class CheckForPullObjects : MonoBehaviour
                         {                         
                             knockScript.LaunchKnockAble();
                             knockScript.isInTornado = true;
+                            other.transform.parent = null; 
                             
                             //knockScript.rb.useGravity = false;
                             //knockScript.enabled = false;
@@ -50,12 +51,11 @@ public class CheckForPullObjects : MonoBehaviour
                         {
                             civilianScript.LaunchCivilian();
                             civilianScript.isInTornado = true; 
-                            //civilianScript.rb.useGravity = false;
-                            //civilianScript.enabled = false; 
+                            
                         }
                     }
 
-                    if (other.gameObject.CompareTag("Buildings") && mainScript.canEatBuilding)
+                    if (other.gameObject.CompareTag("Buildings"))
                     {
                         Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
                         rb.useGravity = false;
@@ -76,7 +76,7 @@ public class CheckForPullObjects : MonoBehaviour
 
 
                         l.range *= 1.5f; //Up lights a bit for that spotlight effect
-       
+                        
                         //trailObj.material.color = l.color; 
                     }
 

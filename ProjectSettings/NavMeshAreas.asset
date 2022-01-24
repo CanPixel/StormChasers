@@ -13,7 +13,7 @@ NavMeshProjectSettings:
     cost: 2
   - name: Swimable
     cost: 1
-  - name: 
+  - name: Driveable
     cost: 1
   - name: 
     cost: 1

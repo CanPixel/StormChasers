@@ -14,6 +14,7 @@ public class TornadoScript : MonoBehaviour
     public Vector3 posOffs; 
     public float speed = 100f;//, turnSpeed = 1f;
 
+
     [Header("PHYSICS")]
     public float pullStrength;
     public float upForce;
@@ -31,7 +32,10 @@ public class TornadoScript : MonoBehaviour
     public bool targetedThrow;
     public bool targetIsPlayer;
     public float maxThrowAmount;
-    private float currentObjectsThrown; 
+    private float currentObjectsThrown;
+    public float randomThrowTimer;
+    public float targetDistance;
+    public float throwDistance; 
 
 
 
@@ -45,7 +49,7 @@ public class TornadoScript : MonoBehaviour
     public bool canPull = true;
 
     [Header("COMPONENTS")]
-    public Transform playerTarget; 
+    public Transform target; 
     public Transform centerPoint;
    
     [HideInInspector] public List<Rigidbody> pulledRbList = new List<Rigidbody>(); 
@@ -69,6 +73,7 @@ public class TornadoScript : MonoBehaviour
         tornadoState = (int)CurrentState.ROAM;
         SetPos();
         pulledRbList.Clear();
+        randomThrowTimer = Random.Range(4f, 10f);
     }
 
     private void FixedUpdate() {
@@ -138,14 +143,30 @@ public class TornadoScript : MonoBehaviour
 
     void CheckForThrow()
     {
+        if(randomThrowTimer > 0) randomThrowTimer -= Time.fixedDeltaTime;        
+
         if (pulledRbList.Count <= 0)
         {
             canThrow = false; 
             return;
         }
 
+        if(target != null) targetDistance = Vector3.Distance(transform.position, target.position); 
+        
+        
+
+
+        if (randomThrowTimer <= 0)
+        {
+            canThrow = true;
+        }
+
+
+
         if (canThrow)
         {
+            
+            
             canThrow = false; 
             pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
             
@@ -153,16 +174,25 @@ public class TornadoScript : MonoBehaviour
             ThrowObject(throwTarget); 
          
         }
+
+        //Random Throw 
     }
 
     void SetThrowTarget()
-    {
-        if (targetedThrow)
-        {
-            if (playerTarget)
-                throwTarget = playerTarget;           
+    {     
+        if (targetedThrow && targetDistance < throwDistance)
+        {       
+            if (target)
+            {
+                maxThrowAmount = 40f;
+                throwTarget = target;
+            }
         }
-        else throwTarget = null; 
+        else
+        {
+            throwTarget = null;
+            maxThrowAmount = 10f; 
+        }
     }
 
 
@@ -178,16 +208,21 @@ public class TornadoScript : MonoBehaviour
         }
         else
         {
-            throwDir = centerPoint.transform.forward;            
+            throwDir = centerPoint.transform.forward * 40;            
         }
 
         
         pickedThrowTarget.AddForce(Vector3.up * throwForce / 2, ForceMode.VelocityChange);
         pickedThrowTarget.AddForce(throwDir * throwForce, ForceMode.VelocityChange);
-  
         currentObjectsThrown++;
-        if (currentObjectsThrown < maxThrowAmount) canThrow = true;
-        else currentObjectsThrown = 0; 
+
+        if (currentObjectsThrown >= maxThrowAmount)
+        {
+            randomThrowTimer = Random.Range(6f, 12f);
+            currentObjectsThrown = 0;
+            canThrow = false; 
+        }
+  
 
 
 
