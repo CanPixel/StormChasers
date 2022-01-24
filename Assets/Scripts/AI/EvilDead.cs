@@ -19,6 +19,10 @@ public class EvilDead : MonoBehaviour {
     public float laserLength = 50f; 
     public bool canLaser;
 
+    public bool hatIsGone;
+    public Transform tornadoCenter;
+    public GameObject hat;
+
     [Header("Rotation")]
     public float headTilt = 22;
     public float headRotationSpeed = 5;
@@ -29,6 +33,7 @@ public class EvilDead : MonoBehaviour {
     public LineRenderer leftLaser;
     public LineRenderer rightLaser;
     public Transform target;
+    public Transform fakeTarget;
     public Transform rotationPoint;
     //public Transform idleLookAtPoint;
     public Transform leftEye;
@@ -132,6 +137,15 @@ public class EvilDead : MonoBehaviour {
             }
         }
 
+        //Tornado steals hat from head
+        if (hat.transform.parent.name != "Tilt") hatIsGone = true;
+        if (hatIsGone)
+        {
+            eyeMeshr.material = angryEyeMat;
+            leftSpotlight.color = rightSpotlight.color = Color.red;
+            target = tornadoCenter;
+        }
+
         //If there isn't a target go into idle 
         if (target == null && !canLaser) {
             //Rotate head randomly
@@ -164,11 +178,9 @@ public class EvilDead : MonoBehaviour {
             canLaser = false;
             leftLaser.enabled = false;
             rightLaser.enabled = false;
-//            transform.eulerAngles = defaultRotation;
             eyeMeshr.material = searchingEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.yellow;
             headState = CurrentState.IDLE; 
-            //Debug.Log("Return To idle");
         }       
     }
 
@@ -206,25 +218,21 @@ public class EvilDead : MonoBehaviour {
 
         //Set lasers L/R
         
-        leftLaser.SetPosition(0, leftEye.position);
-        leftLaser.SetPosition(1, tar - offset);
-     
-        rightLaser.SetPosition(0, rightEye.position);
-        rightLaser.SetPosition(1, tar + offset);        
-    }
+        if (hatIsGone)
+        {
+            leftLaser.SetPosition(0, leftEye.position);
+            leftLaser.SetPosition(1, tornadoCenter.position - offset);
 
-    private void OnDrawGizmos()
-    {
-        
-    }
+            rightLaser.SetPosition(0, rightEye.position);
+            rightLaser.SetPosition(1, tornadoCenter.position + offset);
+        }
+        else
+        {
+            leftLaser.SetPosition(0, leftEye.position);
+            leftLaser.SetPosition(1, tar - offset);
 
-    public void Stunned()
-    {
-
-    }
-
-    public void Disabled()
-    {
-
+            rightLaser.SetPosition(0, rightEye.position);
+            rightLaser.SetPosition(1, tar + offset);
+        }
     }
 }
