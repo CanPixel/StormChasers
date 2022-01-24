@@ -82,7 +82,7 @@ public class CameraControl : MonoBehaviour {
         [HideInInspector] public Image polaroidFrame;
         [HideInInspector] public Color baseColor = new Color(0.9f, 0.9f, 0.9f, 1);
         public bool forMission = false;
-        [HideInInspector] public MissionManager.Mission missionReference;
+        //[HideInInspector] public MissionManager.Mission missionReference;
 
         public PicturedObject[] picturedObjects;
         public string containedObjectTags;
@@ -164,7 +164,7 @@ public class CameraControl : MonoBehaviour {
     public LockOnSystem lockOnSystem;
     public Camera3D cam3D;
     public RatingSystem ratingSystem;
-    public MissionManager missionManager;
+    //public MissionManager missionManager;
     [SerializeField] private InputActionReference cameraAimButton;
 
     public GameObject journalMissionPrefab;
@@ -180,7 +180,7 @@ public class CameraControl : MonoBehaviour {
     public Text openMissionText, completedMissionText;
     public Transform missionContentParent, missionPanelContentParent;
     public Text missionDescription, markButtonText; 
-    public MissionManager.MissionCriteria[] missionRequirement;
+    //public MissionManager.MissionCriteria[] missionRequirement;
 
     public GameObject shaders;
     public ShaderReel shaderReel;
@@ -199,7 +199,7 @@ public class CameraControl : MonoBehaviour {
 
     [System.Serializable]
     public class JournalMission {
-        public MissionManager.Mission mission;
+        //public MissionManager.Mission mission;
         public GameObject journalElement;
         public Text journalTitle;
         public Sprite finalPicture;
@@ -270,7 +270,7 @@ public class CameraControl : MonoBehaviour {
             deliverPicture.transform.position = Vector3.Lerp(deliverPicture.transform.position, deliverTo.position, Time.deltaTime * 1.5f);
             if(deliverTime > 1) {
                 Destroy(deliverPicture);
-                missionManager.Deliver();
+                //missionManager.Deliver();
             }
         }
 
@@ -317,7 +317,7 @@ public class CameraControl : MonoBehaviour {
 
         if(journal) {
             if(journalMissions.Count > 0) journalSelection.transform.position = Vector3.Lerp(journalSelection.transform.position, new Vector3(journalSelection.transform.position.x, journalMissions[journalSelectedMission].journalElement.transform.position.y, journalSelection.transform.position.z), Time.unscaledDeltaTime * 16f);
-            foreach(var jM in journalMissions) jM.journalTitle.color = (jM.active && !jM.mission.delivered) ? activeMissionColor : inactiveMissionColor;
+            foreach(var jM in journalMissions) jM.journalTitle.color = (jM.active/*  && !jM.mission.delivered*/) ? activeMissionColor : inactiveMissionColor;
             photoBookScrollPanel.localPosition = Vector3.Lerp(photoBookScrollPanel.localPosition, new Vector3(photoBookScrollPanel.localPosition.x, portfolioTargetY, photoBookScrollPanel.localPosition.z), Time.unscaledDeltaTime * 12f);
         }
         cycleFilterYButton.SetActive(!journal && camSystem.aim >= 0.5f);
@@ -328,14 +328,14 @@ public class CameraControl : MonoBehaviour {
         discardPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null);
         yInfoButton.SetActive(screenshots.Count > 0);
         markButtonText.text = ((markedScreenshot != null) ? "RETRACT" : "SUBMIT");
-        aMissionSelectButton.SetActive(journalMissions.Count > 0 && !journalMissions[journalSelectedMission].mission.delivered && !journalMissions[journalSelectedMission].active);
+        //aMissionSelectButton.SetActive(journalMissions.Count > 0 && !journalMissions[journalSelectedMission].mission.delivered && !journalMissions[journalSelectedMission].active);
     }
 
     public void OpenJournal() {
         JournalScroll();
     }
 
-    private void ShowMissionInfo(MissionManager.Mission mission) {
+/*     private void ShowMissionInfo(MissionManager.Mission mission) {
         missionPanelContentParent.gameObject.SetActive(mission != null);
         if(mission != null) {
             journalPictureDeliveredPanel.SetActive(mission.delivered);
@@ -350,9 +350,9 @@ public class CameraControl : MonoBehaviour {
                 if(mission.objectives[i].finished) missionRequirement[i].Clear();
             }
         }
-    }
+    } */
 
-    public void ForceSelect(MissionManager.Mission miss) {
+/*     public void ForceSelect(MissionManager.Mission miss) {
         for(int i = 0; i < journalMissions.Count; i++) {
             if(journalMissions[i].mission == miss) {
                 journalSelectedMission = i;
@@ -361,7 +361,7 @@ public class CameraControl : MonoBehaviour {
                 return;
             }
         }
-    }
+    } */
 
     public void JournalSelect() {
         if(photobook) {
@@ -369,17 +369,17 @@ public class CameraControl : MonoBehaviour {
             return;
         }
 
-        if(journalMissions[journalSelectedMission].mission.delivered || journalMissions[journalSelectedMission].active) return;
+        if(/* journalMissions[journalSelectedMission].mission.delivered ||*/ journalMissions[journalSelectedMission].active) return;
 
         foreach(var i in journalMissions) {
             i.active = false;
             if(i == journalMissions[journalSelectedMission]) i.active = true;
         }
-        missionManager.SetCurrentMission(journalMissions[journalSelectedMission].mission, true);
-        if(journalMissions[journalSelectedMission].mission.objectives != null) for(int i = 0; i < journalMissions[journalSelectedMission].mission.objectives.Length; i++) missionManager.MarkCurrentObjective(i, journalMissions[journalSelectedMission].mission.objectives[i].finished);
+        //missionManager.SetCurrentMission(journalMissions[journalSelectedMission].mission, true);
+        //if(journalMissions[journalSelectedMission].mission.objectives != null) for(int i = 0; i < journalMissions[journalSelectedMission].mission.objectives.Length; i++) missionManager.MarkCurrentObjective(i, journalMissions[journalSelectedMission].mission.objectives[i].finished);
     }
     public void ShowJournalInfo() {
-        if(!journal || journalMissions.Count <= 0 || journalMissions[journalSelectedMission].mission.delivered || screenshots.Count <= 0) return;
+        if(!journal || journalMissions.Count <= 0 /* || journalMissions[journalSelectedMission].mission.delivered*/ || screenshots.Count <= 0) return;
         journalSelectionOutline.enabled = true;
         missionListOverlay.SetActive(true);
 
@@ -398,11 +398,11 @@ public class CameraControl : MonoBehaviour {
         photoBookUI.SetActive(false);
         photobook = false;
     }
-    public void JournalMarkObjective(int objectiveIndex) {
+/*     public void JournalMarkObjective(int objectiveIndex) {
         journalMissions[journalSelectedMission].mission.objectives[objectiveIndex].finished = true;
         if(objectiveIndex < missionRequirement.Length) missionRequirement[objectiveIndex].Clear();
-    }
-    public void JournalFinish(MissionManager.Mission miss) {
+    } */
+/*     public void JournalFinish(MissionManager.Mission miss) {
          for(int i = 0; i < journalMissions.Count; i++) 
             if(journalMissions[i].mission == miss) {
                 journalMissions[i].mission.delivered = true;
@@ -410,16 +410,16 @@ public class CameraControl : MonoBehaviour {
                 completedMissions++;
                 return;
             }
-    }
+    } */
 
-    public void JournalReorient() {
+/*     public void JournalReorient() {
         for(int i = 0; i < journalMissions.Count; i++) {
             var jm = journalMissions[i].journalElement;
             var miss = journalMissions[i].mission;
             if(miss.delivered) jm.transform.SetAsLastSibling();
             else jm.transform.SetSiblingIndex(1);
         } 
-    }
+    } */
 
     public void JournalScroll(Vector2 i) {
         if(completedMissions > 0) i *= -1;
@@ -431,10 +431,10 @@ public class CameraControl : MonoBehaviour {
     }
     public void JournalScroll() {
         if(journalSelectedMission > journalMissions.Count || journalMissions.Count <= 0) return;
-        if(journalMissions.Count > 0 && journalMissions[journalSelectedMission] != null) ShowMissionInfo(journalMissions[journalSelectedMission].mission);
+        //if(journalMissions.Count > 0 && journalMissions[journalSelectedMission] != null) ShowMissionInfo(journalMissions[journalSelectedMission].mission);
         pictureDelivered.sprite = journalMissions[journalSelectedMission].finalPicture;
     }
-    public void AddMissionToJournal(MissionManager.Mission miss) {
+   /*  public void AddMissionToJournal(MissionManager.Mission miss) {
         var obj = Instantiate(journalMissionPrefab);
         obj.transform.SetParent(missionContentParent);
         obj.transform.localScale = Vector3.one * 0.85f;
@@ -450,7 +450,7 @@ public class CameraControl : MonoBehaviour {
         JournalScroll();
 
         JournalReorient();
-    }
+    } */
 
     public void MarkPicture() {
         if(currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
@@ -465,15 +465,15 @@ public class CameraControl : MonoBehaviour {
         missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         missionPicture.transform.localScale = basePicScale * physPicScale;
         missionPicture.gameObject.SetActive(true);
-        missionManager.MarkForCurrentMission(true);
-        missionManager.ShowReadyForMark(false);
+        //missionManager.MarkForCurrentMission(true);
+        //missionManager.ShowReadyForMark(false);
         markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
     }
     public void UnmarkPicture() {
         missionPicture.sprite = null;
         missionPicture.gameObject.SetActive(false);
-        missionManager.MarkForCurrentMission(false);
-        missionManager.ShowReadyForMark(true);
+        //missionManager.MarkForCurrentMission(false);
+        //missionManager.ShowReadyForMark(true);
         Destroy(missionPicture.sprite);
         if(screenshots.Count <= 0 || currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null) return;
         screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
@@ -486,12 +486,12 @@ public class CameraControl : MonoBehaviour {
         obj.transform.localScale = Vector3.one * 0.15f;
         obj.GetComponent<SpriteRenderer>().sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
 
-        if(screenshots[currentSelectedPortfolioPhoto].forMission) missionManager.DiscardMissionPicture();
+        //if(screenshots[currentSelectedPortfolioPhoto].forMission) missionManager.DiscardMissionPicture();
 
         DeletePicture(currentSelectedPortfolioPhoto, false);
         PortfolioSelection();
         UnmarkPicture();
-        missionManager.ShowReadyForMark(false);
+        //missionManager.ShowReadyForMark(false);
     }
     protected bool AlreadyMarked() {
         return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
@@ -528,15 +528,15 @@ public class CameraControl : MonoBehaviour {
         deliverTime = 0;
     }
 
-    protected JournalMission FindMissionInJournal(MissionManager.Mission miss) {
+/*     protected JournalMission FindMissionInJournal(MissionManager.Mission miss) {
         foreach(var i in journalMissions) {
             if(i.mission == miss) return i;
         }
         return null;
-    }
+    } */
 
     private Sprite lastMissionSprite;
-    public void DeliverPicture(MissionManager.Mission miss, Transform dest) {
+    /* public void DeliverPicture(MissionManager.Mission miss, Transform dest) {
         if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
         deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
@@ -560,7 +560,7 @@ public class CameraControl : MonoBehaviour {
         journal = false;
         if(dest != null) deliverTo = dest;
         deliverTime = 0;
-    }
+    } */
 
     private bool isLookingBack = false;
     public void BackLook(bool lookBack) {
