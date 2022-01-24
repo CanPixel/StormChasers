@@ -22,8 +22,12 @@ public class RhinoAI : MonoBehaviour {
         else if(targetPos != null) dir = (targetPos - transform.position);
 
         if(rotate) transform.rotation = Quaternion.LookRotation(GetRotation(dir, turnSpeed));
-        if(move) rb.velocity += Time.deltaTime * moveSpeed * transform.forward;
-        ExtrGravity();
+        if(move) {
+            var mov = moveSpeed * transform.forward;
+            mov.y = 0;
+            rb.velocity += Time.deltaTime * mov;
+        }
+        //ExtrGravity();
 
         if(target != null) {
             neck.LookAt(target);
@@ -31,9 +35,9 @@ public class RhinoAI : MonoBehaviour {
         }
     }
 
-    private void ExtrGravity() {
-        if (rb.velocity.y < 3) rb.velocity -= Vector3.down * Physics.gravity.y * 3f * Time.fixedDeltaTime;
-    }
+/*     private void ExtrGravity() {
+        if (rb.velocity.y < 3) rb.velocity -= Vector3.down * Physics.gravity.y * stickToGroundForce * Time.fixedDeltaTime;
+    } */
 
     public Vector3 GetRotation(Vector3 dir, float turnSpeed) {
         var tar = Vector3.RotateTowards(transform.forward, dir, turnSpeed * Time.deltaTime, 0);
