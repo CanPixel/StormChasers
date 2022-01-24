@@ -31,7 +31,7 @@ namespace KartGame.KartSystems
 
         [Space]
         [Tooltip("The maximum angle in degrees that the front wheels can be turned away from their default positions, when the Steering input is either 1 or -1.")]
-        public float maxSteeringAngle;
+        public float maxSteeringAngle = 30;
         [Tooltip("Information referring to the front left wheel of the kart.")]
         public Wheel frontLeftWheel;
         [Tooltip("Information referring to the front right wheel of the kart.")]

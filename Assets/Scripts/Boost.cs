@@ -6,20 +6,20 @@ using UnityEngine.UI;
 public class Boost : MonoBehaviour
 {
     [Header("FOV")]
-    public Vector2 fovChange = new Vector2(40, 90);
-    public float fovChangeSpeed = 5f;
+    public Vector2 fovChange = new Vector2(60, 80);
+    public float fovChangeSpeed = 8f;
     private float fovTarget;
 
     [Header("Boost")]
-    public float currentBoostFuel;
-    public float maxBoostFuel;
-    public float minBoostFuel;
-    public float boostExpandAmount;
-    public float boostRegenSpeed;
-    public float boostRegenCooldown = 2f;
+    public float currentBoostFuel = 100;
+    public float maxBoostFuel = 100;
+    public float minBoostFuel = 0;
+    public float boostExpandAmount = 20;
+    public float boostRegenSpeed = 25;
+    public float boostRegenCooldown = 3f;
     private float boostRegenTimer;
-    public float boostForce;
-    public float impulseBoostForce;
+    public float boostForce = 3;
+    public float impulseBoostForce = 50f;
 
     private bool canBoost = true;
 

@@ -19,45 +19,44 @@ public class CameraControl : MonoBehaviour {
     private float pictureShotTimer = 0;
 
     [Header("Portfolio")]
-    public int maxPhotosInPortfolio = 5;
-    public float portfolioPictureSpacing = 300;
-    public float portfolioPictureYOffs = 300;
+    public int maxPhotosInPortfolio = 10;
+    public float portfolioPictureSpacing = 455;
+    public float portfolioPictureYOffs = 343.4f;
     public Color activeMissionColor, inactiveMissionColor;
     public Color markedPictureColor;
     public Color eligibleForMissionPictureColor;
 
     [Header("Boost Cam")]
     public AnimationCurve zPosOffs;
-    public Vector3 BoostFollowOffset = new Vector3(0, 2.8f, -6);
-    public float BoostFollowDamping = 2f;
-
+    public Vector3 BoostFollowOffset = new Vector3(0, 3f, -9f);
+    public float BoostFollowDamping = 6f;
     public float recenterVelocityFactor = 2f;
     //private float recenterTime = 0;
     //[Space(5)]
     //public float recenterDuration = 2f;
 
     [Header("Physical Discarded Picture")]
-    public float DiscardForce = 10f;
-    public float physPicScale = 0.5f;
+    public float DiscardForce = 100f;
+    public float physPicScale = 0.35f;
     private Vector3 basePicScale;
 
     [HideInInspector] public bool journal = false, photobook = false;
 
-    public int resWidth = 1600, resHeight = 900;
+    public int resWidth = 1920, resHeight = 1080;
 
     [Header("SlowMo")]
     public float slowMotionDamping = 3f;
-    public float slowMotionTime = 0.1f;
+    public float slowMotionTime = 0.25f;
 
     public enum CameraState {
         CARVIEW = 0, CAMVIEW
     }
     [HideInInspector] public CameraState cameraState = CameraState.CARVIEW;
 
-    public Vector3 mascotteRotationOffset = new Vector3(-90, 90, 0);
+    public Vector3 mascotteRotationOffset = new Vector3(-90, 0, 0);
     [Header("Y Axis Look")]
-    public Vector2 lookYLimits = new Vector2(0.6f, 1.4f);
-    public float yLookSensitivity = 10, lookUpCameraSensitivity = 15;
+    public Vector2 lookYLimits = new Vector2(0.65f, 1.1f);
+    public float yLookSensitivity = 1.5f, lookUpCameraSensitivity = 70;
     public AnimationCurve yPosOffs;
 
 /*     [System.Serializable]

@@ -22,37 +22,36 @@ namespace KartGame.KartSystems
         {
             [Header("Movement Settings")]
             [Min(0.001f), Tooltip("Top speed attainable when moving forward.")]
-            public float TopSpeed;
+            public float TopSpeed;// = 80;
 
             [Tooltip("How quickly the kart reaches top speed.")]
-            public float Acceleration;
+            public float Acceleration;// = 15;
 
             [Min(0.001f), Tooltip("Top speed attainable when moving backward.")]
-            public float ReverseSpeed;
+            public float ReverseSpeed;// = 45;
 
             [Tooltip("How quickly the kart reaches top speed, when moving backward.")]
-            public float ReverseAcceleration;
+            public float ReverseAcceleration;// = 15f;
 
             [Tooltip("How quickly the kart starts accelerating from 0. A higher number means it accelerates faster sooner.")]
             [Range(0.2f, 1)]
-            public float AccelerationCurve;
+            public float AccelerationCurve;// = 0.8f;
 
             [Tooltip("How quickly the kart slows down when the brake is applied.")]
-            public float Braking;
+            public float Braking;// = 30;
 
             [Tooltip("How quickly the kart will reach a full stop when no inputs are made.")]
-            public float CoastingDrag;
+            public float CoastingDrag;// = 16;
 
             [Range(0.0f, 1.0f)]
             [Tooltip("The amount of side-to-side friction.")]
-            public float Grip;
+            public float Grip;// = 1;
 
             [Tooltip("How tightly the kart can turn left or right.")]
-            public float Steer;
+            public float Steer;// = 4.5f;
 
             [Tooltip("Additional gravity for when the kart is in the air.")]
-            public float AddedGravity;
-           
+            public float AddedGravity;// = 10f;
 
             // allow for stat adding for powerups.
             public static Stats operator +(Stats a, Stats b)
@@ -99,7 +98,7 @@ namespace KartGame.KartSystems
         };
 
         [Header("Can variabelen")]
-        public float airSteeringFactor = 1f; 
+        public float airSteeringFactor = 1.3f; 
         public float groundSteeringFactor = 1f;
 
         [Header("Vehicle Visual")] 
@@ -110,25 +109,25 @@ namespace KartGame.KartSystems
         public Transform CenterOfMass;
 
         [Range(0.0f, 20.0f), Tooltip("Coefficient used to reorient the kart in the air. The higher the number, the faster the kart will readjust itself along the horizontal plane.")]
-        public float AirborneReorientationCoefficient = 3.0f;
+        public float AirborneReorientationCoefficient = 5.0f;
 
         [Header("Drifting")]
         [Range(0.01f, 1.0f), Tooltip("The grip value when drifting.")]
-        public float DriftGrip = 0.4f;
+        public float DriftGrip = 1f;
         [Range(0.0f, 10.0f), Tooltip("Current Additional steer when the kart is drifting.")]
         [HideInInspector] public float DriftAdditionalSteer = 5.0f;     
         [Range(0.0f, 10.0f), Tooltip("Max Additional steer when the kart is drifting.")]
         public float MaxDriftAdditionalSteer = 5.0f;
         [Range(0.0f, 10.0f), Tooltip("Amount of seconds for a drift to reach max additional steer.")]
-        public float SecondsToFullDrift = 2.0f;
+        public float SecondsToFullDrift = 1.0f;
         [Range(1.0f, 30.0f), Tooltip("The higher the angle, the easier it is to regain full grip.")]
-        public float MinAngleToFinishDrift = 10.0f;
+        public float MinAngleToFinishDrift = 30.0f;
         [Range(0.01f, 0.99f), Tooltip("Mininum speed percentage to switch back to full grip.")]
-        public float MinSpeedPercentToFinishDrift = 0.5f;
+        public float MinSpeedPercentToFinishDrift = 0.3f;
         [Range(1.0f, 20.0f), Tooltip("The higher the value, the easier it is to control the drift steering.")]
-        public float DriftControl = 10.0f;
+        public float DriftControl = 18.0f;
         [Range(0.0f, 20.0f), Tooltip("The lower the value, the longer the drift will last without trying to control it by steering.")]
-        public float DriftDampening = 10.0f;
+        public float DriftDampening = 20.0f;
 
         [Header("VFX")]
         [Tooltip("VFX that will be placed on the wheels when drifting.")]
@@ -151,14 +150,14 @@ namespace KartGame.KartSystems
         [Header("Suspensions")]
         [Tooltip("The maximum extension possible between the kart's body and the wheels.")]
         [Range(0.0f, 1.0f)]
-        public float SuspensionHeight = 0.2f;
+        public float SuspensionHeight = 0.71f;
         [Range(10.0f, 100000.0f), Tooltip("The higher the value, the stiffer the suspension will be.")]
-        public float SuspensionSpring = 20000.0f;
+        public float SuspensionSpring = 44118;
         [Range(0.0f, 5000.0f), Tooltip("The higher the value, the faster the kart will stabilize itself.")]
-        public float SuspensionDamp = 500.0f;
+        public float SuspensionDamp = 2212f;
         [Tooltip("Vertical offset to adjust the position of the wheels relative to the kart's body.")]
         [Range(-1.0f, 1.0f)]
-        public float WheelsPositionVerticalOffset = 0.0f;
+        public float WheelsPositionVerticalOffset = 0.05f;
 
         [Header("Physical Wheels")]
         [Tooltip("The physical representations of the Kart's wheels.")]

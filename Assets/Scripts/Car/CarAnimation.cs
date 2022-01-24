@@ -14,13 +14,11 @@ public class CarAnimation : MonoBehaviour {
     private Vector3 baseScale;
 
     public GameObject chassis;
-    public Vector3 wiggleAxis = new Vector3(0, 0, 1);
-
-    public float wiggleSpeed = 1, wiggleRange = 1;
-    public float wiggleSpeedCap = 10, wiggleRangeCap = 10;
-    public float GasBounceReduction = 6f;
-
-    public float dampening = 20f;
+    public Vector3 wiggleAxis = new Vector3(0.2f, 0, 1f);
+    public float wiggleSpeed = 30, wiggleRange = 2;
+    public float wiggleSpeedCap = 20, wiggleRangeCap = 10;
+    public float GasBounceReduction = 35f;
+    public float dampening = 10f;
 
     private float gasBounce = 0;
     private float lastGas = 0;
