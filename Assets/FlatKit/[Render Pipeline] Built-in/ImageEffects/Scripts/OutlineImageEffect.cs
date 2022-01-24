@@ -5,7 +5,7 @@ namespace FlatKit {
     public class OutlineImageEffect : MonoBehaviour {
         public Color edgeColor = Color.white;
 
-        [Range(0, 5)] public int thickness = 1;
+        [Range(0, 5)] public float thickness = 1;
 
         [Space] public bool useDepth = true;
         public bool useNormals = false;

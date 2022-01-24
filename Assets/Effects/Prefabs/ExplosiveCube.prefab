@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a1371270bf05cef42af89bd63687206a, type: 2}
+  - {fileID: 2100000, guid: 0a996f89b9bddd9419b19932a1e418bc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,10 +111,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionDelayDuration: 0
   waitForResetDuration: 2
-  explosionRadius: 46.91
+  explosionRadius: 33.42
   explosionEffect: {fileID: 781257656568127443, guid: d32a066f35d9b7d4fbef2be8df829c5b,
     type: 3}
   player: {fileID: 0}
+  tornadoScript: {fileID: 0}
   canExplode: 1
   canRetrigger: 1
   isVehicleTrigger: 1
@@ -138,12 +139,14 @@ MonoBehaviour:
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: Explosive
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 0}
   isComposite: 0
   fetchMeshRendererAutomatically: 1
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
