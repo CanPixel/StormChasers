@@ -31,9 +31,6 @@ public class CameraControl : MonoBehaviour {
     public Vector3 BoostFollowOffset = new Vector3(0, 3f, -9f);
     public float BoostFollowDamping = 6f;
     public float recenterVelocityFactor = 2f;
-    //private float recenterTime = 0;
-    //[Space(5)]
-    //public float recenterDuration = 2f;
 
     [Header("Physical Discarded Picture")]
     public float DiscardForce = 100f;
@@ -58,11 +55,6 @@ public class CameraControl : MonoBehaviour {
     public Vector2 lookYLimits = new Vector2(0.65f, 1.1f);
     public float yLookSensitivity = 1.5f, lookUpCameraSensitivity = 70;
     public AnimationCurve yPosOffs;
-
-/*     [System.Serializable]
-    public enum Theme {
-        NULL, CHAOS, ROMANTIC
-    } */
 
     [System.Serializable]
     public class ObjectProperties {
@@ -99,7 +91,6 @@ public class CameraControl : MonoBehaviour {
         public class PicturedObject {
             public string tag;
             public PhotoBase objectReference;
-//            public Dictionary<Theme, int> themeScores = new Dictionary<Theme, int>();
 
             public int sensation;
 
@@ -109,18 +100,7 @@ public class CameraControl : MonoBehaviour {
                 this.tag = tag;
                 this.objectReference = reference;
             }
-
- /*            public PicturedObject SetThemeScore(Theme theme, int value) {
-                themeScores.Add(theme, value);
-                return this;
-            }  */
         }
-
-/*         [System.Serializable]
-        public class ThemeScore {
-            public Theme theme;
-            public int value;
-        } */
 
         [Range(0, 100)]
         public int score = 0;
@@ -778,10 +758,9 @@ public class CameraControl : MonoBehaviour {
         //Mission check
         scren.portfolioObj = pol;
         scren.polaroidFrame = pol.GetComponent<Image>();
-        var completed = missionManager.CheckCompletion(scren);
-
+        
         //Border Colors
-        if(completed) scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;
+        scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;
 
         ratingSystem.SetPolaroidTitle(photoName);
         sf.text.text = photoName;

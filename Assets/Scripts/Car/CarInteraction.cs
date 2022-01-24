@@ -20,7 +20,7 @@ public class CarInteraction : MonoBehaviour {
         if(col.tag == "Player" && !triggered) {
             onEnter.Invoke();
            // if(MissionManager.missionManager.activeMission == mission) MissionManager.missionManager.ScanMissionCompletion(transform);
-            MissionManager.missionManager.StartMission(mission.name);
+            //MissionManager.missionManager.StartMission(mission.name);
             triggered = true;
         } 
     }
