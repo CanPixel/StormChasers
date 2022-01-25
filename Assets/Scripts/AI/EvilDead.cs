@@ -13,6 +13,7 @@ public class EvilDead : MonoBehaviour {
     public Transform rightEyeOrigin;
     public Transform hatObject;
     public Transform tilter;
+    private string parentName; 
 
     [Header("Laser")]
     private float laserCooldownTimer;
@@ -65,6 +66,8 @@ public class EvilDead : MonoBehaviour {
        
         eyeMeshr.material = searchingEyeMat;
         leftSpotlight.color = rightSpotlight.color = Color.yellow;
+
+        parentName = hatObject.transform.parent.name; 
     }
 
     private void Update() {
@@ -128,12 +131,13 @@ public class EvilDead : MonoBehaviour {
         }
 
         //Tornado steals hat from head
-        hatIsGone = (hatObject.parent == null);
-        if (target != null)
+        if (hatObject.parent.name != parentName) hatIsGone = true;
+
+        if (hatIsGone && Vector3.Distance(transform.position, tornadoCenter.position) < LookDistance)
         {
             eyeMeshr.material = angryEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.red;
-            if(hatIsGone) target = tornadoCenter;
+            target = tornadoCenter;
         }
 
         //If there isn't a target go into idle 
@@ -142,16 +146,17 @@ public class EvilDead : MonoBehaviour {
             headRotationTimer -= Time.deltaTime;
             if (headRotationTimer <= 0) {
                 headRotationSpeed *= -1;
-                headRotationTimer = Random.Range(5f, 11f);
+                headRotationTimer = Random.Range(10f, 18f);
             }
         }
         
         //If there is a target
         if (target == null) return;
+
         targetDistance = Vector3.Distance(target.position, transform.position);
 
         //Target is player
-        if (target.CompareTag("Player")) {
+        if (target.CompareTag("Player") || hatIsGone) {
             leftLaser.enabled = true;
             rightLaser.enabled = true;
 
@@ -169,6 +174,7 @@ public class EvilDead : MonoBehaviour {
             rightLaser.enabled = false;
             eyeMeshr.material = searchingEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.yellow;
+           
             headState = CurrentState.IDLE; 
         }       
     }
