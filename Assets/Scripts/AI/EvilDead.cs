@@ -13,6 +13,7 @@ public class EvilDead : MonoBehaviour {
     public Transform rightEyeOrigin;
     public Transform hatObject;
     public Transform tilter;
+    private string parentName; 
 
     [Header("Laser")]
     private float laserCooldownTimer;
@@ -40,7 +41,12 @@ public class EvilDead : MonoBehaviour {
     public Transform leftEye;
     public Transform rightEye;
     public MeshRenderer eyeMeshr;
+    public ParticleSystem leftImpact, rightImpact;
+    public TrailRenderer leftTrail, rightTrail;
     public Material searchingEyeMat;
+    public PhotoItem pi;
+    private int baseSensation;
+    private string baseName;
     public Material angryEyeMat;
     public Light leftSpotlight;
     public Light rightSpotlight; 
@@ -65,21 +71,46 @@ public class EvilDead : MonoBehaviour {
        
         eyeMeshr.material = searchingEyeMat;
         leftSpotlight.color = rightSpotlight.color = Color.yellow;
+
+        parentName = hatObject.transform.parent.name; 
+        baseSensation = pi.sensation;
+        baseName = pi.tag;
     }
 
     private void Update() {
+        leftImpact.transform.position = leftTrail.transform.position = leftLaser.GetPosition(1);
+        rightImpact.transform.position = rightTrail.transform.position = rightLaser.GetPosition(1);
+
         switch (headState) {
             case CurrentState.DISABLED:          
                 break;
             case CurrentState.IDLE:
+                leftImpact.Stop();
+                rightImpact.Stop(); 
+                rightTrail.enabled = leftTrail.enabled = false;
+
+                pi.sensation = baseSensation;
+                pi.tag = baseName;
                 CheckForTarget(); 
                 lookPos.x = 0;
                 lookPos.y = 0;
                 lookPos.z += headRotationSpeed;
                 break;
             case CurrentState.LASER:
+                rightTrail.enabled = leftTrail.enabled = canLaser;
                 CheckForTarget();
-                if(canLaser) LaserTarget();
+                if(canLaser) {
+                    leftImpact.Play();
+                    rightImpact.Play();
+                    LaserTarget();
+                    pi.sensation = baseSensation + SensationScores.scores.angryHeadLaserValue;
+                    pi.tag = baseName + " lasers angrily!";
+                } else {
+                    leftImpact.Stop();
+                    rightImpact.Stop(); 
+                    pi.sensation = baseSensation + SensationScores.scores.angryHeadBoostValue;
+                    pi.tag = baseName + " is angry!";
+                }
                 break; 
         }
 
@@ -128,12 +159,13 @@ public class EvilDead : MonoBehaviour {
         }
 
         //Tornado steals hat from head
-        hatIsGone = (hatObject.parent == null);
-        if (target != null)
+        if (hatObject.parent.name != parentName) hatIsGone = true;
+
+        if (hatIsGone && Vector3.Distance(transform.position, tornadoCenter.position) < LookDistance)
         {
             eyeMeshr.material = angryEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.red;
-            if(hatIsGone) target = tornadoCenter;
+            target = tornadoCenter;
         }
 
         //If there isn't a target go into idle 
@@ -142,16 +174,17 @@ public class EvilDead : MonoBehaviour {
             headRotationTimer -= Time.deltaTime;
             if (headRotationTimer <= 0) {
                 headRotationSpeed *= -1;
-                headRotationTimer = Random.Range(5f, 11f);
+                headRotationTimer = Random.Range(10f, 18f);
             }
         }
         
         //If there is a target
         if (target == null) return;
+
         targetDistance = Vector3.Distance(target.position, transform.position);
 
         //Target is player
-        if (target.CompareTag("Player")) {
+        if (target.CompareTag("Player") || hatIsGone) {
             leftLaser.enabled = true;
             rightLaser.enabled = true;
 
@@ -169,6 +202,7 @@ public class EvilDead : MonoBehaviour {
             rightLaser.enabled = false;
             eyeMeshr.material = searchingEyeMat;
             leftSpotlight.color = rightSpotlight.color = Color.yellow;
+           
             headState = CurrentState.IDLE; 
         }       
     }

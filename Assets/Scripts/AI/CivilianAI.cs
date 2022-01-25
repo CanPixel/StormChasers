@@ -6,19 +6,20 @@ using System.Linq;
 public class CivilianAI : MonoBehaviour {
     public GameObject roadPathsObject;
     private Transform[] roadPaths;
-    private Vector3 targetPos;
     private GameObject collidedObj;
     [HideInInspector] public bool isInTornado = false; 
 
     [ReadOnly] public bool flipped = false;
 
-    public Vector2 retargetDuration;
+    private Vector2 retargetDuration = new Vector2(16, 30);
 
     public float reorientAfter = 10;
     private float reorientTime = 0;
 
     [Header("References")]
     public PhotoItem photoItem;
+    private string baseName;
+    private int baseSensation;
     public UnityEngine.AI.NavMeshAgent navigation; 
     public Rigidbody rb;
 
@@ -30,6 +31,8 @@ public class CivilianAI : MonoBehaviour {
     void Start() {
         roadPaths = roadPathsObject.GetComponentsInChildren<Transform>();
         SetTarget(RandomLocation());
+        baseSensation = photoItem.sensation;
+        baseName = photoItem.tag;
     }
 
     public Vector3 RandomLocation() {
@@ -44,16 +47,27 @@ public class CivilianAI : MonoBehaviour {
         chomped = true;
     }
 
+    void OnDrawGizmosSelected() {
+        if(navigation.destination != null) {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(navigation.destination, 15);
+        }
+    }
+
     void Update() {
-        if(chomped || isInTornado) return;
+        if(chomped || isInTornado) {
+            photoItem.tag = "Car sucked into tornado!";
+            photoItem.sensation = (baseSensation + SensationScores.scores.tornadoCarValue);
+            return;
+        }
 
         time += Time.deltaTime;
 
         flipped = Mathf.Abs(transform.rotation.z) > 0.25f;
-        photoItem.OverwriteTag(photoItem.staticTags + (flipped ? " flippedcar " : ""));
+        photoItem.tag = ((flipped ? "Flipped car! " : baseName));
+        photoItem.sensation = flipped ? (baseSensation + SensationScores.scores.flippedCarValue) : baseSensation;
         
-        //onScreen = LockOnSystem.OnScreen(transform.position);
-        if(time > randomDuration /* && !onScreen && navigation.destination == null*/) {
+        if(time > randomDuration) {
             SetTarget(RandomLocation());
             time = 0;
         }
@@ -79,7 +93,6 @@ public class CivilianAI : MonoBehaviour {
     }
     public void SetTarget(Vector3 pos) {
         if(navigation == null || !navigation.enabled) return;
-        this.targetPos = pos;
         navigation.destination = pos;
         randomDuration = Random.Range(retargetDuration.x, retargetDuration.y);
     }

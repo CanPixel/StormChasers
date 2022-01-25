@@ -130,21 +130,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockableByShark: 1
   addKnockedTag: 0
+  canbeExploded: 1
+  isInTornado: 0
   onKnockShark:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: WaterGeyser, Assembly-CSharp
-        m_MethodName: TriggerGeyser
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onKnockPlayer:
     m_PersistentCalls:
       m_Calls:
@@ -175,6 +165,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  rb: {fileID: 0}
 --- !u!82 &-3640594545768791174
 AudioSource:
   m_ObjectHideFlags: 0
@@ -284,15 +275,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  staticTags: 
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: hydrant
+  sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
   render: {fileID: 363923110044017044}
   isComposite: 0
+  fetchMeshRendererAutomatically: 0
+  fetchMeshRendererInValidate: 0
   keyPoints:
     list: []
   gizmosScale: 1
