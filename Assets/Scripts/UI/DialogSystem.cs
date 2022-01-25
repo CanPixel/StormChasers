@@ -251,7 +251,6 @@ public class DialogSystem : MonoBehaviour {
         targetText = content;
         characterNameText.text = character.name;
         virtualCamera.m_Follow = virtualCamera.m_LookAt = character.target;
-        Debug.Log(virtualCamera.m_Follow + " | " + character.target);
         triggered = true;
     }
     public void DisplayCurrentDialogIndex() {

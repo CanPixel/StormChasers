@@ -7,7 +7,6 @@ public class ChaosMeter : MonoBehaviour {
     public GameObject meter;
     public Image slider;
     public Text showText, percentage;
-    public ParticleSystem sparks;
     public Image marker;
     public Vector2 markerRange = new Vector2(855, 540);
     private Gradient gradient;
@@ -28,8 +27,6 @@ public class ChaosMeter : MonoBehaviour {
         percentage.color = slider.color;
         marker.color = new Color(1 - slider.color.r, 1 - slider.color.g, 1 - slider.color.b, 1);
         marker.transform.localPosition = new Vector3(slider.fillAmount * (markerRange.x) - markerRange.y, marker.transform.localPosition.y, 0);
-
-        //if((int)current == (int)target) sparks.Stop();
     }
 
     public void CalculateChaos(CameraControl.Screenshot screen, Gradient scoring, int totalSensation) {
@@ -37,6 +34,5 @@ public class ChaosMeter : MonoBehaviour {
         current = slider.fillAmount = 0;
         totalSens = totalSensation;
         target = totalSensation;
-        sparks.Play();
     }
 }

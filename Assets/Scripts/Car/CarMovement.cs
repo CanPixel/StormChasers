@@ -6,27 +6,24 @@ using KartGame.KartSystems;
 using Cinemachine;
 using UnityEngine.UI;
 
-public class CarMovement : MonoBehaviour
-{
+public class CarMovement : MonoBehaviour {
     public Light[] brakeLights;
     public Material brakeMaterial;
 
-    public float momentumReduction = 2f;
-    public float maxSpeedCap = 100;
+    public float momentumReduction = 2.5f;
+    public float maxSpeedCap = 110;
 
     public Transform carMesh;
     public DialogSystem dialogSystem;
     public CameraControl camControl;
     public CameraCanvas camCanvas;
     public Boost boostScript;
-
     public ArcadeKart kart;
 
-    public float SuspensionResetSpeed = 2f, jumpHeight = 4f;
-    public float jumpCheckHeight = 2f;
+    public float SuspensionResetSpeed = 5f, jumpHeight = 60f;
+    public float jumpCheckHeight = 3f;
 
     private float baseAirbornReorient;
-
     private float baseSuspension;
     public bool isGrounded; 
 
@@ -43,7 +40,6 @@ public class CarMovement : MonoBehaviour
 
     private Gamepad gamepad;
     private float hapticDuration = 0;
-
     private float baseAirborneReorient;
 
     void Start() {

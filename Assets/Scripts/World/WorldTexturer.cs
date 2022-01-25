@@ -16,10 +16,10 @@ public class WorldTexturer : MonoBehaviour {
         Enable(true);
     }
 
-    public void SynchToMission() {
+/*     public void SynchToMission() {
         if(MissionManager.missionManager == null) return;
         SetSprite(MissionManager.missionManager.camControl.GetLastScreenshot());
-    }
+    } */
 
     private void Enable(bool i) {
         foreach(var l in sprites) l.gameObject.SetActive(i);

@@ -4953,7 +4953,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 4.43
+  m_Radius: 2.4
   m_Height: 1.76
   m_Direction: 1
   m_Center: {x: -0.07927282, y: -0.09992109, z: 0}
@@ -5097,7 +5097,7 @@ Transform:
   m_GameObject: {fileID: 7198556103139920901}
   m_LocalRotation: {x: 0, y: 0.44679978, z: 0, w: 0.894634}
   m_LocalPosition: {x: 4.0984483, y: 7.47, z: 16.79}
-  m_LocalScale: {x: 18, y: 30.245464, z: 18}
+  m_LocalScale: {x: 18.000013, y: 30.245464, z: 18.000013}
   m_Children:
   - {fileID: 7198556102018934999}
   - {fileID: 7198556102206450630}
@@ -5194,6 +5194,7 @@ MonoBehaviour:
   throwForce: 2.5
   pickedThrowTarget: {fileID: 0}
   canThrow: 0
+  canEatBuilding: 0
   isThrowing: 0
   targetedThrow: 1
   targetIsPlayer: 1

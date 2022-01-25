@@ -26,6 +26,7 @@ public class TornadoScript : MonoBehaviour
     public Rigidbody pickedThrowTarget;
 
     public bool canThrow;
+    public bool canEatBuilding; 
     public bool isThrowing;
     public bool targetedThrow;
     public bool targetIsPlayer;
@@ -109,7 +110,8 @@ public class TornadoScript : MonoBehaviour
 
     void CheckPath() {
         currentInnerObjects = pulledRbList.Count;
-
+        if(currentNodeTarget == null) return;
+        
         float nextObjDistance = Vector3.Distance(transform.gameObject.transform.position, currentNodeTarget.position + posOffs); 
         if(nextObjDistance < 25) SetNextNode(path.pathNodes[nodePoint]);
     }

@@ -22,6 +22,7 @@ TagManager:
   - Buildings
   - EvilHead
   - Ground
+  - Rhino
   layers:
   - Default
   - TransparentFX

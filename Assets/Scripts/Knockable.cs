@@ -18,8 +18,6 @@ public class Knockable : MonoBehaviour {
 
     [HideInInspector] public Rigidbody rb;
 
-    
-
     void Start() {
         gameObject.tag = "Knockable";
         photoItem = GetComponent<PhotoItem>();
@@ -30,19 +28,15 @@ public class Knockable : MonoBehaviour {
         isInTornado = false; 
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         ExtrGravity();
         if (rb.useGravity) isInTornado = false; 
     }
 
     void OnCollisionEnter(Collision col) {
-        if (!isInTornado)
-        {
-            if (col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian" || col.gameObject.tag == "Knockable")
-            {
-                if (col.gameObject.GetComponent<Rigidbody>().velocity.magnitude > 5f)
-                {
+        if (!isInTornado) {
+            if (col.gameObject.tag == "Player" || col.gameObject.tag == "CarCivilian" || col.gameObject.tag == "Knockable" || col.gameObject.tag == "Rhino") {
+                if (col.gameObject.GetComponent<Rigidbody>().velocity.magnitude > 5f) {
                     collidedObject = col.gameObject;
                     LaunchKnockAble();
                 }
@@ -61,9 +55,8 @@ public class Knockable : MonoBehaviour {
         }
     }
 
-    private void ExtrGravity()
-    {
-        if (!isStanding && rb.velocity.y < 3) rb.velocity -= Vector3.down * Physics.gravity.y * (4 - 1) * Time.fixedDeltaTime;
+    private void ExtrGravity() {
+        if (!isStanding && rb.velocity.y < 3) rb.velocity -= Vector3.down * Physics.gravity.y * 3f * Time.fixedDeltaTime;
         // rb.velocity -= new Vector3(rb.velocity.x, -5, rb.velocity.z); 
     }
 
