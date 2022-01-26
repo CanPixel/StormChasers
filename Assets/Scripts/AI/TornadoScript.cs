@@ -151,7 +151,8 @@ public class TornadoScript : MonoBehaviour
         {
             canThrow = false; 
             pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
-            
+            if (pickedThrowTarget.name == "Player") pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
+
             SetThrowTarget();
             ThrowObject(throwTarget);        
         }

@@ -9,6 +9,8 @@ public class PadJump : MonoBehaviour
     private bool hasBeenLaunched = false;
     private bool canLaunch = true; 
     private CarMovement carMovementScript;
+    public bool doForward;
+    public float forwardForce;
     public bool AutoTrigger;
 
 
@@ -60,6 +62,8 @@ public class PadJump : MonoBehaviour
         carMovementScript.Jump();
         carMovementScript.jumpHeight = defaultJumpHeight;
         hasBeenLaunched = false;
+        Rigidbody rb = carMovementScript.GetComponent<Rigidbody>();
+        if(doForward) rb.AddForce(transform.forward * forwardForce, ForceMode.VelocityChange);
     }
 
     void WaitForRecharge()
