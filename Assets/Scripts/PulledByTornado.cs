@@ -5,8 +5,12 @@ using UnityEngine;
 public class PulledByTornado : MonoBehaviour
 {
     public Rigidbody rb;
+    public bool isPlayer; 
     public TornadoScript tornadoScript;
-    private float destructionTimer = 5; 
+    private float destructionTimer = 5;
+    private float playerLaunchTimer;
+    float orignalRbMass;
+    public Vector3 originalScale; 
 
     private int objState;
     [HideInInspector]
@@ -20,9 +24,14 @@ public class PulledByTornado : MonoBehaviour
 
     private void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
-        rb.useGravity = false; 
+        //rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        orignalRbMass = rb.mass;
+       // originalScale = rb.transform.localScale; 
+        rb.mass = 5f; 
         rb.AddTorque(-Vector3.right * 1000f, ForceMode.VelocityChange);
+        playerLaunchTimer = Random.Range(3f, 5f);
+        if (isPlayer) destructionTimer = 3f; 
 
     }
 
@@ -33,6 +42,7 @@ public class PulledByTornado : MonoBehaviour
         {
             case (int)CurrentState.PULLED:
                 PullObject();
+                if(isPlayer) LaunchPlayer(); 
                 break;
 
             case (int)CurrentState.RELEASED:
@@ -61,18 +71,29 @@ public class PulledByTornado : MonoBehaviour
 
             if (currentHeight < tornadoScript.minHeight) rb.AddForce(tornadoScript.gameObject.transform.up * tornadoScript.upForce * Time.fixedDeltaTime, ForceMode.Acceleration); //Add force if min height for object is reached  
             if (currentHeight > tornadoScript.maxHeight) rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / 1.06f, rb.velocity.z);  //Reduce velocity if max height for object is reached
-            if (currentDistance > tornadoScript.maxCenterDistance) rb.velocity = rb.velocity / 1.02f;  //Reduce velocity if max distance from center has been reached        
+            if (currentDistance > tornadoScript.maxCenterDistance) rb.velocity = rb.velocity / 1.02f;  //Reduce velocity if max distance from center has been reached                   
+    }
 
+    void LaunchPlayer()
+    {
+        playerLaunchTimer -= Time.deltaTime;
 
-            
+        if(playerLaunchTimer <= 0)
+        {         
+            ReleaseObject();
+            Vector3 launchDir = (tornadoScript.centerPoint.position - rb.transform.position).normalized;
+            rb.AddForce(-launchDir * 40f, ForceMode.VelocityChange); 
+           
+            rb.mass = orignalRbMass; 
+            tornadoScript.playerInTornado = false;
+            isPlayer = false; 
+        }
     }
 
     public void ReleaseObject()
     {
        
-        //IMPORTANT ADD SOMETHING HERE THAT MAKES THE THROWED OBJECTS PICKABLE BY THE TORNADO AGAIN 
-
-
+        //IMPORTANT ADD SOMETHING HERE THAT MAKES THE THROWED OBJECTS PICKABLE BY THE TORNADO AGAIN
         objState = (int)CurrentState.RELEASED; 
         rb.useGravity = true;
         gameObject.transform.parent = null;
@@ -85,6 +106,7 @@ public class PulledByTornado : MonoBehaviour
         destructionTimer -= Time.fixedDeltaTime;
         if (destructionTimer <= 0)
         {
+            rb.transform.localScale = originalScale;
             tornadoScript.pulledRbList.Remove(rb);
             Destroy(GetComponent<PulledByTornado>()); 
         }

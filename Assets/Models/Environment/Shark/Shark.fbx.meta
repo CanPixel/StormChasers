@@ -73,8 +73,8 @@ ModelImporter:
       name: CHOMP
       takeName: Armature|ArmatureAction
       internalID: 0
-      firstFrame: 60
-      lastFrame: 120
+      firstFrame: 83
+      lastFrame: 92
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
