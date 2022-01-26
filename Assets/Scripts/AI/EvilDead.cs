@@ -115,7 +115,7 @@ public class EvilDead : MonoBehaviour {
         }
 
         var tiltDest = Quaternion.Euler(0, 0, 0);
-        if(headState == CurrentState.LASER) {
+        if(headState == CurrentState.LASER && target != null) {
             Vector3 direction = target.position - transform.position;
             Quaternion toRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation * Quaternion.Euler(offset), lerpDuration * Time.deltaTime);

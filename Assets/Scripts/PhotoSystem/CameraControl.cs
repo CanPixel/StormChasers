@@ -134,7 +134,7 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
-    [HideInInspector] public List<Screenshot> screenshots = new List<Screenshot>();
+    public List<Screenshot> screenshots = new List<Screenshot>();
     private Screenshot markedScreenshot;
 
     [Space(10)]
@@ -211,8 +211,8 @@ public class CameraControl : MonoBehaviour {
     private float portfolioPictureBaseScale, portfolioTargetY = 0;
 
     void OnDisable() {
-        foreach(var i in screenshots) Destroy(i.image);
-        screenshots.Clear();
+        //foreach(var i in screenshots) Destroy(i.image);
+        //screenshots.Clear();
     } 
 
     void Start() {
@@ -712,14 +712,13 @@ public class CameraControl : MonoBehaviour {
                 tagsOnPicture[tag] += rest.sensation;
             } else tagsOnPicture.Add(tag, rest.sensation);
             
-            Debug.Log(tag + ": " + rest.sensation);
+            //Debug.Log(tag + ": " + rest.sensation);
 
             objectTags += tag + " ";
             sensationScore += rest.sensation;
 
             //Debug.Log(rest.name);
-            if (rest.CompareTag("ActivationExplosive"))
-            {
+            if (rest.CompareTag("ActivationExplosive")) {
                 TriggerExplosion explosive = rest.gameObject.GetComponent<TriggerExplosion>();
                 explosive.hasBeenActivated = true;
                 explosive.explosionDelayDuration = 0f;
@@ -749,6 +748,8 @@ public class CameraControl : MonoBehaviour {
         scren.score = sensationScore;
         totalScore += sensationScore;
 
+        if(totalScore > 0) SplashSystem.self.SpawnSplash(ratingSystem.GetScoreLabel(totalScore), new Vector3(0, 1, 0), 2, 1, 3, TextAnchor.MiddleCenter);
+
         //Visualize
         cam3D.DoPicture(scren, resWidth, resHeight);
         lockOnSystem.VisualizePictureItems(scren);
@@ -760,12 +761,12 @@ public class CameraControl : MonoBehaviour {
         
         //photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
 
+        scren.name = photoName;
         scren.portfolioObj = pol;
         scren.polaroidFrame = pol.GetComponent<Image>();
 
         //Portfolio
-        if(screenshots.Count >= maxPhotosInPortfolio) DeletePicture(0);
-        screenshots.Add(scren);
+        //if(screenshots.Count >= maxPhotosInPortfolio) DeletePicture(0);
 
         //Border Colors
         scren.polaroidFrame.color = scren.baseColor = eligibleForMissionPictureColor;
@@ -773,7 +774,7 @@ public class CameraControl : MonoBehaviour {
         ratingSystem.SetPolaroidTitle(photoName);
         sf.text.text = photoName;
 
-        takePictureDelay = 0.5f;
+        takePictureDelay = 1f;
 
         //Physical Pictures        
         //foreach(var pic in physPictures) {
@@ -781,6 +782,7 @@ public class CameraControl : MonoBehaviour {
           //  pic.transform.localScale = basePicScale * physPicScale;
         //}
 
+        screenshots.Add(scren);
         SoundManager.PlayUnscaledSound("PhotoShoot", 0.6f);
         ratingSystem.ResetScreenshot();
     }
@@ -792,8 +794,13 @@ public class CameraControl : MonoBehaviour {
     public void PortfolioSelection() {
         foreach(var i in screenshots) i.portfolioObj.transform.localScale = Vector3.one * portfolioPictureBaseScale;
     }
+
+    public int GetTotalScore() {
+        return totalScore;
+    }
     
     public void DeletePicture(int index, bool deleteTexture = true) {
+        return;
         if(screenshots.Count <= 0 || screenshots[index] == null) return;
         Destroy(screenshots[index].portfolioObj);
         if(deleteTexture) Destroy(screenshots[index].image);

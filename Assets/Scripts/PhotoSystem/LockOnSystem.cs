@@ -121,7 +121,7 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
-        if(target == null) return;
+        if(target == null || player == null) return;
         bool inDistance = IsInDistance(target.transform.position, cameraCanvas.maxDistance);
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;

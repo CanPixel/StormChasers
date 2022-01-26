@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
 
 public class CameraCanvas : MonoBehaviour {
-    public LayerMask raycastLayerMask;
-    public float raycastRadius = 3;
     public float maxDistance = 300;
 
     private UnityEngine.Rendering.PostProcessing.DepthOfField dof;

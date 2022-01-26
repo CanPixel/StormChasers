@@ -13,6 +13,22 @@ public class RatingSystem : MonoBehaviour {
 
     public Gradient scoreGradient;
 
+    [System.Serializable]
+    public class Score {
+        public string label;
+        public int min;
+    }
+    public Score[] scores;
+
+    public string GetScoreLabel(int score) {
+        string temp = "";
+        for(int i = 0; i < scores.Length; i++) {
+            if(score > scores[i].min) temp = scores[i].label;
+            else break;
+        }
+        return temp;
+    }
+
     [Space(10)]
     [SerializeField] private CameraControl camControl;
 
