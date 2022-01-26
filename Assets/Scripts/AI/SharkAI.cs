@@ -241,7 +241,7 @@ public class SharkAI : MonoBehaviour {
                         chompTimer = 0;
                         civilianCasualty = sap.drain.target.GetComponent<CivilianAI>();
                         if(civilianCasualty != null) {
-                            civilianCasualty.photoItem.OverwriteTag("sharkvictim");
+                            civilianCasualty.photoItem.tag = ("sharkvictim");
                             civilianCasualty.Chomp(chompingPosition);
                             sap.drain.TriggerShark();
                             feedback.enabled = true;

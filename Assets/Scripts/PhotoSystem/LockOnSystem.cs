@@ -80,9 +80,9 @@ public class LockOnSystem : MonoBehaviour {
         if(sortedScreenObjects.Count > 0) {
             string objects = "";
             foreach(var k in sortedScreenObjects) {
-                if(k.tags.Trim().Length <= 1) continue;
-                if(!k.isKeyPoint) objects += k.tags.Trim() + "\n";
-                else objects += "<color='#ff00ff'>" + k.tags + "</color> \n";
+                if(k.tag.Trim().Length <= 1) continue;
+                if(!k.isKeyPoint) objects += k.tag.Trim() + "\n";
+                else objects += "<color='#ff00ff'>" + k.tag + "</color> \n";
                 FadeCrosshair(k);
             }
             cameraCanvas.highlightedObjectText.text = objects;
@@ -121,7 +121,7 @@ public class LockOnSystem : MonoBehaviour {
     }
 
     protected void PhotoLogic(PhotoBase target, PhotoItem host = null) {
-        if(target == null) return;
+        if(target == null || player == null) return;
         bool inDistance = IsInDistance(target.transform.position, cameraCanvas.maxDistance);
         bool isOccluded = !CanSee(target, host);
         bool isOrientation = (target.specificOrientation & target.InOrientation(player.position)) | !target.specificOrientation;
@@ -230,7 +230,7 @@ public class LockOnSystem : MonoBehaviour {
 
 
     protected void AddCrosshair(PhotoBase pi) {
-        if(pi == null || pi.tag == null || pi.baseTag == null || pi.tag.Length <= 2 || pi.baseTag.Length <= 2) return;
+        if(pi == null || pi.tag == null || pi.tag == null || pi.tag.Length <= 2 || pi.tag.Length <= 2) return;
         var createImage = Instantiate(crossHair) as GameObject;
         createImage.transform.SetParent(canvas.transform, true);
         createImage.SetActive(true);

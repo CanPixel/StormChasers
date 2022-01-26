@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerExplosion : MonoBehaviour
-{
-    private float explosionDelayTímer; 
+public class TriggerExplosion : MonoBehaviour {
+    private float explosionDelayTimer; 
     public float explosionDelayDuration;
 
     private float waitForResetTimer;
@@ -18,6 +17,9 @@ public class TriggerExplosion : MonoBehaviour
     public GameObject player; 
     private GameObject explosion;
     public TornadoScript tornadoScript; 
+    public PhotoItem pi;
+    private string baseName;
+    private int baseSensation;
     //public Collider col;
 
     public bool canExplode;
@@ -28,35 +30,32 @@ public class TriggerExplosion : MonoBehaviour
 
     public int explosiveState;
     private int fixedControllerState;
+
     [HideInInspector]
-    public enum CurrentState
-    {
+    public enum CurrentState {
         IDLE,
         RESET,
         WAIT, 
         EXPLODE,
-        DESTROY, 
-        
+        DESTROY
     }
 
     public static CurrentState curState; 
 
-    private void Start()
-    {
+    private void Start() {
        // if (isVehicleTrigger) explosionDelayDuration = 0f;
         explosiveState = (int)CurrentState.IDLE;
-        explosionDelayTímer = explosionDelayDuration;
+        explosionDelayTimer = explosionDelayDuration;
         waitForResetTimer = waitForResetDuration;
 
         if (isActivationTrigger) gameObject.tag = "ActivationExplosive"; 
 
-
+        baseName = pi.tag;
+        baseSensation = pi.sensation;
     }
 
-    private void Update()
-    {
-        switch (explosiveState)
-        {
+    private void Update() {
+        switch (explosiveState) {
             case (int)CurrentState.IDLE:
                 CheckForTrigger(); 
                 break;
@@ -64,74 +63,64 @@ public class TriggerExplosion : MonoBehaviour
                 WaitForExplosion(); 
                 break;
             case (int)CurrentState.EXPLODE:
+                pi.tag = "EXPLOSION!";
+                pi.sensation = SensationScores.scores.explosionValue;
                 Explode(); 
                 break;
             case (int)CurrentState.RESET:
+                pi.tag = baseName;
+                pi.sensation = baseSensation;
                 ResetExplosive(); 
                 break;
         }
     }
 
-    private void CheckForTrigger()
-    {
+    private void CheckForTrigger() {
         //if (isPhotoTrigger) ;
         if (isActivationTrigger && hasBeenActivated && canExplode) explosiveState = (int)CurrentState.WAIT;
     }
 
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (isVehicleTrigger && other.gameObject.CompareTag("Player") && canExplode)
-        {
+    void OnTriggerEnter(Collider other) {
+        if (isVehicleTrigger && other.gameObject.CompareTag("Player") && canExplode) {
             // Player boosts through explosive object 
-            if (player.GetComponent<Boost>().isBoosting)
-            {
+            if (player.GetComponent<Boost>().isBoosting) {
                 explosiveState = (int)CurrentState.WAIT; 
-                
             }
         }
     }
 
-    void WaitForExplosion()
-    {
-        explosionDelayTímer -= Time.deltaTime;
+    void WaitForExplosion() {
+        explosionDelayTimer -= Time.deltaTime;
         canExplode = false; 
 
-        if (explosionDelayTímer <= 0)
-        {
-            explosionDelayTímer = explosionDelayDuration; 
+        if (explosionDelayTimer <= 0) {
+            explosionDelayTimer = explosionDelayDuration; 
             explosiveState = (int)CurrentState.EXPLODE;
         }
     }
           
 
-    public void Explode()
-    {            
+    public void Explode() {            
         explosion = Instantiate(explosionEffect, transform.position, transform.rotation);
-        
 
         Vector3 explosionPos = transform.position;
        
         Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
 
-        foreach (Collider hit in colliders)
-        {
+        foreach (Collider hit in colliders) {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             float knockAbleExplosionForce = 30000f;
             float carExplosionForce = 70000f; 
 
-            if (rb != null)
-            {
+            if (rb != null) {
                 //Launch a knockable 
-                if (hit.gameObject.CompareTag("Knockable"))
-                {
+                if (hit.gameObject.CompareTag("Knockable")) {
                     Knockable knockScript = hit.gameObject.GetComponent<Knockable>();
                  
-                    if (knockScript.canbeExploded)
-                    {
+                    if (knockScript.canbeExploded) {
                         //Release an object from the tornado
-                        if (knockScript.isInTornado)
-                        {
+                        if (knockScript.isInTornado) {
                             hit.gameObject.GetComponent<PulledByTornado>().ReleaseObject();
                             //PulledByTornado script = hit.gameObject.GetComponent<PulledByTornado>();
                           //  script.ReleaseObject(); 
@@ -140,19 +129,18 @@ public class TriggerExplosion : MonoBehaviour
 
                         //Add physics to object
                         knockScript.LaunchKnockAble(); 
+                        knockScript.Explode();
                         rb.velocity = new Vector3(0, 0, 0); 
                        // rb.AddExplosionForce(knockAbleExplosionForce, explosionPos, explosionRadius, 22);
                     }               
                 }
 
                 //Launch a civilian car
-                else if (hit.gameObject.CompareTag("CarCivilian"))
-                {
+                else if (hit.gameObject.CompareTag("CarCivilian")) {
                     CivilianAI civilianScript = hit.gameObject.GetComponent<CivilianAI>();
 
                     //Release an object from the tornado
-                    if (civilianScript.isInTornado)
-                    {
+                    if (civilianScript.isInTornado) {
                         hit.gameObject.GetComponent<PulledByTornado>().ReleaseObject();
                         civilianScript.isInTornado = false;
                     }
@@ -175,24 +163,18 @@ public class TriggerExplosion : MonoBehaviour
 
                 // Debug.Log(hit.gameObject.name +" | " + distanceModifier);
                 //Debug.Log(rb.velocity.magnitude + " | " + distanceModifier);
-                Debug.Log(dir * (explosionForce / distanceModifier)); 
-
-
-
+                //Debug.Log(dir * (explosionForce / distanceModifier)); 
             }
         }
 
-        if (canRetrigger)
-        {
+        if (canRetrigger) {
             waitForResetTimer = waitForResetDuration;
             explosiveState = (int)CurrentState.RESET;
         }
         else Destroy(this.gameObject); 
     }
 
-    
-    private void ResetExplosive()
-    {
+    private void ResetExplosive() {
         waitForResetTimer -= Time.deltaTime;
 
         if (waitForResetTimer <= 0)
@@ -203,8 +185,7 @@ public class TriggerExplosion : MonoBehaviour
         }        
     }
 
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow * .4f;
         Gizmos.DrawSphere(transform.position, explosionRadius);

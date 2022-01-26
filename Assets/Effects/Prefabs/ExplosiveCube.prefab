@@ -121,6 +121,7 @@ MonoBehaviour:
     type: 3}
   player: {fileID: 0}
   tornadoScript: {fileID: 0}
+  pi: {fileID: 962016333}
   canExplode: 1
   canRetrigger: 1
   isVehicleTrigger: 1
@@ -140,17 +141,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  staticTags: 
   specificOrientation: 0
   isKeyPoint: 0
   baseTag: Explosive
+  tag: 
   sensation: 0
   axisOffset: {x: 0, y: 0, z: 0}
   orientationViewCone: 70
   rayRange: 10
-  render: {fileID: 0}
+  render: {fileID: 879704329890226989}
   isComposite: 0
-  fetchMeshRendererAutomatically: 1
+  fetchMeshRendererAutomatically: 0
   fetchMeshRendererInValidate: 0
   keyPoints:
     list: []

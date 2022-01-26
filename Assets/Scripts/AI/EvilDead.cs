@@ -41,7 +41,12 @@ public class EvilDead : MonoBehaviour {
     public Transform leftEye;
     public Transform rightEye;
     public MeshRenderer eyeMeshr;
+    public ParticleSystem leftImpact, rightImpact;
+    public TrailRenderer leftTrail, rightTrail;
     public Material searchingEyeMat;
+    public PhotoItem pi;
+    private int baseSensation;
+    private string baseName;
     public Material angryEyeMat;
     public Light leftSpotlight;
     public Light rightSpotlight; 
@@ -68,26 +73,49 @@ public class EvilDead : MonoBehaviour {
         leftSpotlight.color = rightSpotlight.color = Color.yellow;
 
         parentName = hatObject.transform.parent.name; 
+        baseSensation = pi.sensation;
+        baseName = pi.tag;
     }
 
     private void Update() {
+        leftImpact.transform.position = leftTrail.transform.position = leftLaser.GetPosition(1);
+        rightImpact.transform.position = rightTrail.transform.position = rightLaser.GetPosition(1);
+
         switch (headState) {
             case CurrentState.DISABLED:          
                 break;
             case CurrentState.IDLE:
+                leftImpact.Stop();
+                rightImpact.Stop(); 
+                rightTrail.enabled = leftTrail.enabled = false;
+
+                pi.sensation = baseSensation;
+                pi.tag = baseName;
                 CheckForTarget(); 
                 lookPos.x = 0;
                 lookPos.y = 0;
                 lookPos.z += headRotationSpeed;
                 break;
             case CurrentState.LASER:
+                rightTrail.enabled = leftTrail.enabled = canLaser;
                 CheckForTarget();
-                if(canLaser) LaserTarget();
+                if(canLaser) {
+                    leftImpact.Play();
+                    rightImpact.Play();
+                    LaserTarget();
+                    pi.sensation = baseSensation + SensationScores.scores.angryHeadLaserValue;
+                    pi.tag = baseName + " lasers angrily!";
+                } else {
+                    leftImpact.Stop();
+                    rightImpact.Stop(); 
+                    pi.sensation = baseSensation + SensationScores.scores.angryHeadBoostValue;
+                    pi.tag = baseName + " is angry!";
+                }
                 break; 
         }
 
         var tiltDest = Quaternion.Euler(0, 0, 0);
-        if(headState == CurrentState.LASER) {
+        if(headState == CurrentState.LASER && target != null) {
             Vector3 direction = target.position - transform.position;
             Quaternion toRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation * Quaternion.Euler(offset), lerpDuration * Time.deltaTime);

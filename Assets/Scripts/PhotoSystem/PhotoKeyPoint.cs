@@ -44,13 +44,10 @@ public class PhotoKeyPoint : PhotoBase {
 
 public abstract class PhotoBase : MonoBehaviour {
     [ReadOnly] public bool active = true;
-    [ReadOnly] public string staticTags;
     public bool specificOrientation = false; 
     [HideInInspector] public bool isKeyPoint = false;
-    public string baseTag;
-    public string tags {
-        get; private set;
-    }
+    [SerializeField] private string baseTag;
+    [HideInInspector] public string tag;
     public int sensation = 0;
 
     [ConditionalHide("specificOrientation", true)] public Vector3 axisOffset = new Vector3(0, 0, 0);
@@ -58,16 +55,13 @@ public abstract class PhotoBase : MonoBehaviour {
     [ConditionalHide("specificOrientation", true)] public float rayRange = 10.0f;
 
     public void Start() {
-        tags = tags = staticTags = baseTag;
+        tag = baseTag;
     }
-
-    public void AddTag(string i) {
-        string add = i.Trim();
-        tags += add + " ";
+    public void AppendTag(string i) {
+        tag = baseTag + " " + i;
     }
-
-    public void OverwriteTag(string i) {
-        tags = i;
+    public void ResetTag() {
+        tag = baseTag;
     }
 
     public bool InOrientation(Vector3 pos) {

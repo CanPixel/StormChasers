@@ -7,20 +7,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
 
 public class CameraCanvas : MonoBehaviour {
-    public LayerMask raycastLayerMask;
-    public float raycastRadius = 3;
     public float maxDistance = 300;
 
     private UnityEngine.Rendering.PostProcessing.DepthOfField dof;
     private UnityEngine.Rendering.PostProcessing.MotionBlur motionBlur;
     private float focusInput;
     private float sensitivityValue = 1;
-
-   // [Header("Motion Blur Reticle")]
-/*     public float movementDamping = 2f;
-    public float movementRange = 400f, movementSensitivityThreshold = 0.2f;
-    public Vector2 motionBlurRange = new Vector2(180, 360);
-    public float motionReticleSensitivity = 1.5f; */
 
     [Header("Focus")]
     private float focalLength = 110;
@@ -40,7 +32,7 @@ public class CameraCanvas : MonoBehaviour {
     public PostProcessVolume postProcessVolume;
     public Slider focusMeter;
     public Text highlightedObjectText;
-    public Image baseReticle, movementReticle;
+    public Image baseReticle;
     public Outline focusMeterOutline;
     public Outline focusMeterImg;
 

@@ -41,7 +41,6 @@ MonoBehaviour:
   m_Name: Dreamy
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: 114934171140021752}
   - {fileID: 114419164644194910}
   - {fileID: 114558044928625268}
   - {fileID: -8787981484510126891}
@@ -1401,53 +1400,6 @@ MonoBehaviour:
   opacity:
     overrideState: 0
     value: 1
---- !u!114 &114934171140021752
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
-  m_Name: Bloom
-  m_EditorClassIdentifier: 
-  active: 0
-  enabled:
-    overrideState: 1
-    value: 1
-  intensity:
-    overrideState: 1
-    value: 17.44
-  threshold:
-    overrideState: 1
-    value: 1
-  softKnee:
-    overrideState: 1
-    value: 0.439
-  clamp:
-    overrideState: 0
-    value: 65472
-  diffusion:
-    overrideState: 1
-    value: 7
-  anamorphicRatio:
-    overrideState: 0
-    value: 0
-  color:
-    overrideState: 0
-    value: {r: 0, g: 1, b: 0.9937358, a: 1}
-  fastMode:
-    overrideState: 1
-    value: 1
-  dirtTexture:
-    overrideState: 0
-    value: {fileID: 0}
-    defaultState: 1
-  dirtIntensity:
-    overrideState: 0
-    value: 0
 --- !u!114 &5810916526443523007
 MonoBehaviour:
   m_ObjectHideFlags: 3

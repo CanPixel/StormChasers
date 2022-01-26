@@ -45,7 +45,7 @@ public class Drain : MonoBehaviour {
         powParticle.transform.position = powBasePos + playerDir * powOffset;
 
         nudger.enabled = shouldNudgeAI;
-        drainPhoto.OverwriteTag((triggered) ? "flyingdrain" : "");
+        drainPhoto.tag = ((triggered) ? "flyingdrain" : "");
     }
 
     public void Detrigger() {

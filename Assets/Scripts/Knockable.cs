@@ -8,6 +8,8 @@ public class Knockable : MonoBehaviour {
     public bool knockableByShark = false;
     public bool addKnockedTag = true;
     private PhotoItem photoItem;
+    private string baseName;
+    private int baseSensation;
     
     public bool canbeExploded = true;
     public bool isInTornado = false; 
@@ -26,6 +28,10 @@ public class Knockable : MonoBehaviour {
 	    rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         isInTornado = false; 
+        
+        if(photoItem == null) return;
+        baseSensation = photoItem.sensation;
+        baseName = photoItem.tag;
     }
 
     private void FixedUpdate() {
@@ -39,6 +45,8 @@ public class Knockable : MonoBehaviour {
                 if (col.gameObject.GetComponent<Rigidbody>().velocity.magnitude > 5f) {
                     collidedObject = col.gameObject;
                     LaunchKnockAble();
+
+                    if(col.gameObject.tag == "Rhino") col.gameObject.GetComponent<RhinoAI>().BoostSensation();
                 }
             }
         }
@@ -67,7 +75,6 @@ public class Knockable : MonoBehaviour {
         rb.useGravity = true;
         onKnockPlayer.Invoke();
         onKnock.Invoke();
-        
 
         if (collidedObject != null) {
             if (collidedObject.gameObject.tag == "Player") rb.AddForce(collidedObject.gameObject.GetComponent<Rigidbody>().velocity * 25f);
@@ -75,10 +82,15 @@ public class Knockable : MonoBehaviour {
         }
 
         if(addKnockedTag && photoItem != null) {
-            photoItem.OverwriteTag("knocked");
-            photoItem.sensation = 15;
+            photoItem.tag = "Knocked " + baseName;
+            photoItem.sensation = baseSensation + SensationScores.scores.knockableValue;
         }
-
         collidedObject = null; 
+    }
+
+    public void Explode() {
+        if(photoItem == null) return;
+        photoItem.tag = "Blasted tree!";
+        photoItem.sensation = SensationScores.scores.knockableValue + 20;
     }
 }

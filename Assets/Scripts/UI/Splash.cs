@@ -10,6 +10,8 @@ public class Splash : MonoBehaviour {
 
     public float duration;
     private float time = 0;
+    public float rotAmp = 0;
+    public float rotSpeed = 3f;
 
     public Vector3 targetScale;
 
@@ -25,6 +27,8 @@ public class Splash : MonoBehaviour {
             markForDestroy = true;
             targetScale = Vector3.one * -0.1f;
         }
+
+        transform.localEulerAngles = new Vector3(0, 0, Mathf.Sin(Time.time * rotSpeed) * rotAmp);
 
         if(DestroyAfterDuration && markForDestroy && transform.localScale.x <= 0) ManualDestroy();
     }
