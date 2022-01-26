@@ -35,6 +35,7 @@ public class LockOnSystem : MonoBehaviour {
     private static LockOnSystem self;
 
     public static void DeletePhotoItem(PhotoItem i) {
+        if (i == null) return; 
         self.allTargets.Remove(i);
     }    
 

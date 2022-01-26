@@ -208,6 +208,7 @@ public class EvilDead : MonoBehaviour {
     }
 
     public void LaserTarget() {
+        if (target == null) return; 
         Vector3 laserOffsetV = new Vector3(laserOffset, 0, 0);
 
         leftEye.LookAt(target);

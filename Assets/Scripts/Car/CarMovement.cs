@@ -14,7 +14,7 @@ public class CarMovement : MonoBehaviour {
     public float maxSpeedCap = 110;
 
     public Transform carMesh;
-    public DialogSystem dialogSystem;
+   // public DialogSystem dialogSystem;
     public CameraControl camControl;
     public CameraCanvas camCanvas;
     public Boost boostScript;
@@ -115,23 +115,13 @@ public class CarMovement : MonoBehaviour {
     }
     public void OnJump(InputValue val)
     {
-        if (camControl.journal && val.Get<float>() >= 0.5f)
-        {
-            camControl.JournalSelect();
-            return;
-        }
+       
         jump = val.Get<float>();
         if (jump >= 0.5f && Physics.Raycast(transform.position, -transform.up, jumpCheckHeight)) Jump();
     }
     public void OnBoost(InputValue val)
     {
-        var valu = val.Get<float>();
-        if (camControl.journal && valu >= 0.5f)
-        {
-            if (camControl.photobook) camControl.ShowJournalBaseScreen();
-            else camControl.journal = false;
-            return;
-        }
+        var valu = val.Get<float>();     
         Boost(valu);
     }
 
@@ -161,7 +151,6 @@ public class CarMovement : MonoBehaviour {
 
         camControl.camSystem.aim = ding;
         if (camControl.camSystem.aim >= 0.5f) {
-            camControl.ShowJournalBaseScreen();
             camControl.journal = camControl.photobook = false;
             camControl.AnimateCameraMascotte();
             SoundManager.PlayUnscaledSound("CamMode", 2f);
@@ -175,29 +164,15 @@ public class CarMovement : MonoBehaviour {
     public void OnCameraShoot(InputValue val) {
         if (camControl == null) return;
         camControl.camSystem.shoot = val.Get<float>();
-        if (camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
+      //  if (camControl.camSystem.shoot >= 0.4f && camControl.camSystem.aim <= 0.3f) dialogSystem.CompleteTypewriterSentence();
     }
 
     /* PhotoBook / Portfoio */
     public void OnPhotoBook(InputValue val) {
-        if (camControl == null || camControl.camSystem.aim >= 0.4f) {
-            camControl.journal = camControl.photobook = false;
-            return;
-        }
-        if (val.Get<float>() >= 0.5f) {
-            camControl.journal = !camControl.journal;
-            if (camControl.journal) camControl.OpenJournal();
-            else camControl.ShowJournalBaseScreen();
-        }
+      
     }
     public void OnScrollPortfolio(InputValue val) {
-        if (camControl == null || !camControl.journal) return;
-        var v = val.Get<Vector2>();
-        if (v != Vector2.zero)
-        {
-            if (!camControl.photobook) camControl.JournalScroll(v);
-            else camControl.PortfolioSelection(v);
-        }
+     
     }
     public void OnDiscardPicture(InputValue val) {
         if (camControl == null || !camControl.journal || !camControl.photobook) return;

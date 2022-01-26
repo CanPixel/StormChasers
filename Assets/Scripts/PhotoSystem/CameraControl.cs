@@ -8,14 +8,15 @@ using UnityEngine.UI;
 using Cinemachine.PostFX;
 using System.Linq;
 
-public class CameraControl : MonoBehaviour {
+public class CameraControl : MonoBehaviour
+{
     public GameObject[] enableOnFirstPerson, disableOnFirstPerson;
     public Graphic[] fadeOnFirstPerson;
     private Color[] baseAlphaFirstPersonFade;
     public CameraSystem camSystem;
 
     [Header("On Picture Shot")]
-    public AnimationCurve pictureShotAlphaFade = AnimationCurve.Linear(0,  1, 1, 0);
+    public AnimationCurve pictureShotAlphaFade = AnimationCurve.Linear(0, 1, 1, 0);
     public float pictureDelayUntilNext = 1;
     private float pictureShotTimer = 0;
 
@@ -46,7 +47,8 @@ public class CameraControl : MonoBehaviour {
     public float slowMotionDamping = 3f;
     public float slowMotionTime = 0.25f;
 
-    public enum CameraState {
+    public enum CameraState
+    {
         CARVIEW = 0, CAMVIEW
     }
     [HideInInspector] public CameraState cameraState = CameraState.CARVIEW;
@@ -58,11 +60,12 @@ public class CameraControl : MonoBehaviour {
     public AnimationCurve yPosOffs;
 
     [System.Serializable]
-    public class ObjectProperties {
+    public class ObjectProperties
+    {
         public Screenshot screenshot;
 
         public List<ObjectProperties> subScore = new List<ObjectProperties>();
-        
+
         public string name;
         public bool onScreen;
         public float physicalDistance;
@@ -70,26 +73,28 @@ public class CameraControl : MonoBehaviour {
         public float focus, motion;
         public float objectSharpness;
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return "[" + name + "]  || Center Frame: " + centerFrame + " || Motion Stability: " + motion + " || Sharpness: " + objectSharpness + " [Focus: " + focus + ", PhysDist: " + physicalDistance + "]";
         }
     }
 
     [System.Serializable]
-    public class Screenshot {
+    public class Screenshot
+    {
         public string name;
         public Texture2D image;
         public GameObject portfolioObj;
         [HideInInspector] public Image polaroidFrame;
         [HideInInspector] public Color baseColor = new Color(0.9f, 0.9f, 0.9f, 1);
         public bool forMission = false;
-        //[HideInInspector] public MissionManager.Mission missionReference;
 
         public PicturedObject[] picturedObjects;
         public string containedObjectTags;
 
         [System.Serializable]
-        public class PicturedObject {
+        public class PicturedObject
+        {
             public string tag;
             public PhotoBase objectReference;
 
@@ -97,7 +102,8 @@ public class CameraControl : MonoBehaviour {
 
             public ObjectProperties score;
 
-            public PicturedObject(string tag, PhotoBase reference) {
+            public PicturedObject(string tag, PhotoBase reference)
+            {
                 this.tag = tag;
                 this.objectReference = reference;
             }
@@ -106,7 +112,8 @@ public class CameraControl : MonoBehaviour {
         [Range(0, 100)]
         public int score = 0;
 
-        public static Screenshot Create(string name, Texture2D sprite) {
+        public static Screenshot Create(string name, Texture2D sprite)
+        {
             Screenshot screen = new Screenshot();
             screen.name = name;
             screen.image = sprite;
@@ -115,11 +122,13 @@ public class CameraControl : MonoBehaviour {
     }
 
     [System.Serializable]
-    public class CameraSystem {
+    public class CameraSystem
+    {
         [ReadOnly] public float aim, shoot;
 
         [System.Serializable]
-        public class ShaderFilter {
+        public class ShaderFilter
+        {
             public string name;
             public PostProcessProfile profile;
             public Sprite icon;
@@ -129,7 +138,8 @@ public class CameraControl : MonoBehaviour {
 
         [HideInInspector] public int filterIndex = 0;
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return "Aim: " + aim + " || Shoot: " + shoot;
         }
     }
@@ -152,7 +162,7 @@ public class CameraControl : MonoBehaviour {
     public Text scoreCounter;
     private int totalScore = 0;
     public Cinemachine.CinemachineBrain cinemachineBrain;
-    public GameObject journalUI, photoBookUI, polaroidPrefab;
+    public GameObject photoBookUI, polaroidPrefab;
     public GameObject cameraMascotte;
     public SpriteRenderer missionPicture;
     public Transform photoBookScrollPanel;
@@ -169,19 +179,7 @@ public class CameraControl : MonoBehaviour {
     public RatingSystem ratingSystem;
     [SerializeField] private InputActionReference cameraAimButton;
 
-    public GameObject journalMissionPrefab;
-    public GameObject journalSelection, journalPictureDeliveredPanel;
-    public Outline journalSelectionOutline;
-    public GameObject journalInfoSelectedBG;
-    public GameObject baseJournalButtons, aMissionSelectButton;
-    public Image pictureDelivered;
-    public GameObject journalControl;
-    public GameObject markPictureButton, discardPictureButton;
-    public GameObject missionListOverlay;
     public GameObject yInfoButton;
-    public Text openMissionText, completedMissionText;
-    public Transform missionContentParent, missionPanelContentParent;
-    public Text missionDescription, markButtonText; 
 
     public GameObject shaders;
     public ShaderReel shaderReel;
@@ -199,7 +197,8 @@ public class CameraControl : MonoBehaviour {
     private float takePictureDelay = 0;
 
     [System.Serializable]
-    public class JournalMission {
+    public class JournalMission
+    {
         public GameObject journalElement;
         public Text journalTitle;
         public Sprite finalPicture;
@@ -210,18 +209,13 @@ public class CameraControl : MonoBehaviour {
 
     private float portfolioPictureBaseScale, portfolioTargetY = 0;
 
-    void OnDisable() {
-        //foreach(var i in screenshots) Destroy(i.image);
-        //screenshots.Clear();
-    } 
-
-    void Start() {
+    void Start()
+    {
         pov = firstPersonLook.GetCinemachineComponent<Cinemachine.CinemachinePOV>();
         orbitalTransposer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineOrbitalTransposer>();
         composer = thirdPersonLook.GetCinemachineComponent<Cinemachine.CinemachineComposer>();
         baseScreenY = composer.m_ScreenY;
-        foreach(var i in enableOnFirstPerson) i.SetActive(false); 
-        missionPanelContentParent.gameObject.SetActive(false);
+        foreach (var i in enableOnFirstPerson) i.SetActive(false);
 
         baseFollowOffset = orbitalTransposer.m_FollowOffset;
         baseZDamping = orbitalTransposer.m_ZDamping;
@@ -235,7 +229,7 @@ public class CameraControl : MonoBehaviour {
         portfolioPictureBaseScale = polaroidPrefab.transform.localScale.x;
 
         baseAlphaFirstPersonFade = new Color[fadeOnFirstPerson.Length];
-        for(int i = 0; i < fadeOnFirstPerson.Length; i++) baseAlphaFirstPersonFade[i] = fadeOnFirstPerson[i].color;
+        for (int i = 0; i < fadeOnFirstPerson.Length; i++) baseAlphaFirstPersonFade[i] = fadeOnFirstPerson[i].color;
 
         ratingSystem.gameObject.SetActive(true);
 
@@ -243,19 +237,15 @@ public class CameraControl : MonoBehaviour {
         missionPicture.gameObject.SetActive(false);
         photobook = false;
 
-        journalInfoSelectedBG.SetActive(false);
         photoBookUI.SetActive(false);
-        journalSelectionOutline.enabled = false;
-        markPictureButton.SetActive(false);
-        discardPictureButton.SetActive(false);
-        missionListOverlay.SetActive(false);
     }
 
     private float cameraMascotteBackLook = 0;
-    void Update() {
+    void Update()
+    {
         scoreCounter.text = totalScore.ToString();
 
-        if(takePictureDelay > 0) takePictureDelay -= Time.unscaledDeltaTime;
+        if (takePictureDelay > 0) takePictureDelay -= Time.unscaledDeltaTime;
 
         minimapCamera.transform.position = new Vector3(transform.position.x, minimapCamBaseY, transform.position.z);
         minimapCamera.transform.rotation = Quaternion.Euler(minimapCamBaseAngle, transform.eulerAngles.y, 0);
@@ -263,202 +253,58 @@ public class CameraControl : MonoBehaviour {
         pictureShotTimer += Time.unscaledDeltaTime;
         pictureShotOverlay.color = new Color(pictureShotOverlay.color.r, pictureShotOverlay.color.g, pictureShotOverlay.color.b, pictureShotAlphaFade.Evaluate(pictureShotTimer));
 
-        if(isLookingBack) RecenterY();
-
-/*         if(deliverTo != null && deliverPicture != null) {
-            deliverTime += Time.deltaTime;
-
-            deliverPicture.transform.localScale = Vector3.Lerp(deliverPicture.transform.localScale, Vector3.zero, Time.deltaTime * 1f);
-            deliverPicture.transform.position = Vector3.Lerp(deliverPicture.transform.position, deliverTo.position, Time.deltaTime * 1.5f);
-            if(deliverTime > 1) {
-                Destroy(deliverPicture);
-                //missionManager.Deliver();
-            }
-        } */
+        if (isLookingBack) RecenterY();
 
         /* Blending Shaders */
         float blendTarget;
-        if(cinemachineBrain.IsLive(firstPersonLook) || cinemachineBrain.IsBlending) blendTarget = 1;
+        if (cinemachineBrain.IsLive(firstPersonLook) || cinemachineBrain.IsBlending) blendTarget = 1;
         else blendTarget = -0.1f;
         blend = Mathf.Lerp(blend, blendTarget, Time.unscaledDeltaTime * 8f);
         cameraCanvas.postProcessVolume.weight = blend;
-
-        journalUI.SetActive(journal);
 
         /* SlowMo */
         Time.timeScale = Mathf.Lerp(Time.timeScale, IsAiming() ? slowMotionTime : 1.0f, Time.unscaledDeltaTime * slowMotionDamping * (!IsAiming() ? 4f : 1f));
         SoundManager.SlowMo();
 
-/*         if(recenterTime > 0 && Mathf.Abs(orbitalTransposer.m_XAxis.Value) > 1) {
-            recenterTime -= Time.deltaTime * 2f;
-            orbitalTransposer.m_XAxis.Value = Mathf.Lerp(orbitalTransposer.m_XAxis.Value, 0, Time.deltaTime * 6f);
-            composer.m_ScreenY = Mathf.Lerp(composer.m_ScreenY, baseScreenY, Time.deltaTime * 6f); 
-        } */
+        /*         if(recenterTime > 0 && Mathf.Abs(orbitalTransposer.m_XAxis.Value) > 1) {
+                    recenterTime -= Time.deltaTime * 2f;
+                    orbitalTransposer.m_XAxis.Value = Mathf.Lerp(orbitalTransposer.m_XAxis.Value, 0, Time.deltaTime * 6f);
+                    composer.m_ScreenY = Mathf.Lerp(composer.m_ScreenY, baseScreenY, Time.deltaTime * 6f); 
+                } */
         //if(carMovement.GetLooking().magnitude >= 0.65f && recenterTime > 0) recenterTime = 0;
 
         orbitalTransposer.m_RecenterToTargetHeading.m_RecenteringTime = (100f - carMovement.rb.velocity.magnitude) / recenterVelocityFactor;
 
-        if(IsAiming()) FirstPersonLook();
+        if (IsAiming()) FirstPersonLook();
         else ThirdPersonLook();
-        for(int i = 0; i < fadeOnFirstPerson.Length; i++) fadeOnFirstPerson[i].color = Color.Lerp(fadeOnFirstPerson[i].color, new Color(fadeOnFirstPerson[i].color.r, fadeOnFirstPerson[i].color.g, fadeOnFirstPerson[i].color.b, (IsAiming() ? 0 : baseAlphaFirstPersonFade[i].a)), Time.unscaledDeltaTime * 8f);
+        for (int i = 0; i < fadeOnFirstPerson.Length; i++) fadeOnFirstPerson[i].color = Color.Lerp(fadeOnFirstPerson[i].color, new Color(fadeOnFirstPerson[i].color.r, fadeOnFirstPerson[i].color.g, fadeOnFirstPerson[i].color.b, (IsAiming() ? 0 : baseAlphaFirstPersonFade[i].a)), Time.unscaledDeltaTime * 8f);
 
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
-    
+
         /* PhotoBook / Portfolio */
         photoBookCapacity.text = screenshots.Count + "/" + maxPhotosInPortfolio;
         photoBookSelection.enabled = screenshots.Count > 0;
-        if(screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count) {
+        if (screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count)
+        {
             var screen = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform;
             photoBookSelection.transform.position = screen.position;
             screen.localScale = Vector3.Lerp(screen.localScale, Vector3.one, Time.unscaledDeltaTime * 10f);
             photoBookSelection.transform.localScale = screen.localScale;
         }
-        
+
         currentSelectedPortfolioPhoto = Mathf.Clamp(currentSelectedPortfolioPhoto, 0, Mathf.Clamp(screenshots.Count - 1, 0, screenshots.Count));
         portfolioTargetY = currentSelectedPortfolioPhoto * portfolioPictureSpacing - portfolioPictureYOffs;
 
-        if(journal) {
-            if(journalMissions.Count > 0) journalSelection.transform.position = Vector3.Lerp(journalSelection.transform.position, new Vector3(journalSelection.transform.position.x, journalMissions[journalSelectedMission].journalElement.transform.position.y, journalSelection.transform.position.z), Time.unscaledDeltaTime * 16f);
-            foreach(var jM in journalMissions) jM.journalTitle.color = (jM.active/*  && !jM.mission.delivered*/) ? activeMissionColor : inactiveMissionColor;
-            photoBookScrollPanel.localPosition = Vector3.Lerp(photoBookScrollPanel.localPosition, new Vector3(photoBookScrollPanel.localPosition.x, portfolioTargetY, photoBookScrollPanel.localPosition.z), Time.unscaledDeltaTime * 12f);
-        }
         cycleFilterYButton.SetActive(!journal && camSystem.aim >= 0.5f);
         shaders.SetActive(camSystem.aim >= 0.5f);
-        journalSelection.SetActive(journalMissions.Count > 0);
-        journalControl.SetActive(journalMissions.Count > 0);
-        //markPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null && screenshots[currentSelectedPortfolioPhoto].forMission);
-        discardPictureButton.SetActive(screenshots.Count > 0 && screenshots[currentSelectedPortfolioPhoto] != null);
-        //yInfoButton.SetActive(screenshots.Count > 0);
-        //markButtonText.text = ((markedScreenshot != null) ? "RETRACT" : "SUBMIT");
-        //aMissionSelectButton.SetActive(journalMissions.Count > 0 && !journalMissions[journalSelectedMission].mission.delivered && !journalMissions[journalSelectedMission].active);
     }
 
-    public void OpenJournal() {
-        JournalScroll();
-    }
+    public void MarkPicture()
+    {
+        if (currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
 
-/*     private void ShowMissionInfo(MissionManager.Mission mission) {
-        missionPanelContentParent.gameObject.SetActive(mission != null);
-        if(mission != null) {
-            journalPictureDeliveredPanel.SetActive(mission.delivered);
-            yInfoButton.SetActive(!mission.delivered);
-
-            missionDescription.text = mission.name;
-            foreach(var i in missionRequirement) i.Disable();
-            for(int i = 0; i < missionRequirement.Length; i++) {
-                if(mission.objectives == null) break;
-                if(mission.objectives.Length <= i) continue;
-                if(mission.objectives[i].show) missionRequirement[i].Load(mission.objectives[i]);
-                if(mission.objectives[i].finished) missionRequirement[i].Clear();
-            }
-        }
-    } */
-
-/*     public void ForceSelect(MissionManager.Mission miss) {
-        for(int i = 0; i < journalMissions.Count; i++) {
-            if(journalMissions[i].mission == miss) {
-                journalSelectedMission = i;
-                JournalSelect();
-                JournalScroll();
-                return;
-            }
-        }
-    } */
-
-    public void JournalSelect() {
-        if(photobook) {
-            MarkPicture();
-            return;
-        }
-
-        if(/* journalMissions[journalSelectedMission].mission.delivered ||*/ journalMissions[journalSelectedMission].active) return;
-
-        foreach(var i in journalMissions) {
-            i.active = false;
-            if(i == journalMissions[journalSelectedMission]) i.active = true;
-        }
-        //missionManager.SetCurrentMission(journalMissions[journalSelectedMission].mission, true);
-        //if(journalMissions[journalSelectedMission].mission.objectives != null) for(int i = 0; i < journalMissions[journalSelectedMission].mission.objectives.Length; i++) missionManager.MarkCurrentObjective(i, journalMissions[journalSelectedMission].mission.objectives[i].finished);
-    }
-    public void ShowJournalInfo() {
-        if(!journal || journalMissions.Count <= 0 /* || journalMissions[journalSelectedMission].mission.delivered*/ || screenshots.Count <= 0) return;
-        journalSelectionOutline.enabled = true;
-        missionListOverlay.SetActive(true);
-
-        if(!photobook) {
-            photobook = true;
-            baseJournalButtons.SetActive(false);
-            photoBookUI.SetActive(true);
-        }
-        journalInfoSelectedBG.SetActive(true);
-    }
-    public void ShowJournalBaseScreen() {
-        missionListOverlay.SetActive(false);
-        journalSelectionOutline.enabled = false;
-        baseJournalButtons.SetActive(true);
-        journalInfoSelectedBG.SetActive(false);
-        photoBookUI.SetActive(false);
-        photobook = false;
-    }
-/*     public void JournalMarkObjective(int objectiveIndex) {
-        journalMissions[journalSelectedMission].mission.objectives[objectiveIndex].finished = true;
-        if(objectiveIndex < missionRequirement.Length) missionRequirement[objectiveIndex].Clear();
-    } */
-/*     public void JournalFinish(MissionManager.Mission miss) {
-         for(int i = 0; i < journalMissions.Count; i++) 
-            if(journalMissions[i].mission == miss) {
-                journalMissions[i].mission.delivered = true;
-                journalMissions[i].journalElement.transform.SetAsLastSibling();
-                completedMissions++;
-                return;
-            }
-    } */
-
-/*     public void JournalReorient() {
-        for(int i = 0; i < journalMissions.Count; i++) {
-            var jm = journalMissions[i].journalElement;
-            var miss = journalMissions[i].mission;
-            if(miss.delivered) jm.transform.SetAsLastSibling();
-            else jm.transform.SetSiblingIndex(1);
-        } 
-    } */
-
-    public void JournalScroll(Vector2 i) {
-        if(completedMissions > 0) i *= -1;
-
-        missionPanelContentParent.gameObject.SetActive(journalMissions.Count > 0);
-        journalSelectedMission = (int)(journalSelectedMission + i.y);
-        journalSelectedMission = Mathf.Clamp(journalSelectedMission, 0, journalMissions.Count - 1);
-        JournalScroll();
-    }
-    public void JournalScroll() {
-        if(journalSelectedMission > journalMissions.Count || journalMissions.Count <= 0) return;
-        //if(journalMissions.Count > 0 && journalMissions[journalSelectedMission] != null) ShowMissionInfo(journalMissions[journalSelectedMission].mission);
-        pictureDelivered.sprite = journalMissions[journalSelectedMission].finalPicture;
-    }
-   /*  public void AddMissionToJournal(MissionManager.Mission miss) {
-        var obj = Instantiate(journalMissionPrefab);
-        obj.transform.SetParent(missionContentParent);
-        obj.transform.localScale = Vector3.one * 0.85f;
-        obj.transform.SetSiblingIndex(1);
-
-        var jM = new JournalMission();
-        jM.journalElement = obj;
-        jM.mission = miss;
-        jM.journalTitle = obj.GetComponentInChildren<Text>();
-        jM.journalTitle.text = miss.name;
-        if(journalMissions.Count <= 0) jM.active = true;
-        journalMissions.Add(jM);
-        JournalScroll();
-
-        JournalReorient();
-    } */
-
-    public void MarkPicture() {
-        if(currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
-
-        //Already marked
-        if(AlreadyMarked()) {
+        if (AlreadyMarked())
+        {
             UnmarkPicture();
             return;
         }
@@ -467,23 +313,21 @@ public class CameraControl : MonoBehaviour {
         missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
         missionPicture.transform.localScale = basePicScale * physPicScale;
         missionPicture.gameObject.SetActive(true);
-        //missionManager.MarkForCurrentMission(true);
-        //missionManager.ShowReadyForMark(false);
         markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
     }
-    public void UnmarkPicture() {
+    public void UnmarkPicture()
+    {
         missionPicture.sprite = null;
         missionPicture.gameObject.SetActive(false);
-        //missionManager.MarkForCurrentMission(false);
-        //missionManager.ShowReadyForMark(true);
         Destroy(missionPicture.sprite);
-        if(screenshots.Count <= 0 || currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null) return;
+        if (screenshots.Count <= 0 || currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null) return;
         screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
         markedScreenshot = null;
     }
-    public void DiscardPicture() {
-        if(currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || screenshots.Count <= 0) return;
-        var obj = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
+    public void DiscardPicture()
+    {
+        if (currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || screenshots.Count <= 0) return;
+        var obj = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10, 0, 0));
         obj.GetComponent<Rigidbody>().AddForce(Vector3.up * DiscardForce * 50f);
         obj.transform.localScale = Vector3.one * 0.15f;
         obj.GetComponent<SpriteRenderer>().sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
@@ -495,11 +339,13 @@ public class CameraControl : MonoBehaviour {
         UnmarkPicture();
         //missionManager.ShowReadyForMark(false);
     }
-    protected bool AlreadyMarked() {
+    protected bool AlreadyMarked()
+    {
         return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
     }
 
-    public void DeliverReset() {
+    public void DeliverReset()
+    {
         deliverTime = 0;
         deliverPicture = null;
     }
@@ -507,10 +353,11 @@ public class CameraControl : MonoBehaviour {
     private GameObject deliverPicture = null;
     private Transform deliverTo;
     private float deliverTime = 0;
-    public void DeliverPicture(Transform pos) {
-        if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
+    public void DeliverPicture(Transform pos)
+    {
+        if (screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
-        deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
+        deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10, 0, 0));
         var rb = deliverPicture.GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * DiscardForce * 50f);
         rb.useGravity = false;
@@ -519,66 +366,36 @@ public class CameraControl : MonoBehaviour {
 
         deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
         journalMissions[journalSelectedMission].finalPicture = spr;
-        ShowJournalBaseScreen();
-        
+
         DeletePicture(currentSelectedPortfolioPhoto, false);
         currentSelectedPortfolioPhoto = 0;
         UnmarkPicture();
-        
+
         journal = false;
         deliverTo = pos;
         deliverTime = 0;
     }
 
-/*     protected JournalMission FindMissionInJournal(MissionManager.Mission miss) {
-        foreach(var i in journalMissions) {
-            if(i.mission == miss) return i;
-        }
-        return null;
-    } */
-
     private Sprite lastMissionSprite;
-    /* public void DeliverPicture(MissionManager.Mission miss, Transform dest) {
-        if(screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
-
-        deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10,0,0));
-        var rb = deliverPicture.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.up * DiscardForce * 100f);
-        rb.AddTorque(new Vector3(-1, 2, 1) * 10000f);
-        deliverPicture.transform.localScale = Vector3.one * 0.15f;
-
-        var journalInstance = new Texture2D(resWidth, resHeight);
-        journalInstance.SetPixels(screenshots[currentSelectedPortfolioPhoto].image.GetPixels());
-        journalInstance.Apply();
-
-        var spr = Sprite.Create(journalInstance, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
-        deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
-        
-        journalMissions[journalSelectedMission].finalPicture = lastMissionSprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
-        ShowJournalBaseScreen();
-
-        MarkPicture();
-        
-        journal = false;
-        if(dest != null) deliverTo = dest;
-        deliverTime = 0;
-    } */
 
     private bool isLookingBack = false;
-    public void BackLook(bool lookBack) {
+    public void BackLook(bool lookBack)
+    {
         backLook.m_Priority = (lookBack) ? 15 : 2;
         isLookingBack = lookBack;
     }
 
-    protected bool IsAiming() {
+    protected bool IsAiming()
+    {
         return camSystem.aim >= 0.5f;
     }
 
-    public void CycleFilters(float add) {
+    public void CycleFilters(float add)
+    {
         camSystem.filterIndex += (int)add;
-        if(camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
-        if(camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
-        
+        if (camSystem.filterIndex >= camSystem.shaderFilters.Length) camSystem.filterIndex = 0;
+        if (camSystem.filterIndex < 0) camSystem.filterIndex = camSystem.shaderFilters.Length - 1;
+
         cameraCanvas.postProcessVolume.sharedProfile = camSystem.shaderFilters[camSystem.filterIndex].profile;
         shaderReel.current = camSystem.filterIndex;
         cameraCanvas.ReloadFX();
@@ -588,36 +405,42 @@ public class CameraControl : MonoBehaviour {
     }
 
     private bool canTakePicture = true;
-    protected void FirstPersonLook() {
-        if(cinemachineBrain.IsLive(firstPersonLook)) {
-            if(!cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
-            else cam.cullingMask = midPersonCull; 
-        } else cam.cullingMask = thirdPersonCull;
+    protected void FirstPersonLook()
+    {
+        if (cinemachineBrain.IsLive(firstPersonLook))
+        {
+            if (!cinemachineBrain.IsBlending) cam.cullingMask = firstPersonCull;
+            else cam.cullingMask = midPersonCull;
+        }
+        else cam.cullingMask = thirdPersonCull;
 
         firstPersonLook.Priority = 16;
         thirdPersonLook.Priority = 10;
 
-        if(cameraState != CameraState.CAMVIEW) {
-            foreach(var i in enableOnFirstPerson) i.SetActive(true); 
-            foreach(var i in disableOnFirstPerson) i.SetActive(false); 
+        if (cameraState != CameraState.CAMVIEW)
+        {
+            foreach (var i in enableOnFirstPerson) i.SetActive(true);
+            foreach (var i in disableOnFirstPerson) i.SetActive(false);
             cameraState = CameraState.CAMVIEW;
         }
 
         SynchTransposer();
 
-        if(camSystem.shoot < 0.4f) canTakePicture = true;
-        if(camSystem.shoot >= 0.5f && canTakePicture) TakePicture();
+        if (camSystem.shoot < 0.4f) canTakePicture = true;
+        if (camSystem.shoot >= 0.5f && canTakePicture) TakePicture();
     }
-    protected void ThirdPersonLook() {
+    protected void ThirdPersonLook()
+    {
         cam.cullingMask = thirdPersonCull;
         firstPersonLook.Priority = 10;
         thirdPersonLook.Priority = 12;
 
-        if(cameraState != CameraState.CARVIEW) {
-            foreach(var i in enableOnFirstPerson) i.SetActive(false); 
-            foreach(var i in disableOnFirstPerson) i.SetActive(true); 
+        if (cameraState != CameraState.CARVIEW)
+        {
+            foreach (var i in enableOnFirstPerson) i.SetActive(false);
+            foreach (var i in disableOnFirstPerson) i.SetActive(true);
             cameraState = CameraState.CARVIEW;
-        } 
+        }
 
         cameraMascotte.transform.rotation = transform.rotation;
         cameraMascotteBackLook = Mathf.Lerp(cameraMascotteBackLook, isLookingBack ? 180 : 0, Time.deltaTime * 4f);
@@ -632,7 +455,8 @@ public class CameraControl : MonoBehaviour {
         orbitalTransposer.m_ZDamping = Mathf.Lerp(orbitalTransposer.m_ZDamping, (carMovement.boostScript.isBoosting) ? 0.05f : baseZDamping, Time.deltaTime * BoostFollowDamping / 2f);
     }
 
-    public void SynchTransposer() {
+    public void SynchTransposer()
+    {
         //mascotteRotationOffset.x + (baseScreenY - composer.m_ScreenY) * lookUpCameraSensitivity
 
         //pov.m_VerticalAxis.Value - x axis
@@ -641,29 +465,35 @@ public class CameraControl : MonoBehaviour {
         orbitalTransposer.m_XAxis.Value = pov.m_HorizontalAxis.Value - transform.eulerAngles.y;
     }
 
-    public void AnimateCameraMascotte() {
+    public void AnimateCameraMascotte()
+    {
         cameraMascotte.transform.localScale = Vector3.one * 1.2f;
     }
 
-    public void Recenter() {
+    public void Recenter()
+    {
         pov.m_VerticalAxis.Value = 0;
         //recenterTime = recenterDuration;
     }
-    public void RecenterY() {
-        pov.m_VerticalAxis.Value = 0;     
+    public void RecenterY()
+    {
+        pov.m_VerticalAxis.Value = 0;
         composer.m_ScreenY = baseScreenY;
     }
 
-    public bool HasTakenPicture() {
+    public bool HasTakenPicture()
+    {
         return ratingSystem.HasTakenPicture();
     }
 
-    public Sprite GetLastScreenshot() {
+    public Sprite GetLastScreenshot()
+    {
         return lastMissionSprite;
     }
 
-    protected void TakePicture() {
-        if(takePictureDelay > 0 || !canTakePicture) return;
+    protected void TakePicture()
+    {
+        if (takePictureDelay > 0 || !canTakePicture) return;
 
         canTakePicture = false;
         pictureShotTimer = 0;
@@ -704,27 +534,31 @@ public class CameraControl : MonoBehaviour {
         string pluralName = "";
         Dictionary<string, int> tagsOnPicture = new Dictionary<string, int>();
         int sensationScore = 0;
-        foreach(var rest in allObjects) {
+        foreach (var rest in allObjects)
+        {
             bool isOnScreen = true;
             string tag = rest.tag.ToUpper().Trim();
-            if(tagsOnPicture.ContainsKey(tag)){
+            if (tagsOnPicture.ContainsKey(tag))
+            {
                 pluralName = tag + "s";
                 tagsOnPicture[tag] += rest.sensation;
-            } else tagsOnPicture.Add(tag, rest.sensation);
-            
+            }
+            else tagsOnPicture.Add(tag, rest.sensation);
+
             //Debug.Log(tag + ": " + rest.sensation);
 
             objectTags += tag + " ";
             sensationScore += rest.sensation;
 
             //Debug.Log(rest.name);
-            if (rest.CompareTag("ActivationExplosive")) {
+            if (rest.CompareTag("ActivationExplosive"))
+            {
                 TriggerExplosion explosive = rest.gameObject.GetComponent<TriggerExplosion>();
                 explosive.hasBeenActivated = true;
                 explosive.explosionDelayDuration = 0f;
             }
 
-            scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tag, rest);  
+            scren.picturedObjects[index] = new Screenshot.PicturedObject(rest.tag, rest);
 
             ObjectProperties sub = new ObjectProperties();
             targetPos = cam.WorldToViewportPoint(rest.transform.position);
@@ -748,7 +582,7 @@ public class CameraControl : MonoBehaviour {
         scren.score = sensationScore;
         totalScore += sensationScore;
 
-        if(totalScore > 0) SplashSystem.self.SpawnSplash(ratingSystem.GetScoreLabel(totalScore), new Vector3(0, 1, 0), 2, 1, 3, TextAnchor.MiddleCenter);
+        if (totalScore > 0) SplashSystem.self.SpawnSplash(ratingSystem.GetScoreLabel(totalScore), new Vector3(0, 1, 0), 2, 1, 3, TextAnchor.MiddleCenter);
 
         //Visualize
         cam3D.DoPicture(scren, resWidth, resHeight);
@@ -758,7 +592,7 @@ public class CameraControl : MonoBehaviour {
         //Find highest sensation scoring tag and name picture accordingly
         var sortedBySensation = tagsOnPicture.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
         photoName = (pluralName.Length > 1) ? ("''" + pluralName + "''") : ((sortedBySensation.Count > 0) ? ("''" + sortedBySensation[0] + "''") : (""));
-        
+
         //photoName +=  " [<color='#" + ColorUtility.ToHtmlStringRGB(ratingSystem.scoreGradient.Evaluate(scren.score / 100f)) + "'>" + scren.score + "</color>]";
 
         scren.name = photoName;
@@ -778,8 +612,8 @@ public class CameraControl : MonoBehaviour {
 
         //Physical Pictures        
         //foreach(var pic in physPictures) {
-          //  pic.sprite = Sprite.Create(screenshots[Random.Range(0, screenshots.Count)].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
-          //  pic.transform.localScale = basePicScale * physPicScale;
+        //  pic.sprite = Sprite.Create(screenshots[Random.Range(0, screenshots.Count)].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+        //  pic.transform.localScale = basePicScale * physPicScale;
         //}
 
         screenshots.Add(scren);
@@ -787,23 +621,27 @@ public class CameraControl : MonoBehaviour {
         ratingSystem.ResetScreenshot();
     }
 
-    public void PortfolioSelection(Vector2 delta) {
+    public void PortfolioSelection(Vector2 delta)
+    {
         currentSelectedPortfolioPhoto = Mathf.Clamp(currentSelectedPortfolioPhoto - (int)delta.y, 0, Mathf.Clamp(screenshots.Count - 1, 0, screenshots.Count));
         PortfolioSelection();
     }
-    public void PortfolioSelection() {
-        foreach(var i in screenshots) i.portfolioObj.transform.localScale = Vector3.one * portfolioPictureBaseScale;
+    public void PortfolioSelection()
+    {
+        foreach (var i in screenshots) i.portfolioObj.transform.localScale = Vector3.one * portfolioPictureBaseScale;
     }
 
-    public int GetTotalScore() {
+    public int GetTotalScore()
+    {
         return totalScore;
     }
-    
-    public void DeletePicture(int index, bool deleteTexture = true) {
+
+    public void DeletePicture(int index, bool deleteTexture = true)
+    {
         return;
-        if(screenshots.Count <= 0 || screenshots[index] == null) return;
+        if (screenshots.Count <= 0 || screenshots[index] == null) return;
         Destroy(screenshots[index].portfolioObj);
-        if(deleteTexture) Destroy(screenshots[index].image);
+        if (deleteTexture) Destroy(screenshots[index].image);
         screenshots.RemoveAt(index);
     }
 }

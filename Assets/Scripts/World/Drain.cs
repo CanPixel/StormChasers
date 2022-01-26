@@ -40,6 +40,7 @@ public class Drain : MonoBehaviour {
     }
 
     void Update() {
+        if (player == null) return; 
         var playerDir = (transform.position - player.transform.position).normalized;
         playerDir.y = 0;
         powParticle.transform.position = powBasePos + playerDir * powOffset;
