@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 2230918418934176524}
   - component: {fileID: 4490673703821056273}
   - component: {fileID: 4640126502205465942}
+  - component: {fileID: 1872575237}
   m_Layer: 0
   m_Name: RoadR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &2230918418934176524
 Transform:
@@ -59,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 9a5b6b12226d244a9b0b9405dfcd5abc, type: 3}
+  - {fileID: 2100000, guid: 7b0cd54b262d0e94ab4db548fbc5ba5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,6 +82,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1872575237
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73049654924004648}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4832502029931959749, guid: 9a5b6b12226d244a9b0b9405dfcd5abc, type: 3}
 --- !u!1 &6662233668418627894
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 6662233668418627894}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 7379982222897715156}
   - {fileID: 2230918418934176524}
@@ -124,12 +139,13 @@ GameObject:
   - component: {fileID: 7379982222897715156}
   - component: {fileID: 8097873238515380589}
   - component: {fileID: 7920807742148480391}
+  - component: {fileID: 1872575238}
   m_Layer: 0
   m_Name: RoadL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &7379982222897715156
 Transform:
@@ -172,7 +188,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 9a5b6b12226d244a9b0b9405dfcd5abc, type: 3}
+  - {fileID: 2100000, guid: 7b0cd54b262d0e94ab4db548fbc5ba5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -194,3 +210,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1872575238
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815195866325445240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5326538741221769823, guid: 9a5b6b12226d244a9b0b9405dfcd5abc, type: 3}
