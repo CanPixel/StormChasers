@@ -31,9 +31,10 @@ public class TornadoScript : MonoBehaviour
     public bool targetedThrow;
     public bool targetIsPlayer;
     public float maxThrowAmount;
-    private float currentObjectsThrown; 
-
-
+    private float currentObjectsThrown;
+    private float waitForThrowTimer;
+    [HideInInspector] public bool playerInTornado = false; 
+    
 
     [Header("CONSTRAINTS")]
     public float minHeight = -2f;
@@ -53,7 +54,6 @@ public class TornadoScript : MonoBehaviour
 
     //States 
     private int tornadoState;
-    private int fixedControllerState;
     public bool explosionInside; 
     [HideInInspector]
     private enum CurrentState
@@ -69,14 +69,14 @@ public class TornadoScript : MonoBehaviour
         tornadoState = (int)CurrentState.ROAM;
         SetPos();
         pulledRbList.Clear();
+
+        waitForThrowTimer = Random.Range(5f, 10f);
+        maxThrowAmount = Random.Range(3f, 7f);
     }
 
     private void FixedUpdate() {
         switch (tornadoState) {
             case (int)CurrentState.IDLE:
-               // CheckPath();
-                //PullObjects();
-               // RotateCenter(); 
                 break;
             case (int)CurrentState.ROAM:
                 MoveTornado();
@@ -87,11 +87,6 @@ public class TornadoScript : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        
-    }
-
     protected void SetPos() {
         if (path == null) return;
 
@@ -99,14 +94,8 @@ public class TornadoScript : MonoBehaviour
         var next = nodePoint + 1;
         if (next >= path.pathNodes.Count) next = 0;
         currentNodeTarget = path.pathNodes[next];
-        //transform.rotation = GetAngleTo(currentNodeTarget);
     }
 
-    /* public Quaternion GetAngleTo(Transform targetPos) {
-        var dir = (transform.position - targetPos.position);
-        dir.y = 0;
-        return Quaternion.LookRotation(dir) * Quaternion.Euler(rotOffs);
-    } */
 
     void CheckPath() {
         currentInnerObjects = pulledRbList.Count;
@@ -134,25 +123,37 @@ public class TornadoScript : MonoBehaviour
         var dir = (transform.position - currentNodeTarget.position);
         dir.y = 0;
         transform.position -= dir.normalized * speed * Time.deltaTime;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, GetAngleTo(currentNodeTarget), Time.deltaTime * turnSpeed);
     }
 
     void CheckForThrow()
     {
+        //No objects in tornado
         if (pulledRbList.Count <= 0)
         {
             canThrow = false; 
             return;
         }
 
+        //Cooldown for throwing 
+        if(waitForThrowTimer > 0)
+        {
+            waitForThrowTimer -= Time.deltaTime; 
+        }
+        else
+        {
+            waitForThrowTimer = Random.Range(5f, 10f);
+            maxThrowAmount = Random.Range(3f, 7f); 
+            canThrow = true; 
+        }
+
+        //Throw logic 
         if (canThrow)
         {
             canThrow = false; 
             pickedThrowTarget = pulledRbList[Random.Range(0, pulledRbList.Count)];
             
             SetThrowTarget();
-            ThrowObject(throwTarget); 
-         
+            ThrowObject(throwTarget);        
         }
     }
 
@@ -170,8 +171,10 @@ public class TornadoScript : MonoBehaviour
     void ThrowObject(Transform target)
     {
         pickedThrowTarget.GetComponent<PulledByTornado>().ReleaseObject();
-        Vector3 throwDir; 
 
+
+        //Set throwing direction 
+        Vector3 throwDir;
         if (target != null)
         {
             throwDir = target.position - pickedThrowTarget.position;
@@ -182,17 +185,14 @@ public class TornadoScript : MonoBehaviour
             throwDir = centerPoint.transform.forward;            
         }
 
-        
+        //Add force to picked ojject
         pickedThrowTarget.AddForce(Vector3.up * throwForce / 2, ForceMode.VelocityChange);
-        pickedThrowTarget.AddForce(throwDir * throwForce, ForceMode.VelocityChange);
-  
+        pickedThrowTarget.AddForce(throwDir * throwForce, ForceMode.VelocityChange); 
+
+        //Check if max amount of objects has been thrown 
         currentObjectsThrown++;
         if (currentObjectsThrown < maxThrowAmount) canThrow = true;
         else currentObjectsThrown = 0; 
-
-
-
-
     }
 
     void TrackStats()

@@ -81,7 +81,7 @@ public class PlayerRespawnScript : MonoBehaviour
             {
                 SetParent();
                 grounded = false;
-                if(hit.collider.CompareTag("Water") && hit.distance < groundCheckDis - 38f) disablePlayer = true;                     
+                if(hit.collider.CompareTag("Water") && hit.distance < groundCheckDis - 41f) disablePlayer = true;                     
             }
 
         }
@@ -176,11 +176,12 @@ public class PlayerRespawnScript : MonoBehaviour
     {
         player.parent = null;
         playerRb.mass = 500f;
-        playerRb.velocity = new Vector3(0, 0, 0); 
+        playerRb.velocity = new Vector3(0, 3, 0); 
         player.transform.position = groundcheckObject.transform.position;   
         player.GetComponent<Rigidbody>().isKinematic = false;
         disablePlayer = false;
-        sharkCanJump = true;      
+        sharkCanJump = true;
+        Debug.Log("DROPTHEPLAYER??"); 
     }
 
   
