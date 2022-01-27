@@ -7,7 +7,7 @@ public class PulledByTornado : MonoBehaviour
     public Rigidbody rb;
     public bool isPlayer; 
     public TornadoScript tornadoScript;
-    private float destructionTimer = 5;
+    private float destructionTimer = 1;
     private float playerLaunchTimer;
     float orignalRbMass;
     public Vector3 originalScale; 
@@ -106,9 +106,14 @@ public class PulledByTornado : MonoBehaviour
         destructionTimer -= Time.fixedDeltaTime;
         if (destructionTimer <= 0)
         {
+            if (!isPlayer)
+            {
+                rb.velocity = new Vector3(0, 0, 0); 
+            }
             rb.transform.localScale = originalScale;
             tornadoScript.pulledRbList.Remove(rb);
             Destroy(GetComponent<PulledByTornado>()); 
+
         }
     }
 

@@ -81,7 +81,7 @@ public class PlayerRespawnScript : MonoBehaviour
             {
                 SetParent();
                 grounded = false;
-                if(hit.collider.CompareTag("Water") && hit.distance < groundCheckDis - 41f) disablePlayer = true;                     
+                if(hit.collider.CompareTag("Water") && hit.distance < groundCheckDis - 43f) disablePlayer = true;                     
             }
 
         }
@@ -137,8 +137,10 @@ public class PlayerRespawnScript : MonoBehaviour
         }
         else
         {
-            shark.transform.eulerAngles += new Vector3(0, upForce * 5, 0);
+            
         }
+
+        shark.transform.eulerAngles += new Vector3(0, upForce * 7.5f, 0);
 
 
 

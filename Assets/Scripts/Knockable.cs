@@ -35,8 +35,19 @@ public class Knockable : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        ExtrGravity();
+        if(transform.position.y > -50f) ExtrGravity();
+        DestroySelf(); 
         if (rb.useGravity) isInTornado = false; 
+    }
+
+    private void DestroySelf()
+    {
+        if(transform.position.y < -50f && !rb.isKinematic)
+        {
+            
+            rb.velocity = new Vector3(0, 0, 0);        
+            rb.isKinematic = true;       
+        }
     }
 
     void OnCollisionEnter(Collision col) {

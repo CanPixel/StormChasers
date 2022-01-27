@@ -128,7 +128,7 @@ public class TornadoScript : MonoBehaviour
     void CheckForThrow()
     {
         //No objects in tornado
-        if (pulledRbList.Count <= 0)
+        if (pulledRbList.Count <= 0 && pulledRbList.Count > 40f)
         {
             canThrow = false; 
             return;
@@ -142,7 +142,7 @@ public class TornadoScript : MonoBehaviour
         else
         {
             waitForThrowTimer = Random.Range(5f, 10f);
-            maxThrowAmount = Random.Range(3f, 7f); 
+            maxThrowAmount = Random.Range(2f, 6f); 
             canThrow = true; 
         }
 
