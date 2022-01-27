@@ -54,13 +54,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
 
-        if (done)
-        {
-            endCamera.Priority = 100;
-            return;
-        }
-
+        if (done) return;
 
 
         if (timerObj != null) timerObj.transform.localScale = Vector3.Lerp(timerObj.transform.localScale, Vector3.one * (Mathf.Sin(Time.time * 2f) * 0.1f + 1), Time.deltaTime * 6.5f);
