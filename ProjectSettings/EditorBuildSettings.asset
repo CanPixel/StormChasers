@@ -23,9 +23,6 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/simchaSCENE.unity
     guid: 2c41cf89f9f008141814cc38d3c4bdc1

@@ -22,8 +22,8 @@ public class CameraControl : MonoBehaviour
 
     [Header("Portfolio")]
     public int maxPhotosInPortfolio = 10;
-    public float portfolioPictureSpacing = 455;
-    public float portfolioPictureYOffs = 343.4f;
+    //public float portfolioPictureSpacing = 455;
+    //public float portfolioPictureYOffs = 343.4f;
     public Color activeMissionColor, inactiveMissionColor;
     public Color markedPictureColor;
     public Color eligibleForMissionPictureColor;
@@ -162,14 +162,14 @@ public class CameraControl : MonoBehaviour
     public Text scoreCounter;
     private int totalScore = 0;
     public Cinemachine.CinemachineBrain cinemachineBrain;
-    public GameObject photoBookUI, polaroidPrefab;
+    public GameObject polaroidPrefab;
     public GameObject cameraMascotte;
     public SpriteRenderer missionPicture;
     public Transform photoBookScrollPanel;
     public Image pictureShotOverlay;
-    public RawImage photoBookSelection;
+    //public RawImage photoBookSelection;
     public GameObject physicalPhotoPrefab;
-    public Text photoBookCapacity;
+    //public Text photoBookCapacity;
     public UIBob reticleBob;
     public GameObject minimapCamera;
     public CarMovement carMovement;
@@ -178,8 +178,6 @@ public class CameraControl : MonoBehaviour
     public Camera3D cam3D;
     public RatingSystem ratingSystem;
     [SerializeField] private InputActionReference cameraAimButton;
-
-    public GameObject yInfoButton;
 
     public GameObject shaders;
     public ShaderReel shaderReel;
@@ -204,10 +202,9 @@ public class CameraControl : MonoBehaviour
         public Sprite finalPicture;
         public bool active = false;
     }
-    private List<JournalMission> journalMissions = new List<JournalMission>();
-    private int journalSelectedMission = 0;
+    //private List<JournalMission> journalMissions = new List<JournalMission>();
 
-    private float portfolioPictureBaseScale, portfolioTargetY = 0;
+    private float portfolioPictureBaseScale;
 
     void Start()
     {
@@ -237,7 +234,7 @@ public class CameraControl : MonoBehaviour
         missionPicture.gameObject.SetActive(false);
         photobook = false;
 
-        photoBookUI.SetActive(false);
+        //        photoBookUI.SetActive(false);
     }
 
     private float cameraMascotteBackLook = 0;
@@ -282,48 +279,48 @@ public class CameraControl : MonoBehaviour
         cameraMascotte.transform.localScale = Vector3.Lerp(cameraMascotte.transform.localScale, Vector3.one, Time.deltaTime * 5f);
 
         /* PhotoBook / Portfolio */
-        photoBookCapacity.text = screenshots.Count + "/" + maxPhotosInPortfolio;
-        photoBookSelection.enabled = screenshots.Count > 0;
-        if (screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count)
-        {
-            var screen = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform;
-            photoBookSelection.transform.position = screen.position;
-            screen.localScale = Vector3.Lerp(screen.localScale, Vector3.one, Time.unscaledDeltaTime * 10f);
-            photoBookSelection.transform.localScale = screen.localScale;
-        }
+        //        photoBookCapacity.text = screenshots.Count + "/" + maxPhotosInPortfolio;
+        //       photoBookSelection.enabled = screenshots.Count > 0;
+        /*   if (screenshots.Count > 0 && currentSelectedPortfolioPhoto < screenshots.Count)
+           {
+               var screen = screenshots[currentSelectedPortfolioPhoto].portfolioObj.transform;
+               photoBookSelection.transform.position = screen.position;
+               screen.localScale = Vector3.Lerp(screen.localScale, Vector3.one, Time.unscaledDeltaTime * 10f);
+               photoBookSelection.transform.localScale = screen.localScale;
+           }
 
-        currentSelectedPortfolioPhoto = Mathf.Clamp(currentSelectedPortfolioPhoto, 0, Mathf.Clamp(screenshots.Count - 1, 0, screenshots.Count));
-        portfolioTargetY = currentSelectedPortfolioPhoto * portfolioPictureSpacing - portfolioPictureYOffs;
+           currentSelectedPortfolioPhoto = Mathf.Clamp(currentSelectedPortfolioPhoto, 0, Mathf.Clamp(screenshots.Count - 1, 0, screenshots.Count));
+          */ //portfolioTargetY = currentSelectedPortfolioPhoto * portfolioPictureSpacing - portfolioPictureYOffs;
 
         cycleFilterYButton.SetActive(!journal && camSystem.aim >= 0.5f);
         shaders.SetActive(camSystem.aim >= 0.5f);
     }
 
-    public void MarkPicture()
-    {
-        if (currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
+    /*  public void MarkPicture()
+      {
+          if (currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || !screenshots[currentSelectedPortfolioPhoto].forMission || screenshots.Count <= 0) return;
 
-        if (AlreadyMarked())
-        {
-            UnmarkPicture();
-            return;
-        }
+          if (AlreadyMarked())
+          {
+              UnmarkPicture();
+              return;
+          }
 
-        screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = markedPictureColor;
-        missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
-        missionPicture.transform.localScale = basePicScale * physPicScale;
-        missionPicture.gameObject.SetActive(true);
-        markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
-    }
-    public void UnmarkPicture()
-    {
-        missionPicture.sprite = null;
-        missionPicture.gameObject.SetActive(false);
-        Destroy(missionPicture.sprite);
-        if (screenshots.Count <= 0 || currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null) return;
-        screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
-        markedScreenshot = null;
-    }
+          screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = markedPictureColor;
+          missionPicture.sprite = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+          missionPicture.transform.localScale = basePicScale * physPicScale;
+          missionPicture.gameObject.SetActive(true);
+          markedScreenshot = screenshots[currentSelectedPortfolioPhoto];
+      }
+      public void UnmarkPicture()
+      {
+          missionPicture.sprite = null;
+          missionPicture.gameObject.SetActive(false);
+          Destroy(missionPicture.sprite);
+          if (screenshots.Count <= 0 || currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null) return;
+          screenshots[currentSelectedPortfolioPhoto].polaroidFrame.color = screenshots[currentSelectedPortfolioPhoto].baseColor;
+          markedScreenshot = null;
+      }*/
     public void DiscardPicture()
     {
         if (currentSelectedPortfolioPhoto >= screenshots.Count || screenshots[currentSelectedPortfolioPhoto] == null || screenshots.Count <= 0) return;
@@ -336,45 +333,45 @@ public class CameraControl : MonoBehaviour
 
         DeletePicture(currentSelectedPortfolioPhoto, false);
         PortfolioSelection();
-        UnmarkPicture();
+        //UnmarkPicture();
         //missionManager.ShowReadyForMark(false);
     }
-    protected bool AlreadyMarked()
-    {
-        return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
-    }
+    /* protected bool AlreadyMarked()
+     {
+         return currentSelectedPortfolioPhoto < screenshots.Count && markedScreenshot != null && screenshots[currentSelectedPortfolioPhoto] != null && markedScreenshot == screenshots[currentSelectedPortfolioPhoto];
+     }
 
-    public void DeliverReset()
-    {
-        deliverTime = 0;
-        deliverPicture = null;
-    }
+     public void DeliverReset()
+     {
+         deliverTime = 0;
+         deliverPicture = null;
+     }
 
-    private GameObject deliverPicture = null;
-    private Transform deliverTo;
-    private float deliverTime = 0;
-    public void DeliverPicture(Transform pos)
-    {
-        if (screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
+     private GameObject deliverPicture = null;
+     private Transform deliverTo;
+     private float deliverTime = 0;
+       public void DeliverPicture(Transform pos)
+       {
+           if (screenshots.Count <= 0 || screenshots[currentSelectedPortfolioPhoto] == null || deliverPicture != null) return;
 
-        deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10, 0, 0));
-        var rb = deliverPicture.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.up * DiscardForce * 50f);
-        rb.useGravity = false;
-        deliverPicture.transform.localScale = Vector3.one * 0.15f;
-        var spr = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
+           deliverPicture = Instantiate(physicalPhotoPrefab, transform.position + Vector3.up * 2f, Quaternion.Euler(10, 0, 0));
+           var rb = deliverPicture.GetComponent<Rigidbody>();
+           rb.AddForce(Vector3.up * DiscardForce * 50f);
+           rb.useGravity = false;
+           deliverPicture.transform.localScale = Vector3.one * 0.15f;
+           var spr = Sprite.Create(screenshots[currentSelectedPortfolioPhoto].image, new Rect(0, 0, resWidth, resHeight), Vector2.one * 0.5f);
 
-        deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
-        journalMissions[journalSelectedMission].finalPicture = spr;
+           deliverPicture.GetComponent<SpriteRenderer>().sprite = spr;
+           journalMissions[journalSelectedMission].finalPicture = spr;
 
-        DeletePicture(currentSelectedPortfolioPhoto, false);
-        currentSelectedPortfolioPhoto = 0;
-        UnmarkPicture();
+           DeletePicture(currentSelectedPortfolioPhoto, false);
+           currentSelectedPortfolioPhoto = 0;
+           UnmarkPicture();
 
-        journal = false;
-        deliverTo = pos;
-        deliverTime = 0;
-    }
+           journal = false;
+           deliverTo = pos;
+           deliverTime = 0;
+       }*/
 
     private Sprite lastMissionSprite;
 
